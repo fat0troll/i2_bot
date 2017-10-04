@@ -1,0 +1,8 @@
+telegram_connection:
+    api_token: "your-awesome-token"
+database_connection:
+    host: "localhost"
+    port: "3306"
+    user: "i2_bot"
+    password: "i2_bot"
+    database: "i2_bot"
