@@ -11,7 +11,7 @@ import (
 )
 
 func HelpMessage(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
-    help_message := "*Бот Инстинкта. Версия обезшпионенная и улучшенная.*\n\n"
+    help_message := "*Бот Инстинкта Enchanched.*\n\n"
     help_message += "Текущая версия: *" + config.VERSION + "*\n\n"
     help_message += "Список команд:\n\n"
     help_message += "+ /help – выводит данное сообщение\n"

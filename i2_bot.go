@@ -10,6 +10,8 @@ import (
 	"gopkg.in/telegram-bot-api.v4"
     // local
 	"./lib/appcontext"
+	"./lib/migrations"
+	"./lib/parsers"
 	"./lib/router"
 )
 
@@ -21,6 +23,9 @@ func main() {
 	c := appcontext.New()
 	c.Init()
 	router.New(c)
+	migrations.New(c)
+	c.RunDatabaseMigrations()
+	parsers.New(c)
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
@@ -28,7 +33,7 @@ func main() {
 	updates, _ := c.Bot.GetUpdatesChan(u)
 
 	for update := range updates {
-		if update.Message == nil {
+		if update.Message == nil || update.Message.From == nil {
 			continue
 		} else if update.Message.Date < (int(time.Now().Unix()) - 1) {
 			// Ignore old messages
