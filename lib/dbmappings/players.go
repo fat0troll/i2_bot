@@ -14,6 +14,6 @@ type Players struct {
     League_id       int             `db:"league_id"`
     Squad_id        int             `db:"squad_id"`
     Status          string          `db:"status"`
-    Created_at      *time.Time      `db:"created_at"`
-    Updated_at      *time.Time      `db:"updated_at"`
+    Created_at      time.Time       `db:"created_at"`
+    Updated_at      time.Time       `db:"updated_at"`
 }

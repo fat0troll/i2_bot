@@ -8,12 +8,12 @@ import (
 	"gopkg.in/telegram-bot-api.v4"
 )
 
-func AnyMessageUnauthorized(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
+func (t *Talkers) AnyMessageUnauthorized(update tgbotapi.Update) {
     error_message := "Извини, действие для тебя недоступно. Возможно, у меня нет твоего профиля или же твои права недостаточны для совершения данного действия\n\n"
     error_message += "Если тебе кажется, что это ошибка, пиши @fat0troll.\n"
 
     msg := tgbotapi.NewMessage(update.Message.Chat.ID, error_message)
     msg.ParseMode = "Markdown"
 
-    bot.Send(msg)
+    c.Bot.Send(msg)
 }

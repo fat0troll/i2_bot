@@ -10,7 +10,7 @@ import (
     "../config"
 )
 
-func HelpMessage(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
+func (t *Talkers) HelpMessage(update tgbotapi.Update) {
     help_message := "*Бот Инстинкта Enchanched.*\n\n"
     help_message += "Текущая версия: *" + config.VERSION + "*\n\n"
     help_message += "Список команд:\n\n"
@@ -21,5 +21,5 @@ func HelpMessage(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
     msg := tgbotapi.NewMessage(update.Message.Chat.ID, help_message)
     msg.ParseMode = "Markdown"
 
-    bot.Send(msg)
+    c.Bot.Send(msg)
 }

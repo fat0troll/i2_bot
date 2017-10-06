@@ -11,4 +11,5 @@ import (
 
 type ParsersInterface interface {
     ParsePokememe(text string, player_raw dbmappings.Players) string
+    ReturnPoints(points int) string
 }

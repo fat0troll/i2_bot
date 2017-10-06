@@ -19,5 +19,5 @@ type Profiles struct {
     Power               int             `db:"power"`
     Weapon_id           int             `db:"weapon_id"`
     Crystalls           int             `db:"crystalls"`
-    Created_at          *time.Time      `db:"created_at"`
+    Created_at          time.Time       `db:"created_at"`
 }

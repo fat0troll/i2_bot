@@ -12,5 +12,5 @@ type PokememesElements struct {
     Id              int             `db:"id"`
     Pokememe_id     int             `db:"pokememe_id"`
     Element_id      int             `db:"element_id"`
-    Created_at      *time.Time      `db:"created_at"`
+    Created_at      time.Time       `db:"created_at"`
 }

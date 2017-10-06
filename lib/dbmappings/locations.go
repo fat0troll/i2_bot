@@ -11,6 +11,6 @@ import (
 type Locations struct {
     Id              int             `db:"id"`
     Symbol          string          `db:"symbol"`
-    Name            string          `db:"league_id"`
-    Created_at      *time.Time      `db:"created_at"`
+    Name            string          `db:"name"`
+    Created_at      time.Time       `db:"created_at"`
 }

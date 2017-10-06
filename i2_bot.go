@@ -13,6 +13,7 @@ import (
 	"./lib/migrations"
 	"./lib/parsers"
 	"./lib/router"
+	"./lib/talkers"
 )
 
 var (
@@ -26,6 +27,7 @@ func main() {
 	migrations.New(c)
 	c.RunDatabaseMigrations()
 	parsers.New(c)
+	talkers.New(c)
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60

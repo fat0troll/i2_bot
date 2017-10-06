@@ -12,7 +12,7 @@ import (
 	"gopkg.in/telegram-bot-api.v4"
 )
 
-func DurakMessage(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
+func (t *Talkers) DurakMessage(update tgbotapi.Update) {
     log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 
     reactions := make([]string, 0)
@@ -27,10 +27,10 @@ func DurakMessage(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
     msg := tgbotapi.NewMessage(update.Message.Chat.ID, reactions[rand.Intn(len(reactions))])
     msg.ReplyToMessageID = update.Message.MessageID
 
-    bot.Send(msg)
+    c.Bot.Send(msg)
 }
 
-func MatMessage(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
+func (t *Talkers) MatMessage(update tgbotapi.Update) {
     log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 
     reactions := make([]string, 0)
@@ -44,5 +44,5 @@ func MatMessage(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
     msg := tgbotapi.NewMessage(update.Message.Chat.ID, reactions[rand.Intn(len(reactions))])
     msg.ReplyToMessageID = update.Message.MessageID
 
-    bot.Send(msg)
+    c.Bot.Send(msg)
 }

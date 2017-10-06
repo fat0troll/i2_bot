@@ -14,6 +14,7 @@ import (
     "../migrations/migrationsinterface"
     "../parsers/parsersinterface"
     "../router/routerinterface"
+    "../talkers/talkersinterface"
 )
 
 type Context struct {
@@ -23,6 +24,7 @@ type Context struct {
 	Router      routerinterface.RouterInterface
     Parsers     parsersinterface.ParsersInterface
 	Db 			*sqlx.DB
+    Talkers     talkersinterface.TalkersInterface
 }
 
 func (c *Context) Init() {
@@ -44,6 +46,10 @@ func (c *Context) RegisterMigrationsInterface(mi migrationsinterface.MigrationsI
 
 func (c *Context) RegisterParsersInterface(pi parsersinterface.ParsersInterface) {
     c.Parsers = pi
+}
+
+func (c *Context) RegisterTalkersInterface(ti talkersinterface.TalkersInterface) {
+    c.Talkers = ti
 }
 
 func (c *Context) RunDatabaseMigrations() {
