@@ -52,8 +52,8 @@ func (r *Router) RouteRequest(update tgbotapi.Update) string {
     // Regular expressions
     var durakMsg = regexp.MustCompile("(Д|д)(У|у)(Р|р)(А|а|Е|е|О|о)")
     var huMsg = regexp.MustCompile("(Х|х)(У|у)(Й|й|Я|я|Ю|ю|Е|е)")
-    var blMsg = regexp.MustCompile("\\s(Б|б)(Л|л)(Я|я)(Т|т|Д|д)")
-    var ebMsg = regexp.MustCompile("(Е|е|Ё|ё)(Б|б)(\\s|А|а|Т|т|У|у|Е|е|Ё|ё|И|и)")
+    var blMsg = regexp.MustCompile("(\\s|^)(Б|б)(Л|л)(Я|я)(Т|т|Д|д)")
+    var ebMsg = regexp.MustCompile("(\\s|^|ЗА|За|зА|за)(Е|е|Ё|ё)(Б|б)(\\s|Л|л|А|а|Т|т|У|у|Е|е|Ё|ё|И|и)")
     var piMsg = regexp.MustCompile("(П|п)(И|и)(З|з)(Д|д)")
 
     // Commands

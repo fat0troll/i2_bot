@@ -37,7 +37,8 @@ func (t *Talkers) MatMessage(update tgbotapi.Update) {
     reactions = append(reactions, "Фу, как некультурно!",
         "Иди рот с мылом помой",
         "Тшшшш!",
-        "Да я твою мамку в кино водил!")
+        "Да я твою мамку в кино водил!",
+		"Приятно пообщаться с умным собеседником. К тебе это не относится.")
 
     // Praise the Random Gods!
     rand.Seed(time.Now().Unix())
