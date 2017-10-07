@@ -6,7 +6,7 @@ package appcontext
 import (
     // 3rd-party
     "github.com/jmoiron/sqlx"
-	"gopkg.in/telegram-bot-api.v4"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
     // local
     "../config"
     "../connections"

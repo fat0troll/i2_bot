@@ -7,7 +7,7 @@ import (
 	// stdlib
 	"time"
     // 3rd-party
-	"gopkg.in/telegram-bot-api.v4"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
     // local
 	"./lib/appcontext"
 	"./lib/migrations"

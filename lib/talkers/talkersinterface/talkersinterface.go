@@ -5,7 +5,7 @@ package talkersinterface
 
 import (
     // 3rd party
-	"gopkg.in/telegram-bot-api.v4"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
     // local
     "../../dbmappings"
 )
@@ -17,6 +17,7 @@ type TalkersInterface interface {
     HelloMessageAuthorized(update tgbotapi.Update, player_raw dbmappings.Players)
     HelpMessage(update tgbotapi.Update)
     PokememesList(update tgbotapi.Update, page int)
+	PokememeInfo(update tgbotapi.Update) string
 
     // Returns
     PokememeAddSuccessMessage(update tgbotapi.Update)

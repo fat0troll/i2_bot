@@ -7,7 +7,7 @@ import (
     // stdlib
     "log"
     // 3rd-party
-	"gopkg.in/telegram-bot-api.v4"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
     "github.com/jmoiron/sqlx"
     _ "github.com/go-sql-driver/mysql"
     // local

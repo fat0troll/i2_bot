@@ -23,6 +23,7 @@ func (m *Migrations) Init() {
     goose.AddNamedMigration("6_create_elements.go", CreateElementsUp, CreateElementsDown)
     goose.AddNamedMigration("7_create_leagues.go", CreateLeaguesUp, CreateLeaguesDown)
     goose.AddNamedMigration("8_create_relations.go", CreateRelationsUp, CreateRelationsDown)
+    goose.AddNamedMigration("9_update_locations.go", UpdateLocationsUp, UpdateLocationsDown)
 }
 
 func (m *Migrations) Migrate() error {

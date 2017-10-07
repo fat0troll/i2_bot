@@ -5,7 +5,7 @@ package talkers
 
 import (
     // 3rd party
-	"gopkg.in/telegram-bot-api.v4"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
     // local
     "../config"
 )
@@ -14,6 +14,7 @@ func (t *Talkers) HelpMessage(update tgbotapi.Update) {
     help_message := "*Бот Инстинкта Enchanched.*\n\n"
     help_message += "Текущая версия: *" + config.VERSION + "*\n\n"
     help_message += "Список команд:\n\n"
+	help_message += "+ /pokedex – получить список известных боту покемемов\n"
     help_message += "+ /help – выводит данное сообщение\n"
     help_message += "\n\n"
     help_message += "Связаться с автором: @fat0troll\n"

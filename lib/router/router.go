@@ -11,7 +11,7 @@ import (
     "strings"
     "time"
     // 3rd party
-	"gopkg.in/telegram-bot-api.v4"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
     // local
     "../dbmappings"
 )
@@ -60,6 +60,7 @@ func (r *Router) RouteRequest(update tgbotapi.Update) string {
     var helpMsg = regexp.MustCompile("/help\\z")
     var helloMsg = regexp.MustCompile("/start\\z")
     var pokedexMsg = regexp.MustCompile("/pokede(x|ks)\\d?\\z")
+    var pokememeInfoMsg = regexp.MustCompile("/pk(\\d+)")
 
     // Forwards
     var pokememeMsg = regexp.MustCompile("(Уровень)(.+)(Опыт)(.+)\n(Элементы:)(.+)\n(.+)(💙MP)")
@@ -115,6 +116,8 @@ func (r *Router) RouteRequest(update tgbotapi.Update) string {
             } else {
                 c.Talkers.PokememesList(update, 1)
             }
+        case pokememeInfoMsg.MatchString(text):
+            c.Talkers.PokememeInfo(update)
         // Easter eggs
         case huMsg.MatchString(text):
             c.Talkers.MatMessage(update)
