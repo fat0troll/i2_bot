@@ -25,6 +25,7 @@ func (t *Talkers) HelloMessageAuthorized(update tgbotapi.Update, player_raw dbma
     hello_message := "*Бот Инстинкта приветствует тебя. Снова.*\n\n"
     hello_message += "Привет, " + update.Message.From.FirstName + " " + update.Message.From.LastName + "!\n"
 	hello_message += "Последнее обновление информации о тебе: " + player_raw.Updated_at.Format("02.01.2006 15:04:05 -0700")
+	hello_message += "\nПосмотреть информацию о себе: /me"
     msg := tgbotapi.NewMessage(update.Message.Chat.ID, hello_message)
     msg.ParseMode = "Markdown"
 

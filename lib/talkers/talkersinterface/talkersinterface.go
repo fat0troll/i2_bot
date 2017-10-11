@@ -23,6 +23,9 @@ type TalkersInterface interface {
     PokememeAddSuccessMessage(update tgbotapi.Update)
     PokememeAddDuplicateMessage(update tgbotapi.Update)
     PokememeAddFailureMessage(update tgbotapi.Update)
+    ProfileAddSuccessMessage(update tgbotapi.Update)
+    ProfileAddFailureMessage(update tgbotapi.Update)
+	ProfileMessage(update tgbotapi.Update, player_raw dbmappings.Players) string
 
     // Errors
     AnyMessageUnauthorized(update tgbotapi.Update)

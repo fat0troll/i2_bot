@@ -61,17 +61,20 @@ func (r *Router) RouteRequest(update tgbotapi.Update) string {
     var helloMsg = regexp.MustCompile("/start\\z")
     var pokedexMsg = regexp.MustCompile("/pokede(x|ks)\\d?\\z")
     var pokememeInfoMsg = regexp.MustCompile("/pk(\\d+)")
+    var meMsg = regexp.MustCompile("/me\\z")
 
     // Forwards
     var pokememeMsg = regexp.MustCompile("(Уровень)(.+)(Опыт)(.+)\n(Элементы:)(.+)\n(.+)(💙MP)")
+    var profileMsg = regexp.MustCompile("(Онлайн: )(\\d+)\n(Турнир Лиг через)(.+)\n\n(.*)\n(Элементы)(.+)\n\n(.+)(Уровень)(.+)\n")
 
     if update.Message.ForwardFrom != nil {
         if update.Message.ForwardFrom.ID != 360402625 {
             log.Printf("Forward from another user or bot. Ignoring")
         } else {
             log.Printf("Forward from PokememBro bot! Processing...")
-            if pokememeMsg.MatchString(text) {
-                if player_raw.Id != 0 {
+            if player_raw.Id != 0 {
+                switch {
+                case pokememeMsg.MatchString(text):
                     log.Printf("Pokememe posted!")
                     status := c.Parsers.ParsePokememe(text, player_raw)
                     switch status {
@@ -82,11 +85,20 @@ func (r *Router) RouteRequest(update tgbotapi.Update) string {
                     case "fail":
                         c.Talkers.PokememeAddFailureMessage(update)
                     }
-                } else {
-                    c.Talkers.AnyMessageUnauthorized(update)
+                case profileMsg.MatchString(text):
+                    log.Printf("Profile posted!")
+                    status := c.Parsers.ParseProfile(update, player_raw)
+                    switch status {
+                    case "ok":
+                        c.Talkers.ProfileAddSuccessMessage(update)
+                    case "fail":
+                        c.Talkers.ProfileAddFailureMessage(update)
+                    }
+                default:
+                    log.Printf(text)
                 }
             } else {
-                log.Printf(text)
+                c.Talkers.AnyMessageUnauthorized(update)
             }
         }
     } else {
@@ -118,6 +130,13 @@ func (r *Router) RouteRequest(update tgbotapi.Update) string {
             }
         case pokememeInfoMsg.MatchString(text):
             c.Talkers.PokememeInfo(update)
+        // Profile info
+        case meMsg.MatchString(text):
+            if player_raw.Id != 0 {
+                c.Talkers.ProfileMessage(update, player_raw)
+            } else {
+                c.Talkers.AnyMessageUnauthorized(update)
+            }
         // Easter eggs
         case huMsg.MatchString(text):
             c.Talkers.MatMessage(update)

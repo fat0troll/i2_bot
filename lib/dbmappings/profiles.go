@@ -14,6 +14,8 @@ type Profiles struct {
     Nickname            string          `db:"nickname"`
     TelegramNickname    string          `db:"telegram_nickname"`
     Level_id            int             `db:"level_id"`
+    Pokeballs           int             `db:"pokeballs"`
+    Wealth              int             `db:"wealth"`
     Exp                 int             `db:"exp"`
     Egg_exp             int             `db:"egg_exp"`
     Power               int             `db:"power"`

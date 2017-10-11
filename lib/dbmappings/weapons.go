@@ -8,9 +8,10 @@ import (
     "time"
 )
 
-type Leagues struct {
+type Weapons struct {
     Id              int             `db:"id"`
-    Symbol          string          `db:"symbol"`
     Name            string          `db:"name"`
-    Created_at      *time.Time      `db:"created_at"`
+    Power           int             `db:"power"`
+    Price           int             `db:"price"`
+    Created_at      time.Time       `db:"created_at"`
 }

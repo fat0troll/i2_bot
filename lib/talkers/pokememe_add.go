@@ -31,7 +31,7 @@ func (t *Talkers) PokememeAddDuplicateMessage(update tgbotapi.Update) {
 
 func (t *Talkers) PokememeAddFailureMessage(update tgbotapi.Update) {
     message := "*Неудачно получилось :(*\n\n"
-    message += "Случилась жуткая ошибка, и мы не смогли записать бота в базу. Напиши @fat0troll, он разбер]тся.\n\n"
+    message += "Случилась жуткая ошибка, и мы не смогли записать покемема в базу. Напиши @fat0troll, он разберется.\n\n"
     message += "Посмотреть всех известных боту покемемов можно командой /pokedeks"
 
     msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
