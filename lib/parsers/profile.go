@@ -89,7 +89,7 @@ func (p *Parsers) ParseProfile(update tgbotapi.Update, player_raw dbmappings.Pla
                 return "fail"
             }
             for j := range(current_runes) {
-                if j > 2 {
+                if j > 1 {
                     nickname += string(current_runes[j])
                 }
             }

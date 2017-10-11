@@ -12,7 +12,7 @@ func (t *Talkers) ProfileAddSuccessMessage(update tgbotapi.Update) {
     message := "*Профиль успешно обновлен.*\n\n"
     message += "Функциональность бота держится на актуальности профилей. Обновляйся почаще, и да пребудет с тобой Рандом!\n"
 	message += "Сохраненный профиль ты можешь просмотреть командой /me.\n\n"
-	message += "– почаще – как мощно чаще, но не более 48 раз в сутки."
+	message += "– почаще – как можно чаще, но не более 48 раз в сутки."
 
     msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
     msg.ParseMode = "Markdown"
