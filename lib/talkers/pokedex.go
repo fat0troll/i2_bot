@@ -107,7 +107,7 @@ func (t *Talkers) PokememeInfo(update tgbotapi.Update, player_raw dbmapping.Play
     }
 
     if calculate_possibilites {
-        if (pk.Grade < profile_raw.Level_id + 2) || (pk.Grade > profile_raw.Level_id - 3) {
+        if (pk.Grade < profile_raw.Level_id + 2) && (pk.Grade > profile_raw.Level_id - 3) {
             message += "\nВероятность поимки:"
             for i := range(pokememe.Locations) {
                 percentile, pokeballs := c.Getters.PossibilityRequiredPokeballs(pokememe.Locations[i].Id, pk.Grade, profile_raw.Level_id)
