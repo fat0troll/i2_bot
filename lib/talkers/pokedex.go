@@ -20,13 +20,21 @@ type PokememeFull struct {
     Locations   []dbmappings.Locations
 }
 
-func (t *Talkers) PokememeInfo(update tgbotapi.Update) string {
+func (t *Talkers) PokememeInfo(update tgbotapi.Update, player_raw dbmappings.Players) string {
 	pokememe_number := strings.Replace(update.Message.Text, "/pk", "", 1)
+	var calculate_possibilites bool = false
+	profile_raw := dbmappings.Profiles{}
+	err := c.Db.Get(&profile_raw, c.Db.Rebind("SELECT * FROM profiles WHERE player_id=? ORDER BY created_at DESC LIMIT 1"), player_raw.Id)
+	if err != nil {
+		log.Println(err)
+	} else {
+		calculate_possibilites = true
+	}
 
 	// Building pokememe
 	pk := dbmappings.Pokememes{}
 	// Checking if pokememe exists in database
-	err := c.Db.Get(&pk, c.Db.Rebind("SELECT * FROM pokememes WHERE id='" + pokememe_number + "'"))
+	err = c.Db.Get(&pk, c.Db.Rebind("SELECT * FROM pokememes WHERE id='" + pokememe_number + "'"))
 	if err != nil {
 		log.Println(err)
 		return "fail"
@@ -86,6 +94,17 @@ func (t *Talkers) PokememeInfo(update tgbotapi.Update) string {
 				message += " *" + locations[j].Name + "*"
 				if (i + 1) < len(pokememes_locations) {
 					message += ","
+				}
+			}
+		}
+	}
+
+	if calculate_possibilites {
+		message += "\nВероятность поимки:"
+		for i := range(pokememes_locations) {
+			for j := range(locations) {
+				if pokememes_locations[i].Location_id == locations[j].Id {
+					message += "\n" + locations[j].Name + " – " + strconv.Itoa(c.Getters.PossibilityRequiredPokeballs(locations[j].Id, pk.Grade, profile_raw.Level_id)) + "⭕"
 				}
 			}
 		}

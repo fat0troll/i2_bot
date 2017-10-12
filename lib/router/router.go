@@ -129,7 +129,7 @@ func (r *Router) RouteRequest(update tgbotapi.Update) string {
                 c.Talkers.PokememesList(update, 1)
             }
         case pokememeInfoMsg.MatchString(text):
-            c.Talkers.PokememeInfo(update)
+            c.Talkers.PokememeInfo(update, player_raw)
         // Profile info
         case meMsg.MatchString(text):
             if player_raw.Id != 0 {

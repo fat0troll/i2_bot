@@ -11,6 +11,7 @@ import (
     "../config"
     "../connections"
 	// interfaces
+    "../getters/gettersinterface"
     "../migrations/migrationsinterface"
     "../parsers/parsersinterface"
     "../router/routerinterface"
@@ -25,6 +26,7 @@ type Context struct {
     Parsers     parsersinterface.ParsersInterface
 	Db 			*sqlx.DB
     Talkers     talkersinterface.TalkersInterface
+    Getters     gettersinterface.GettersInterface
 }
 
 func (c *Context) Init() {
@@ -50,6 +52,10 @@ func (c *Context) RegisterParsersInterface(pi parsersinterface.ParsersInterface)
 
 func (c *Context) RegisterTalkersInterface(ti talkersinterface.TalkersInterface) {
     c.Talkers = ti
+}
+
+func (c *Context) RegisterGettersInterface(gi gettersinterface.GettersInterface) {
+    c.Getters = gi
 }
 
 func (c *Context) RunDatabaseMigrations() {

@@ -10,6 +10,7 @@ import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
     // local
 	"./lib/appcontext"
+	"./lib/getters"
 	"./lib/migrations"
 	"./lib/parsers"
 	"./lib/router"
@@ -28,6 +29,7 @@ func main() {
 	c.RunDatabaseMigrations()
 	parsers.New(c)
 	talkers.New(c)
+	getters.New(c)
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
