@@ -12,7 +12,7 @@ import (
     "gopkg.in/yaml.v2"
 )
 
-const VERSION = "0.28"
+const VERSION = "0.29"
 
 type DatabaseConnection struct {
     Host        string                  `yaml:"host"`

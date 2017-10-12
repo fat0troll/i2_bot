@@ -11,16 +11,12 @@ import (
     "../dbmapping"
 )
 
-func (g *Getters) GetPokememes() ([]dbmapping.PokememeFull, bool) {
+// Internal functions
+
+func (g *Getters) formFullPokememes(pokememes []dbmapping.Pokememe) ([]dbmapping.PokememeFull, bool) {
     pokememes_full := []dbmapping.PokememeFull{}
-    pokememes := []dbmapping.Pokememe{}
-    err := c.Db.Select(&pokememes, "SELECT * FROM pokememes ORDER BY grade asc, name asc");
-    if err != nil {
-        log.Println(err)
-        return pokememes_full, false
-    }
     elements := []dbmapping.Element{}
-    err = c.Db.Select(&elements, "SELECT * FROM elements");
+    err := c.Db.Select(&elements, "SELECT * FROM elements");
     if err != nil {
         log.Println(err)
         return pokememes_full, false
@@ -77,6 +73,48 @@ func (g *Getters) GetPokememes() ([]dbmapping.PokememeFull, bool) {
     }
 
     return pokememes_full, true
+}
+
+// External functions
+
+func (g *Getters) GetPokememes() ([]dbmapping.PokememeFull, bool) {
+    pokememes_full := []dbmapping.PokememeFull{}
+    pokememes := []dbmapping.Pokememe{}
+    err := c.Db.Select(&pokememes, "SELECT * FROM pokememes ORDER BY grade asc, name asc");
+    if err != nil {
+        log.Println(err)
+        return pokememes_full, false
+    }
+
+    pokememes_full, ok := g.formFullPokememes(pokememes)
+    return pokememes_full, ok
+}
+
+func (g *Getters) GetBestPokememes(player_id int) ([]dbmapping.PokememeFull, bool) {
+    pokememes_full := []dbmapping.PokememeFull{}
+    player_raw, ok := g.GetPlayerByID(player_id)
+    if !ok {
+        return pokememes_full, ok
+    }
+    profile_raw, ok := g.GetProfile(player_id)
+    if !ok {
+        return pokememes_full, ok
+    }
+
+    if player_raw.League_id == 0 {
+        return pokememes_full, false
+    }
+
+    // TODO: make it more complicated
+    pokememes := []dbmapping.Pokememe{}
+    err := c.Db.Select(&pokememes, c.Db.Rebind("SELECT p.* FROM pokememes p, pokememes_elements pe, elements e WHERE e.league_id = ? AND p.grade = ? AND pe.element_id = e.id AND pe.pokememe_id = p.id ORDER BY p.attack DESC"), player_raw.League_id, profile_raw.Level_id + 1)
+    if err != nil {
+        log.Println(err)
+        return pokememes_full, false
+    }
+
+    pokememes_full, ok = g.formFullPokememes(pokememes)
+    return pokememes_full, ok
 }
 
 func (g *Getters) GetPokememeByID(pokememe_id string) (dbmapping.PokememeFull, bool) {

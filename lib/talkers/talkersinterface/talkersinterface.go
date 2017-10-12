@@ -18,6 +18,7 @@ type TalkersInterface interface {
     HelpMessage(update tgbotapi.Update)
     PokememesList(update tgbotapi.Update, page int)
 	PokememeInfo(update tgbotapi.Update, player_raw dbmapping.Player) string
+    BestPokememesList(update tgbotapi.Update, player_raw dbmapping.Player) string
 
     // Returns
     PokememeAddSuccessMessage(update tgbotapi.Update)

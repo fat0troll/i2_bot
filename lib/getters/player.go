@@ -11,6 +11,17 @@ import (
     "../dbmapping"
 )
 
+func (g *Getters) GetPlayerByID(player_id int) (dbmapping.Player, bool) {
+    player_raw := dbmapping.Player{}
+    err := c.Db.Get(&player_raw, c.Db.Rebind("SELECT * FROM players WHERE id=?"), player_id)
+    if err != nil {
+        log.Println(err)
+        return player_raw, false
+    }
+
+    return player_raw, true
+}
+
 func (g *Getters) GetOrCreatePlayer(telegram_id int) (dbmapping.Player, bool) {
     player_raw := dbmapping.Player{}
     err := c.Db.Get(&player_raw, c.Db.Rebind("SELECT * FROM players WHERE telegram_id=?"), telegram_id)

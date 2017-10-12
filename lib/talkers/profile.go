@@ -95,7 +95,8 @@ func (t *Talkers) ProfileMessage(update tgbotapi.Update, player_raw dbmapping.Pl
     }
     message += "\n\n💳" + strconv.Itoa(player_raw.Telegram_id)
     message += "\n⏰Последнее обновление профиля: " + profile_raw.Created_at.Format("02.01.2006 15:04:05")
-    message += "\n\nНе забывай обновляться, это важно для получения актуальной информации."
+    message += "\n\nНе забывай обновляться, это важно для получения актуальной информации.\n\n"
+    message += "/best – посмотреть лучших покемемов для поимки"
 
     msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
     msg.ParseMode = "Markdown"

@@ -39,6 +39,7 @@ func (r *Router) RouteRequest(update tgbotapi.Update) string {
     var pokedexMsg = regexp.MustCompile("/pokede(x|ks)\\d?\\z")
     var pokememeInfoMsg = regexp.MustCompile("/pk(\\d+)")
     var meMsg = regexp.MustCompile("/me\\z")
+    var bestMsg = regexp.MustCompile("/best\\z")
 
     // Forwards
     var pokememeMsg = regexp.MustCompile("(Уровень)(.+)(Опыт)(.+)\n(Элементы:)(.+)\n(.+)(💙MP)")
@@ -114,6 +115,9 @@ func (r *Router) RouteRequest(update tgbotapi.Update) string {
             } else {
                 c.Talkers.AnyMessageUnauthorized(update)
             }
+        // Suggestions
+        case bestMsg.MatchString(text):
+            c.Talkers.BestPokememesList(update, player_raw)
         // Easter eggs
         case huMsg.MatchString(text):
             c.Talkers.MatMessage(update)

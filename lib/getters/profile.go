@@ -10,9 +10,9 @@ import (
     "../dbmapping"
 )
 
-func (g *Getters) GetProfile(profile_id int) (dbmapping.Profile, bool) {
+func (g *Getters) GetProfile(player_id int) (dbmapping.Profile, bool) {
     profile_raw := dbmapping.Profile{}
-    err := c.Db.Get(&profile_raw, c.Db.Rebind("SELECT * FROM profiles WHERE player_id=? ORDER BY created_at DESC LIMIT 1"), profile_id)
+    err := c.Db.Get(&profile_raw, c.Db.Rebind("SELECT * FROM profiles WHERE player_id=? ORDER BY created_at DESC LIMIT 1"), player_id)
     if err != nil {
         log.Println(err)
         return profile_raw, false
