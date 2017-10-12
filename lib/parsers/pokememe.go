@@ -11,7 +11,7 @@ import (
     "strconv"
     "time"
     // local
-    "../dbmappings"
+    "../dbmapping"
 )
 
 // Internal functions
@@ -34,7 +34,7 @@ func (p *Parsers) getPoints(points_str string) int {
 
 // External functions
 
-func (p *Parsers) ParsePokememe(text string, player_raw dbmappings.Players) string {
+func (p *Parsers) ParsePokememe(text string, player_raw dbmapping.Player) string {
     var defendable_pokememe bool = false
     pokememe_info_strings := strings.Split(text, "\n")
     pokememe_info_runed_strings := make([][]rune, 0)
@@ -47,7 +47,7 @@ func (p *Parsers) ParsePokememe(text string, player_raw dbmappings.Players) stri
     }
 
     // Getting elements
-    elements := []dbmappings.Elements{}
+    elements := []dbmapping.Element{}
     element_emojis := make([]string, 0)
     element_emojis = append(element_emojis, string(pokememe_info_runed_strings[4][11]))
     if len(pokememe_info_runed_strings[4]) > 12 {
@@ -75,7 +75,7 @@ func (p *Parsers) ParsePokememe(text string, player_raw dbmappings.Players) stri
     defence := "0"
     price := "0"
 
-    locations := []dbmappings.Locations{}
+    locations := []dbmapping.Location{}
 
     purchaseable := false
     image := ""
@@ -180,7 +180,7 @@ func (p *Parsers) ParsePokememe(text string, player_raw dbmappings.Players) stri
     log.Printf("Image: " + image)
 
     // Building pokememe
-    pokememe := dbmappings.Pokememes{}
+    pokememe := dbmapping.Pokememe{}
     // Checking if pokememe exists in database
     err3 := c.Db.Get(&pokememe, c.Db.Rebind("SELECT * FROM pokememes WHERE grade='" + grade + "' AND name='" + name + "';"))
     if err3 != nil {
@@ -227,7 +227,7 @@ func (p *Parsers) ParsePokememe(text string, player_raw dbmappings.Players) stri
         return "fail"
     }
     for i := range(elements) {
-        link := dbmappings.PokememesElements{}
+        link := dbmapping.PokememeElement{}
         link.Pokememe_id = pokememe.Id
         link.Element_id = elements[i].Id
         link.Created_at = time.Now().UTC()
@@ -239,7 +239,7 @@ func (p *Parsers) ParsePokememe(text string, player_raw dbmappings.Players) stri
         }
     }
     for i := range(locations) {
-        link := dbmappings.PokememesLocations{}
+        link := dbmapping.PokememeLocation{}
         link.Pokememe_id = pokememe.Id
         link.Location_id = locations[i].Id
         link.Created_at = time.Now().UTC()

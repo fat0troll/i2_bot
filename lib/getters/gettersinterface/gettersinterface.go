@@ -3,8 +3,20 @@
 
 package gettersinterface
 
+import (
+    // local
+    "../../dbmapping"
+)
+
 type GettersInterface interface {
     Init()
+    // Player
+    GetOrCreatePlayer(telegram_id int) (dbmapping.Player, bool)
+    // Profile
+    GetProfile(player_id int) (dbmapping.Profile, bool)
+    // Pokememes
+    GetPokememes() ([]dbmapping.PokememeFull, bool)
+    GetPokememeByID(pokememe_id string) (dbmapping.PokememeFull, bool)
     // Possibilities
-    PossibilityRequiredPokeballs(location int, grade int, lvl int) int
+    PossibilityRequiredPokeballs(location int, grade int, lvl int) (float64, int)
 }

@@ -1,14 +1,14 @@
 // i2_bot – Instinct PokememBro Bot
 // Copyright (c) 2017 Vladimir "fat0troll" Hodakov
 
-package dbmappings
+package dbmapping
 
 import (
     // stdlib
     "time"
 )
 
-type Levels struct {
+type Level struct {
     Id                  int             `db:"id"`
     Max_exp             int             `db:"max_exp"`
     Max_egg             int             `db:"max_egg"`

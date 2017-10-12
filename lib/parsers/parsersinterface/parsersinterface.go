@@ -7,12 +7,12 @@ import (
     // 3rd party
     "github.com/go-telegram-bot-api/telegram-bot-api"
     // local
-    "../../dbmappings"
+    "../../dbmapping"
 )
 
 
 type ParsersInterface interface {
-    ParsePokememe(text string, player_raw dbmappings.Players) string
-    ParseProfile(update tgbotapi.Update, player_raw dbmappings.Players) string
+    ParsePokememe(text string, player_raw dbmapping.Player) string
+    ParseProfile(update tgbotapi.Update, player_raw dbmapping.Player) string
     ReturnPoints(points int) string
 }

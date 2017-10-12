@@ -7,7 +7,7 @@ import (
     // 3rd party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	// local
-	"../dbmappings"
+	"../dbmapping"
 )
 
 func (t *Talkers) HelloMessageUnauthorized(update tgbotapi.Update) {
@@ -21,7 +21,7 @@ func (t *Talkers) HelloMessageUnauthorized(update tgbotapi.Update) {
     c.Bot.Send(msg)
 }
 
-func (t *Talkers) HelloMessageAuthorized(update tgbotapi.Update, player_raw dbmappings.Players) {
+func (t *Talkers) HelloMessageAuthorized(update tgbotapi.Update, player_raw dbmapping.Player) {
     hello_message := "*Бот Инстинкта приветствует тебя. Снова.*\n\n"
     hello_message += "Привет, " + update.Message.From.FirstName + " " + update.Message.From.LastName + "!\n"
 	hello_message += "Последнее обновление информации о тебе: " + player_raw.Updated_at.Format("02.01.2006 15:04:05 -0700")

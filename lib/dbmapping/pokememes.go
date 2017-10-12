@@ -1,14 +1,14 @@
 // i2_bot – Instinct PokememBro Bot
 // Copyright (c) 2017 Vladimir "fat0troll" Hodakov
 
-package dbmappings
+package dbmapping
 
 import (
     // stdlib
     "time"
 )
 
-type Pokememes struct {
+type Pokememe struct {
     Id              int             `db:"id"`
     Grade           int             `db:"grade"`
     Name            string          `db:"name"`
@@ -22,4 +22,12 @@ type Pokememes struct {
     Image_url       string          `db:"image_url"`
     Player_id       int             `db:"player_id"`
     Created_at      time.Time       `db:"created_at"`
+}
+
+// Type for handling pokememe with all informations about locations and elements
+
+type PokememeFull struct {
+    Pokememe        Pokememe
+    Locations       []Location
+    Elements        []Element
 }

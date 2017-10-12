@@ -13,13 +13,13 @@ import (
     // 3rd party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
     // local
-    "../dbmappings"
+    "../dbmapping"
 )
 
 // Internal functions
 
 func (p *Parsers) fillProfilePokememe(profile_id int, meme string, attack string, rarity string) {
-    spk_raw := dbmappings.Pokememes{}
+    spk_raw := dbmapping.Pokememe{}
     err := c.Db.Get(&spk_raw, c.Db.Rebind("SELECT * FROM pokememes WHERE name='" + meme + "';"))
     if err != nil {
         log.Println(err)
@@ -32,7 +32,7 @@ func (p *Parsers) fillProfilePokememe(profile_id int, meme string, attack string
         }
         level := int(float64(attack_int) / orig_attack)
 
-        ppk := dbmappings.ProfilesPokememes{}
+        ppk := dbmapping.ProfilePokememe{}
         ppk.Profile_id = profile_id
         ppk.Pokememe_id = spk_raw.Id
         ppk.Pokememe_lvl = level
@@ -47,7 +47,7 @@ func (p *Parsers) fillProfilePokememe(profile_id int, meme string, attack string
 
 // External functions
 
-func (p *Parsers) ParseProfile(update tgbotapi.Update, player_raw dbmappings.Players) string {
+func (p *Parsers) ParseProfile(update tgbotapi.Update, player_raw dbmapping.Player) string {
     text := update.Message.Text
     log.Println(text)
 
@@ -57,7 +57,7 @@ func (p *Parsers) ParseProfile(update tgbotapi.Update, player_raw dbmappings.Pla
         profile_info_runed_strings = append(profile_info_runed_strings, []rune(profile_info_strings[i]))
     }
 
-    league := dbmappings.Leagues{}
+    league := dbmapping.League{}
 
     telegram_nickname := update.Message.From.UserName
     nickname := ""
@@ -199,7 +199,7 @@ func (p *Parsers) ParseProfile(update tgbotapi.Update, player_raw dbmappings.Pla
     }
 
     // Information is gathered, let's create profile in database!
-    weapon_raw := dbmappings.Weapons{}
+    weapon_raw := dbmapping.Weapon{}
     err2 := c.Db.Get(&weapon_raw, c.Db.Rebind("SELECT * FROM weapons WHERE name='" + weapon + "'"))
     if err2 != nil {
         log.Println(err2)
@@ -234,7 +234,7 @@ func (p *Parsers) ParseProfile(update tgbotapi.Update, player_raw dbmappings.Pla
         }
     }
 
-    profile_raw := dbmappings.Profiles{}
+    profile_raw := dbmapping.Profile{}
     profile_raw.Player_id = player_raw.Id
     profile_raw.Nickname = nickname
     profile_raw.TelegramNickname = telegram_nickname

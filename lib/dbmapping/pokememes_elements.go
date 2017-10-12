@@ -1,17 +1,16 @@
 // i2_bot – Instinct PokememBro Bot
 // Copyright (c) 2017 Vladimir "fat0troll" Hodakov
 
-package dbmappings
+package dbmapping
 
 import (
     // stdlib
     "time"
 )
 
-type Weapons struct {
+type PokememeElement struct {
     Id              int             `db:"id"`
-    Name            string          `db:"name"`
-    Power           int             `db:"power"`
-    Price           int             `db:"price"`
+    Pokememe_id     int             `db:"pokememe_id"`
+    Element_id      int             `db:"element_id"`
     Created_at      time.Time       `db:"created_at"`
 }

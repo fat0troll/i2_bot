@@ -10,40 +10,38 @@ import (
     // 3rd party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
     // local
-    "../dbmappings"
+    "../dbmapping"
 )
 
-func (t *Talkers) ProfileMessage(update tgbotapi.Update, player_raw dbmappings.Players) string {
-    profile_raw := dbmappings.Profiles{}
-    err := c.Db.Get(&profile_raw, c.Db.Rebind("SELECT * FROM profiles WHERE player_id=? ORDER BY created_at DESC LIMIT 1"), player_raw.Id)
-    if err != nil {
-        log.Println(err)
+func (t *Talkers) ProfileMessage(update tgbotapi.Update, player_raw dbmapping.Player) string {
+    profile_raw, ok := c.Getters.GetProfile(player_raw.Id)
+    if !ok {
         c.Talkers.AnyMessageUnauthorized(update)
         return "fail"
     }
-    league := dbmappings.Leagues{}
-    err = c.Db.Get(&league, c.Db.Rebind("SELECT * FROM leagues WHERE id=?"), player_raw.League_id)
+    league := dbmapping.League{}
+    err := c.Db.Get(&league, c.Db.Rebind("SELECT * FROM leagues WHERE id=?"), player_raw.League_id)
     if err != nil {
         log.Println(err)
     }
-    level := dbmappings.Levels{}
+    level := dbmapping.Level{}
     err = c.Db.Get(&level, c.Db.Rebind("SELECT * FROM levels WHERE id=?"), profile_raw.Level_id)
     if err != nil {
         log.Println(err)
     }
-    weapon := dbmappings.Weapons{}
+    weapon := dbmapping.Weapon{}
     if profile_raw.Weapon_id != 0 {
         err = c.Db.Get(&weapon, c.Db.Rebind("SELECT * FROM weapons WHERE id=?"), profile_raw.Weapon_id)
         if err != nil {
             log.Println(err)
         }
     }
-    p_pk := []dbmappings.ProfilesPokememes{}
+    p_pk := []dbmapping.ProfilePokememe{}
     err = c.Db.Select(&p_pk, c.Db.Rebind("SELECT * FROM profiles_pokememes WHERE profile_id=?"), profile_raw.Id)
     if err != nil {
         log.Println(err)
     }
-    pokememes := []dbmappings.Pokememes{}
+    pokememes := []dbmapping.Pokememe{}
     err = c.Db.Select(&pokememes, c.Db.Rebind("SELECT * FROM pokememes"))
     if err != nil {
         log.Println(err)

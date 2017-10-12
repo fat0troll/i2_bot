@@ -1,14 +1,14 @@
 // i2_bot – Instinct PokememBro Bot
 // Copyright (c) 2017 Vladimir "fat0troll" Hodakov
 
-package dbmappings
+package dbmapping
 
 import (
     // stdlib
     "time"
 )
 
-type Leagues struct {
+type League struct {
     Id              int             `db:"id"`
     Symbol          string          `db:"symbol"`
     Name            string          `db:"name"`

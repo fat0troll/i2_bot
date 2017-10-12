@@ -8,9 +8,10 @@ import (
     "log"
 )
 
-func (g *Getters) PossibilityRequiredPokeballs(location int, grade int, lvl int) int {
+func (g *Getters) PossibilityRequiredPokeballs(location int, grade int, lvl int) (float64, int) {
     var base_possibility float64 = 0.00
     var required_pokeballs int = 0
+    var percentile = 0.00
 
     if lvl > 3 {
         switch {
@@ -70,8 +71,9 @@ func (g *Getters) PossibilityRequiredPokeballs(location int, grade int, lvl int)
     }
 
     if base_possibility != 0 && number_of_pokememes != 0 {
-        required_pokeballs = int(1.0 / (base_possibility / float64(number_of_pokememes)))
+        percentile = base_possibility * 100.0 / float64(number_of_pokememes)
+        required_pokeballs = int(100.0 / percentile)
     }
 
-    return required_pokeballs
+    return percentile, required_pokeballs
 }

@@ -5,15 +5,11 @@ package router
 
 import (
     // stdlib
-    "fmt"
     "log"
     "regexp"
     "strings"
-    "time"
     // 3rd party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
-    // local
-    "../dbmappings"
 )
 
 type Router struct {}
@@ -23,31 +19,12 @@ type Router struct {}
 // If command doesn't exist, it's "fail"
 func (r *Router) RouteRequest(update tgbotapi.Update) string {
     text := update.Message.Text
-    user_id := update.Message.From.ID
 
-    player_raw := dbmappings.Players{}
-    err := c.Db.Get(&player_raw, c.Db.Rebind("SELECT * FROM players WHERE telegram_id=?"), user_id)
-    if err != nil {
-        log.Printf("Message user not found in database.")
-        log.Printf(err.Error())
-
-        // Create "nobody" user
-        player_raw.Telegram_id = user_id
-        player_raw.League_id = 0
-        player_raw.Squad_id = 0
-        player_raw.Status = "nobody"
-        player_raw.Created_at = time.Now().UTC()
-        player_raw.Updated_at = time.Now().UTC()
-        _, erradd := c.Db.NamedExec("INSERT INTO players VALUES(NULL, :telegram_id, :league_id, :squad_id, :status, :created_at, :updated_at)", &player_raw)
-        if erradd != nil {
-            log.Printf(erradd.Error())
-            return "fail"
-        }
-    } else {
-        log.Printf("Message user found in database.")
+    player_raw, ok := c.Getters.GetOrCreatePlayer(update.Message.From.ID)
+    if !ok {
+        // Silently fail
+        return "fail"
     }
-
-    fmt.Println(player_raw)
 
     // Regular expressions
     var durakMsg = regexp.MustCompile("(Д|д)(У|у)(Р|р)(А|а|Е|е|О|о)")

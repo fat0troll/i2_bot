@@ -17,3 +17,13 @@ func (t *Talkers) AnyMessageUnauthorized(update tgbotapi.Update) {
 
     c.Bot.Send(msg)
 }
+
+func (t *Talkers) GetterError(update tgbotapi.Update) {
+    error_message := "Ой, внутренняя ошибка в боте :(\n\n"
+    error_message += "Напиши @fat0troll, приложив форвардом последние сообщения до этого.\n"
+
+    msg := tgbotapi.NewMessage(update.Message.Chat.ID, error_message)
+    msg.ParseMode = "Markdown"
+
+    c.Bot.Send(msg)
+}

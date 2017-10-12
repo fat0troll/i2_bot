@@ -1,14 +1,14 @@
 // i2_bot – Instinct PokememBro Bot
 // Copyright (c) 2017 Vladimir "fat0troll" Hodakov
 
-package dbmappings
+package dbmapping
 
 import (
     // stdlib
     "time"
 )
 
-type Profiles struct {
+type Profile struct {
     Id                  int             `db:"id"`
     Player_id           int             `db:"player_id"`
     Nickname            string          `db:"nickname"`
