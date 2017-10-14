@@ -43,7 +43,7 @@ func (r *Router) RouteRequest(update tgbotapi.Update) string {
 
     // Forwards
     var pokememeMsg = regexp.MustCompile("(Уровень)(.+)(Опыт)(.+)\n(Элементы:)(.+)\n(.+)(💙MP)")
-    var profileMsg = regexp.MustCompile("(Онлайн: )(\\d+)\n(Турнир Лиг через)(.+)\n\n(.*)\n(Элементы)(.+)\n\n(.+)(Уровень)(.+)\n")
+    var profileMsg = regexp.MustCompile(`(Онлайн: )(\d+)\n(Турнир через)(.+)\n\n(.*)\n(Элементы)(.+)\n(.*)\n\n(.+)(Уровень)(.+)\n`)
 
     if update.Message.ForwardFrom != nil {
         if update.Message.ForwardFrom.ID != 360402625 {
