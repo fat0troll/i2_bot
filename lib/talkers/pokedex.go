@@ -15,12 +15,12 @@ import (
 
 // Internal functions
 
-func (t *Talkers) pokememesListing(update tgbotapi.Update, page int, pokememes_full []dbmapping.PokememeFull) {
+func (t *Talkers) pokememesListing(update tgbotapi.Update, page int, pokememesArray []dbmapping.PokememeFull) {
 	message := "*Известные боту покемемы*\n"
 	message += "Список отсортирован по грейду и алфавиту.\n"
-	message += "Покедекс: " + strconv.Itoa(len(pokememes_full)) + " / 206\n"
+	message += "Покедекс: " + strconv.Itoa(len(pokememesArray)) + " / 206\n"
 	message += "Отображаем покемемов с " + strconv.Itoa(((page-1)*50)+1) + " по " + strconv.Itoa(page*50) + "\n"
-	if len(pokememes_full) > page*50 {
+	if len(pokememesArray) > page*50 {
 		message += "Переход на следующую страницу: /pokedeks" + strconv.Itoa(page+1)
 	}
 	if page > 1 {
@@ -28,18 +28,18 @@ func (t *Talkers) pokememesListing(update tgbotapi.Update, page int, pokememes_f
 	}
 	message += "\n\n"
 
-	for i := range pokememes_full {
+	for i := range pokememesArray {
 		if (i+1 > 50*(page-1)) && (i+1 < (50*page)+1) {
-			pk := pokememes_full[i].Pokememe
-			pk_e := pokememes_full[i].Elements
+			pk := pokememesArray[i].Pokememe
+			pkE := pokememesArray[i].Elements
 			message += strconv.Itoa(i+1) + ". " + strconv.Itoa(pk.Grade)
 			message += "⃣ *" + pk.Name
 			message += "* (" + c.Parsers.ReturnPoints(pk.HP) + "-" + c.Parsers.ReturnPoints(pk.MP) + ") ⚔️ *"
 			message += c.Parsers.ReturnPoints(pk.Attack) + "* \\["
-			for j := range pk_e {
-				message += pk_e[j].Symbol
+			for j := range pkE {
+				message += pkE[j].Symbol
 			}
-			message += "] " + c.Parsers.ReturnPoints(pk.Price) + "$ /pk" + strconv.Itoa(pk.Id)
+			message += "] " + c.Parsers.ReturnPoints(pk.Price) + "$ /pk" + strconv.Itoa(pk.ID)
 			message += "\n"
 		}
 	}
@@ -53,24 +53,26 @@ func (t *Talkers) pokememesListing(update tgbotapi.Update, page int, pokememes_f
 
 // External functions
 
+// PokememesList lists all known pokememes
 func (t *Talkers) PokememesList(update tgbotapi.Update, page int) {
-	pokememes_full, ok := c.Getters.GetPokememes()
+	pokememesArray, ok := c.Getters.GetPokememes()
 	if !ok {
 		t.GetterError(update)
 	} else {
-		t.pokememesListing(update, page, pokememes_full)
+		t.pokememesListing(update, page, pokememesArray)
 	}
 }
 
-func (t *Talkers) PokememeInfo(update tgbotapi.Update, player_raw dbmapping.Player) string {
-	pokememe_number := strings.Replace(update.Message.Text, "/pk", "", 1)
-	var calculate_possibilites bool = true
-	profile_raw, ok := c.Getters.GetProfile(player_raw.Id)
+// PokememeInfo shows information about single pokememe based on internal ID
+func (t *Talkers) PokememeInfo(update tgbotapi.Update, playerRaw dbmapping.Player) string {
+	pokememeNumber := strings.Replace(update.Message.Text, "/pk", "", 1)
+	var calculatePossibilites = true
+	profileRaw, ok := c.Getters.GetProfile(playerRaw.ID)
 	if !ok {
-		calculate_possibilites = false
+		calculatePossibilites = false
 	}
 
-	pokememe, ok := c.Getters.GetPokememeByID(pokememe_number)
+	pokememe, ok := c.Getters.GetPokememeByID(pokememeNumber)
 	if !ok {
 		return "fail"
 	}
@@ -106,11 +108,11 @@ func (t *Talkers) PokememeInfo(update tgbotapi.Update, player_raw dbmapping.Play
 		}
 	}
 
-	if calculate_possibilites {
-		if (pk.Grade < profile_raw.Level_id+2) && (pk.Grade > profile_raw.Level_id-3) {
+	if calculatePossibilites {
+		if (pk.Grade < profileRaw.LevelID+2) && (pk.Grade > profileRaw.LevelID-3) {
 			message += "\nВероятность поимки:"
 			for i := range pokememe.Locations {
-				percentile, pokeballs := c.Getters.PossibilityRequiredPokeballs(pokememe.Locations[i].Id, pk.Grade, profile_raw.Level_id)
+				percentile, pokeballs := c.Getters.PossibilityRequiredPokeballs(pokememe.Locations[i].ID, pk.Grade, profileRaw.LevelID)
 				message += "\n" + pokememe.Locations[i].Name + " – "
 				message += strconv.FormatFloat(percentile, 'f', 2, 64) + "% или "
 				message += strconv.Itoa(pokeballs) + "⭕"
@@ -118,7 +120,7 @@ func (t *Talkers) PokememeInfo(update tgbotapi.Update, player_raw dbmapping.Play
 		}
 	}
 
-	message += "\n" + pk.Image_url
+	message += "\n" + pk.ImageURL
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	keyboard := tgbotapi.InlineKeyboardMarkup{}

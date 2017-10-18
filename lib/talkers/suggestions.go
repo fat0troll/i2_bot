@@ -13,8 +13,9 @@ import (
 	"../dbmapping"
 )
 
-func (t *Talkers) BestPokememesList(update tgbotapi.Update, player_raw dbmapping.Player) string {
-	pokememes, ok := c.Getters.GetBestPokememes(player_raw.Id)
+// BestPokememesList shows list for catching based on player league and grade
+func (t *Talkers) BestPokememesList(update tgbotapi.Update, playerRaw dbmapping.Player) string {
+	pokememes, ok := c.Getters.GetBestPokememes(playerRaw.ID)
 	if !ok {
 		log.Printf("Cannot get pokememes from getter!")
 		return "fail"
@@ -23,20 +24,20 @@ func (t *Talkers) BestPokememesList(update tgbotapi.Update, player_raw dbmapping
 	message := "*Лучшие покемемы для ловли*\n\n"
 	for i := range pokememes {
 		pk := pokememes[i].Pokememe
-		pk_l := pokememes[i].Locations
-		pk_e := pokememes[i].Elements
+		pkL := pokememes[i].Locations
+		pkE := pokememes[i].Elements
 		message += strconv.Itoa(pk.Grade) + "⃣ "
 		message += pk.Name + " (⚔"
 		message += c.Parsers.ReturnPoints(pk.Attack)
 		message += ", 🛡" + c.Parsers.ReturnPoints(pk.Defence) + ")"
-		for i := range pk_e {
-			message += pk_e[i].Symbol
+		for i := range pkE {
+			message += pkE[i].Symbol
 		}
-		message += " /pk" + strconv.Itoa(pk.Id) + "\n"
+		message += " /pk" + strconv.Itoa(pk.ID) + "\n"
 		message += "Локации: "
-		for i := range pk_l {
-			message += pk_l[i].Symbol + pk_l[i].Name
-			if i+1 < len(pk_l) {
+		for i := range pkL {
+			message += pkL[i].Symbol + pkL[i].Name
+			if i+1 < len(pkL) {
 				message += ", "
 			}
 		}

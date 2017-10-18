@@ -14,6 +14,7 @@ import (
 	"../config"
 )
 
+// BotInit initializes connection to Telegram
 func BotInit(cfg *config.Config) *tgbotapi.BotAPI {
 	bot, err := tgbotapi.NewBotAPI(cfg.Telegram.APIToken)
 	if err != nil {
@@ -28,6 +29,7 @@ func BotInit(cfg *config.Config) *tgbotapi.BotAPI {
 	return bot
 }
 
+// DBInit initializes database connection
 func DBInit(cfg *config.Config) *sqlx.DB {
 	database, err := sqlx.Connect("mysql", cfg.Database.User+":"+cfg.Database.Password+"@tcp("+cfg.Database.Host+":"+cfg.Database.Port+")/"+cfg.Database.Database+"?parseTime=true&charset=utf8mb4,utf8")
 	if err != nil {

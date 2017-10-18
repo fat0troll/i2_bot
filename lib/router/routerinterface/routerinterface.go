@@ -8,6 +8,7 @@ import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
+// RouterInterface implements Router for importing via appcontext.
 type RouterInterface interface {
 	Init()
 	RouteRequest(update tgbotapi.Update) string

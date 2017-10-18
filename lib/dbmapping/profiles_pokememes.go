@@ -8,11 +8,12 @@ import (
 	"time"
 )
 
+// ProfilePokememe is a struct, which represents `profiles_pokememes` table item in databse.
 type ProfilePokememe struct {
-	Id              int       `db:"id"`
-	Profile_id      int       `db:"profile_id"`
-	Pokememe_id     int       `db:"pokememe_id"`
-	Pokememe_lvl    int       `db:"pokememe_lvl"`
-	Pokememe_rarity string    `db:"pokememe_rarity"`
-	Created_at      time.Time `db:"created_at"`
+	ID             int       `db:"id"`
+	ProfileID      int       `db:"profile_id"`
+	PokememeID     int       `db:"pokememe_id"`
+	PokememeLevel  int       `db:"pokememe_lvl"`
+	PokememeRarity string    `db:"pokememe_rarity"`
+	CreatedAt      time.Time `db:"created_at"`
 }

@@ -8,9 +8,10 @@ import (
 	"time"
 )
 
+// League is a struct, which represents `leagues` table item in databse.
 type League struct {
-	Id         int        `db:"id"`
-	Symbol     string     `db:"symbol"`
-	Name       string     `db:"name"`
-	Created_at *time.Time `db:"created_at"`
+	ID        int        `db:"id"`
+	Symbol    string     `db:"symbol"`
+	Name      string     `db:"name"`
+	CreatedAt *time.Time `db:"created_at"`
 }

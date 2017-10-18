@@ -8,12 +8,13 @@ import (
 	"time"
 )
 
+// Player is a struct, which represents `players` table item in databse.
 type Player struct {
-	Id          int       `db:"id"`
-	Telegram_id int       `db:"telegram_id"`
-	League_id   int       `db:"league_id"`
-	Squad_id    int       `db:"squad_id"`
-	Status      string    `db:"status"`
-	Created_at  time.Time `db:"created_at"`
-	Updated_at  time.Time `db:"updated_at"`
+	ID         int       `db:"id"`
+	TelegramID int       `db:"telegram_id"`
+	LeagueID   int       `db:"league_id"`
+	SquadID    int       `db:"squad_id"`
+	Status     string    `db:"status"`
+	CreatedAt  time.Time `db:"created_at"`
+	UpdatedAt  time.Time `db:"updated_at"`
 }

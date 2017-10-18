@@ -10,29 +10,26 @@ import (
 	"../../dbmapping"
 )
 
+// TalkersInterface implements Talkers for importing via appcontex
 type TalkersInterface interface {
 	Init()
-	// Commands
 	HelloMessageUnauthorized(update tgbotapi.Update)
-	HelloMessageAuthorized(update tgbotapi.Update, player_raw dbmapping.Player)
+	HelloMessageAuthorized(update tgbotapi.Update, playerRaw dbmapping.Player)
 	HelpMessage(update tgbotapi.Update)
 	PokememesList(update tgbotapi.Update, page int)
-	PokememeInfo(update tgbotapi.Update, player_raw dbmapping.Player) string
-	BestPokememesList(update tgbotapi.Update, player_raw dbmapping.Player) string
+	PokememeInfo(update tgbotapi.Update, playerRaw dbmapping.Player) string
+	BestPokememesList(update tgbotapi.Update, playerRaw dbmapping.Player) string
 
-	// Returns
 	PokememeAddSuccessMessage(update tgbotapi.Update)
 	PokememeAddDuplicateMessage(update tgbotapi.Update)
 	PokememeAddFailureMessage(update tgbotapi.Update)
 	ProfileAddSuccessMessage(update tgbotapi.Update)
 	ProfileAddFailureMessage(update tgbotapi.Update)
-	ProfileMessage(update tgbotapi.Update, player_raw dbmapping.Player) string
+	ProfileMessage(update tgbotapi.Update, playerRaw dbmapping.Player) string
 
-	// Errors
 	AnyMessageUnauthorized(update tgbotapi.Update)
 	GetterError(update tgbotapi.Update)
 
-	// Easter eggs
 	DurakMessage(update tgbotapi.Update)
 	MatMessage(update tgbotapi.Update)
 }

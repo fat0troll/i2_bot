@@ -13,8 +13,10 @@ var (
 	c *appcontext.Context
 )
 
+// Parsers is a function-handling struct for package parsers
 type Parsers struct{}
 
+// New is an initialization function for appcontext
 func New(ac *appcontext.Context) {
 	c = ac
 	p := &Parsers{}

@@ -29,6 +29,7 @@ func (m *Migrations) Init() {
 	goose.AddNamedMigration("12_create_profile_relations.go", CreateProfileRelationsUp, CreateProfileRelationsDown)
 	goose.AddNamedMigration("13_create_weapons_and_add_wealth.go", CreateWeaponsAndAddWealthUp, CreateWeaponsAndAddWealthDown)
 	goose.AddNamedMigration("14_fix_time_element.go", FixTimeElementUp, FixTimeElementDown)
+	goose.AddNamedMigration("15_create_chats.go", CreateChatsUp, CreateChatsDown)
 }
 
 func (m *Migrations) Migrate() error {

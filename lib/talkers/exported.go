@@ -15,14 +15,17 @@ var (
 	c *appcontext.Context
 )
 
+// Talkers is a function-handling struct for talkers
 type Talkers struct{}
 
+// New is a appcontext initialization function
 func New(ac *appcontext.Context) {
 	c = ac
 	m := &Talkers{}
 	c.RegisterTalkersInterface(talkersinterface.TalkersInterface(m))
 }
 
+// Init is an initialization function for talkers
 func (t *Talkers) Init() {
 	log.Printf("Initializing responders...")
 }

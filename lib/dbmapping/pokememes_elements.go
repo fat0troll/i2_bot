@@ -8,9 +8,10 @@ import (
 	"time"
 )
 
+// PokememeElement is a struct, which represents `pokememes_elements` table item in databse.
 type PokememeElement struct {
-	Id          int       `db:"id"`
-	Pokememe_id int       `db:"pokememe_id"`
-	Element_id  int       `db:"element_id"`
-	Created_at  time.Time `db:"created_at"`
+	ID         int       `db:"id"`
+	PokememeID int       `db:"pokememe_id"`
+	ElementID  int       `db:"element_id"`
+	CreatedAt  time.Time `db:"created_at"`
 }

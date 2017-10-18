@@ -14,168 +14,171 @@ import (
 // Internal functions
 
 func (g *Getters) formFullPokememes(pokememes []dbmapping.Pokememe) ([]dbmapping.PokememeFull, bool) {
-	pokememes_full := []dbmapping.PokememeFull{}
+	pokememesArray := []dbmapping.PokememeFull{}
 	elements := []dbmapping.Element{}
 	err := c.Db.Select(&elements, "SELECT * FROM elements")
 	if err != nil {
 		log.Println(err)
-		return pokememes_full, false
+		return pokememesArray, false
 	}
 	locations := []dbmapping.Location{}
 	err = c.Db.Select(&locations, "SELECT * FROM locations")
 	if err != nil {
 		log.Println(err)
-		return pokememes_full, false
+		return pokememesArray, false
 	}
-	pokememes_elements := []dbmapping.PokememeElement{}
-	err = c.Db.Select(&pokememes_elements, "SELECT * FROM pokememes_elements")
+	pokememesElements := []dbmapping.PokememeElement{}
+	err = c.Db.Select(&pokememesElements, "SELECT * FROM pokememes_elements")
 	if err != nil {
 		log.Println(err)
-		return pokememes_full, false
+		return pokememesArray, false
 	}
-	pokememes_locations := []dbmapping.PokememeLocation{}
-	err = c.Db.Select(&pokememes_locations, "SELECT * FROM pokememes_locations")
+	pokememesLocations := []dbmapping.PokememeLocation{}
+	err = c.Db.Select(&pokememesLocations, "SELECT * FROM pokememes_locations")
 	if err != nil {
 		log.Println(err)
-		return pokememes_full, false
+		return pokememesArray, false
 	}
 
 	for i := range pokememes {
-		full_pokememe := dbmapping.PokememeFull{}
-		elements_listed := []dbmapping.Element{}
-		locations_listed := []dbmapping.Location{}
+		fullPokememe := dbmapping.PokememeFull{}
+		elementsListed := []dbmapping.Element{}
+		locationsListed := []dbmapping.Location{}
 
-		for j := range pokememes_locations {
-			if pokememes_locations[j].Pokememe_id == pokememes[i].Id {
+		for j := range pokememesLocations {
+			if pokememesLocations[j].PokememeID == pokememes[i].ID {
 				for l := range locations {
-					if pokememes_locations[j].Location_id == locations[l].Id {
-						locations_listed = append(locations_listed, locations[l])
+					if pokememesLocations[j].LocationID == locations[l].ID {
+						locationsListed = append(locationsListed, locations[l])
 					}
 				}
 			}
 		}
 
-		for k := range pokememes_elements {
-			if pokememes_elements[k].Pokememe_id == pokememes[i].Id {
+		for k := range pokememesElements {
+			if pokememesElements[k].PokememeID == pokememes[i].ID {
 				for e := range elements {
-					if pokememes_elements[k].Element_id == elements[e].Id {
-						elements_listed = append(elements_listed, elements[e])
+					if pokememesElements[k].ElementID == elements[e].ID {
+						elementsListed = append(elementsListed, elements[e])
 					}
 				}
 			}
 		}
 
-		full_pokememe.Pokememe = pokememes[i]
-		full_pokememe.Elements = elements_listed
-		full_pokememe.Locations = locations_listed
+		fullPokememe.Pokememe = pokememes[i]
+		fullPokememe.Elements = elementsListed
+		fullPokememe.Locations = locationsListed
 
-		pokememes_full = append(pokememes_full, full_pokememe)
+		pokememesArray = append(pokememesArray, fullPokememe)
 	}
 
-	return pokememes_full, true
+	return pokememesArray, true
 }
 
 // External functions
 
+// GetPokememes returns all existing pokememes, known by bot
 func (g *Getters) GetPokememes() ([]dbmapping.PokememeFull, bool) {
-	pokememes_full := []dbmapping.PokememeFull{}
+	pokememesArray := []dbmapping.PokememeFull{}
 	pokememes := []dbmapping.Pokememe{}
 	err := c.Db.Select(&pokememes, "SELECT * FROM pokememes ORDER BY grade asc, name asc")
 	if err != nil {
 		log.Println(err)
-		return pokememes_full, false
+		return pokememesArray, false
 	}
 
-	pokememes_full, ok := g.formFullPokememes(pokememes)
-	return pokememes_full, ok
+	pokememesArray, ok := g.formFullPokememes(pokememes)
+	return pokememesArray, ok
 }
 
-func (g *Getters) GetBestPokememes(player_id int) ([]dbmapping.PokememeFull, bool) {
-	pokememes_full := []dbmapping.PokememeFull{}
-	player_raw, ok := g.GetPlayerByID(player_id)
+// GetBestPokememes returns all pokememes, which will be good for player to catch
+func (g *Getters) GetBestPokememes(playerID int) ([]dbmapping.PokememeFull, bool) {
+	pokememesArray := []dbmapping.PokememeFull{}
+	playerRaw, ok := g.GetPlayerByID(playerID)
 	if !ok {
-		return pokememes_full, ok
+		return pokememesArray, ok
 	}
-	profile_raw, ok := g.GetProfile(player_id)
+	profileRaw, ok := g.GetProfile(playerID)
 	if !ok {
-		return pokememes_full, ok
+		return pokememesArray, ok
 	}
 
-	if player_raw.League_id == 0 {
-		return pokememes_full, false
+	if playerRaw.LeagueID == 0 {
+		return pokememesArray, false
 	}
 
 	// TODO: make it more complicated
 	pokememes := []dbmapping.Pokememe{}
-	err := c.Db.Select(&pokememes, c.Db.Rebind("SELECT p.* FROM pokememes p, pokememes_elements pe, elements e WHERE e.league_id = ? AND p.grade = ? AND pe.element_id = e.id AND pe.pokememe_id = p.id ORDER BY p.attack DESC"), player_raw.League_id, profile_raw.Level_id+1)
+	err := c.Db.Select(&pokememes, c.Db.Rebind("SELECT p.* FROM pokememes p, pokememes_elements pe, elements e WHERE e.league_id = ? AND p.grade = ? AND pe.element_id = e.id AND pe.pokememe_id = p.id ORDER BY p.attack DESC"), playerRaw.LeagueID, profileRaw.LevelID+1)
 	if err != nil {
 		log.Println(err)
-		return pokememes_full, false
+		return pokememesArray, false
 	}
 
-	pokememes_full, ok = g.formFullPokememes(pokememes)
-	return pokememes_full, ok
+	pokememesArray, ok = g.formFullPokememes(pokememes)
+	return pokememesArray, ok
 }
 
-func (g *Getters) GetPokememeByID(pokememe_id string) (dbmapping.PokememeFull, bool) {
-	pokememe_full := dbmapping.PokememeFull{}
+// GetPokememeByUD returns single pokememe based on internal ID in database
+func (g *Getters) GetPokememeByID(pokememeID string) (dbmapping.PokememeFull, bool) {
+	fullPokememe := dbmapping.PokememeFull{}
 	pokememe := dbmapping.Pokememe{}
-	err := c.Db.Get(&pokememe, c.Db.Rebind("SELECT * FROM pokememes WHERE id=?"), pokememe_id)
+	err := c.Db.Get(&pokememe, c.Db.Rebind("SELECT * FROM pokememes WHERE id=?"), pokememeID)
 	if err != nil {
 		log.Println(err)
-		return pokememe_full, false
+		return fullPokememe, false
 	}
 	elements := []dbmapping.Element{}
 	err = c.Db.Select(&elements, "SELECT * FROM elements")
 	if err != nil {
 		log.Println(err)
-		return pokememe_full, false
+		return fullPokememe, false
 	}
 	locations := []dbmapping.Location{}
 	err = c.Db.Select(&locations, "SELECT * FROM locations")
 	if err != nil {
 		log.Println(err)
-		return pokememe_full, false
+		return fullPokememe, false
 	}
-	pokememes_elements := []dbmapping.PokememeElement{}
-	err = c.Db.Select(&pokememes_elements, "SELECT * FROM pokememes_elements WHERE pokememe_id='"+strconv.Itoa(pokememe.Id)+"'")
+	pokememesElements := []dbmapping.PokememeElement{}
+	err = c.Db.Select(&pokememesElements, "SELECT * FROM pokememes_elements WHERE pokememe_id='"+strconv.Itoa(pokememe.ID)+"'")
 	if err != nil {
 		log.Println(err)
-		return pokememe_full, false
+		return fullPokememe, false
 	}
-	pokememes_locations := []dbmapping.PokememeLocation{}
-	err = c.Db.Select(&pokememes_locations, "SELECT * FROM pokememes_locations WHERE pokememe_id='"+strconv.Itoa(pokememe.Id)+"'")
+	pokememesLocations := []dbmapping.PokememeLocation{}
+	err = c.Db.Select(&pokememesLocations, "SELECT * FROM pokememes_locations WHERE pokememe_id='"+strconv.Itoa(pokememe.ID)+"'")
 	if err != nil {
 		log.Println(err)
-		return pokememe_full, false
+		return fullPokememe, false
 	}
 
-	elements_listed := []dbmapping.Element{}
-	locations_listed := []dbmapping.Location{}
+	elementsListed := []dbmapping.Element{}
+	locationsListed := []dbmapping.Location{}
 
-	for j := range pokememes_locations {
-		if pokememes_locations[j].Pokememe_id == pokememe.Id {
+	for j := range pokememesLocations {
+		if pokememesLocations[j].PokememeID == pokememe.ID {
 			for l := range locations {
-				if pokememes_locations[j].Location_id == locations[l].Id {
-					locations_listed = append(locations_listed, locations[l])
+				if pokememesLocations[j].LocationID == locations[l].ID {
+					locationsListed = append(locationsListed, locations[l])
 				}
 			}
 		}
 	}
 
-	for k := range pokememes_elements {
-		if pokememes_elements[k].Pokememe_id == pokememe.Id {
+	for k := range pokememesElements {
+		if pokememesElements[k].PokememeID == pokememe.ID {
 			for e := range elements {
-				if pokememes_elements[k].Element_id == elements[e].Id {
-					elements_listed = append(elements_listed, elements[e])
+				if pokememesElements[k].ElementID == elements[e].ID {
+					elementsListed = append(elementsListed, elements[e])
 				}
 			}
 		}
 	}
 
-	pokememe_full.Pokememe = pokememe
-	pokememe_full.Elements = elements_listed
-	pokememe_full.Locations = locations_listed
+	fullPokememe.Pokememe = pokememe
+	fullPokememe.Elements = elementsListed
+	fullPokememe.Locations = locationsListed
 
-	return pokememe_full, true
+	return fullPokememe, true
 }

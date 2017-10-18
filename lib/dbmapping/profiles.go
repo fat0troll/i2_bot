@@ -8,18 +8,19 @@ import (
 	"time"
 )
 
+// Profile is a struct, which represents `profiles` table item in databse.
 type Profile struct {
-	Id               int       `db:"id"`
-	Player_id        int       `db:"player_id"`
+	ID               int       `db:"id"`
+	PlayerID         int       `db:"player_id"`
 	Nickname         string    `db:"nickname"`
 	TelegramNickname string    `db:"telegram_nickname"`
-	Level_id         int       `db:"level_id"`
+	LevelID          int       `db:"level_id"`
 	Pokeballs        int       `db:"pokeballs"`
 	Wealth           int       `db:"wealth"`
 	Exp              int       `db:"exp"`
-	Egg_exp          int       `db:"egg_exp"`
+	EggExp           int       `db:"egg_exp"`
 	Power            int       `db:"power"`
-	Weapon_id        int       `db:"weapon_id"`
+	WeaponID         int       `db:"weapon_id"`
 	Crystalls        int       `db:"crystalls"`
-	Created_at       time.Time `db:"created_at"`
+	CreatedAt        time.Time `db:"created_at"`
 }

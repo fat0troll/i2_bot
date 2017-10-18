@@ -16,48 +16,49 @@ import (
 
 // Internal functions
 
-func (p *Parsers) getPoints(points_str string) int {
+func (p *Parsers) getPoints(pointsStr string) int {
 	value := 0
-	if strings.HasSuffix(points_str, "K") {
-		value_num := strings.Replace(points_str, "K", "", 1)
-		value_float, _ := strconv.ParseFloat(value_num, 64)
-		value = int(value_float * 1000)
-	} else if strings.HasSuffix(points_str, "M") {
-		value_num := strings.Replace(points_str, "M", "", 1)
-		value_float, _ := strconv.ParseFloat(value_num, 64)
-		value = int(value_float * 1000000)
+	if strings.HasSuffix(pointsStr, "K") {
+		valueNumber := strings.Replace(pointsStr, "K", "", 1)
+		valueFloat, _ := strconv.ParseFloat(valueNumber, 64)
+		value = int(valueFloat * 1000)
+	} else if strings.HasSuffix(pointsStr, "M") {
+		valueNumber := strings.Replace(pointsStr, "M", "", 1)
+		valueFloat, _ := strconv.ParseFloat(valueNumber, 64)
+		value = int(valueFloat * 1000000)
 	} else {
-		value, _ = strconv.Atoi(points_str)
+		value, _ = strconv.Atoi(pointsStr)
 	}
 	return value
 }
 
 // External functions
 
-func (p *Parsers) ParsePokememe(text string, player_raw dbmapping.Player) string {
-	var defendable_pokememe bool = false
-	pokememe_info_strings := strings.Split(text, "\n")
-	pokememe_info_runed_strings := make([][]rune, 0)
-	for i := range pokememe_info_strings {
-		pokememe_info_runed_strings = append(pokememe_info_runed_strings, []rune(pokememe_info_strings[i]))
+// ParsePokememe parses pokememe, forwarded from PokememeBroBot, to database
+func (p *Parsers) ParsePokememe(text string, playerRaw dbmapping.Player) string {
+	var defendablePokememe = false
+	pokememeStringsArray := strings.Split(text, "\n")
+	pokememeRunesArray := make([][]rune, 0)
+	for i := range pokememeStringsArray {
+		pokememeRunesArray = append(pokememeRunesArray, []rune(pokememeStringsArray[i]))
 	}
 
-	if len(pokememe_info_runed_strings) == 13 {
-		defendable_pokememe = true
+	if len(pokememeRunesArray) == 13 {
+		defendablePokememe = true
 	}
 
 	// Getting elements
 	elements := []dbmapping.Element{}
-	element_emojis := make([]string, 0)
-	element_emojis = append(element_emojis, string(pokememe_info_runed_strings[4][11]))
-	if len(pokememe_info_runed_strings[4]) > 12 {
-		element_emojis = append(element_emojis, string(pokememe_info_runed_strings[4][13]))
+	elementEmojis := make([]string, 0)
+	elementEmojis = append(elementEmojis, string(pokememeRunesArray[4][11]))
+	if len(pokememeRunesArray[4]) > 12 {
+		elementEmojis = append(elementEmojis, string(pokememeRunesArray[4][13]))
 	}
-	if len(pokememe_info_runed_strings[4]) > 14 {
-		element_emojis = append(element_emojis, string(pokememe_info_runed_strings[4][15]))
+	if len(pokememeRunesArray[4]) > 14 {
+		elementEmojis = append(elementEmojis, string(pokememeRunesArray[4][15]))
 	}
 
-	err := c.Db.Select(&elements, "SELECT * FROM elements WHERE symbol IN ('"+strings.Join(element_emojis, "', '")+"')")
+	err := c.Db.Select(&elements, "SELECT * FROM elements WHERE symbol IN ('"+strings.Join(elementEmojis, "', '")+"')")
 	if err != nil {
 		log.Printf(err.Error())
 		return "fail"
@@ -65,10 +66,10 @@ func (p *Parsers) ParsePokememe(text string, player_raw dbmapping.Player) string
 
 	// Getting hit-points
 	hitPointsRx := regexp.MustCompile("(\\d|\\.)+(K|M)?")
-	hitPoints := hitPointsRx.FindAllString(string(pokememe_info_runed_strings[5]), -1)
+	hitPoints := hitPointsRx.FindAllString(string(pokememeRunesArray[5]), -1)
 	if len(hitPoints) != 3 {
 		log.Printf("Can't parse hitpoints!")
-		log.Println(pokememe_info_runed_strings[5])
+		log.Println(pokememeRunesArray[5])
 		return "fail"
 	}
 
@@ -80,26 +81,26 @@ func (p *Parsers) ParsePokememe(text string, player_raw dbmapping.Player) string
 	purchaseable := false
 	image := ""
 
-	if defendable_pokememe {
+	if defendablePokememe {
 		// Actions for high-grade pokememes
-		defenceMatch := hitPointsRx.FindAllString(string(pokememe_info_runed_strings[6]), -1)
+		defenceMatch := hitPointsRx.FindAllString(string(pokememeRunesArray[6]), -1)
 		if len(defenceMatch) < 1 {
 			log.Printf("Can't parse defence!")
-			log.Println(pokememe_info_runed_strings[6])
+			log.Println(pokememeRunesArray[6])
 			return "fail"
 		}
 		defence = defenceMatch[0]
-		priceMatch := hitPointsRx.FindAllString(string(pokememe_info_runed_strings[7]), -1)
+		priceMatch := hitPointsRx.FindAllString(string(pokememeRunesArray[7]), -1)
 		if len(priceMatch) < 1 {
 			log.Printf("Can't parse price!")
-			log.Println(pokememe_info_runed_strings[7])
+			log.Println(pokememeRunesArray[7])
 			return "fail"
 		}
 		price = priceMatch[0]
-		locationsPrepare := strings.Split(string(pokememe_info_runed_strings[8]), ": ")
+		locationsPrepare := strings.Split(string(pokememeRunesArray[8]), ": ")
 		if len(locationsPrepare) < 2 {
 			log.Printf("Can't parse locations!")
-			log.Println(pokememe_info_runed_strings[8])
+			log.Println(pokememeRunesArray[8])
 			return "fail"
 		}
 		locationsNames := strings.Split(locationsPrepare[1], ", ")
@@ -114,24 +115,24 @@ func (p *Parsers) ParsePokememe(text string, player_raw dbmapping.Player) string
 			log.Printf(err2.Error())
 			return "fail"
 		}
-		if strings.HasSuffix(string(pokememe_info_runed_strings[9]), "Можно") {
+		if strings.HasSuffix(string(pokememeRunesArray[9]), "Можно") {
 			purchaseable = true
 		}
-		image = strings.Replace(string(pokememe_info_runed_strings[12]), " ", "", -1)
+		image = strings.Replace(string(pokememeRunesArray[12]), " ", "", -1)
 	} else {
 		// Actions for low-grade pokememes
 		defence = hitPoints[0]
-		priceMatch := hitPointsRx.FindAllString(string(pokememe_info_runed_strings[6]), -1)
+		priceMatch := hitPointsRx.FindAllString(string(pokememeRunesArray[6]), -1)
 		if len(priceMatch) < 1 {
 			log.Printf("Can't parse price!")
-			log.Println(pokememe_info_runed_strings[6])
+			log.Println(pokememeRunesArray[6])
 			return "fail"
 		}
 		price = priceMatch[0]
-		locationsPrepare := strings.Split(string(pokememe_info_runed_strings[7]), ": ")
+		locationsPrepare := strings.Split(string(pokememeRunesArray[7]), ": ")
 		if len(locationsPrepare) < 2 {
 			log.Printf("Can't parse locations!")
-			log.Println(pokememe_info_runed_strings[7])
+			log.Println(pokememeRunesArray[7])
 			return "fail"
 		}
 		locationsNames := strings.Split(locationsPrepare[1], ", ")
@@ -146,15 +147,15 @@ func (p *Parsers) ParsePokememe(text string, player_raw dbmapping.Player) string
 			log.Printf(err2.Error())
 			return "fail"
 		}
-		if strings.HasSuffix(string(pokememe_info_runed_strings[8]), "Можно") {
+		if strings.HasSuffix(string(pokememeRunesArray[8]), "Можно") {
 			purchaseable = true
 		}
-		image = strings.Replace(string(pokememe_info_runed_strings[11]), " ", "", -1)
+		image = strings.Replace(string(pokememeRunesArray[11]), " ", "", -1)
 	}
 
-	grade := string(pokememe_info_runed_strings[0][0])
-	name := string(pokememe_info_runed_strings[0][3:])
-	description := string(pokememe_info_runed_strings[1])
+	grade := string(pokememeRunesArray[0][0])
+	name := string(pokememeRunesArray[0][3:])
+	description := string(pokememeRunesArray[1])
 	log.Printf("Pokememe grade: " + grade)
 	log.Printf("Pokememe name: " + name)
 	log.Printf("Pokememe description: " + description)
@@ -189,29 +190,29 @@ func (p *Parsers) ParsePokememe(text string, player_raw dbmapping.Player) string
 		return "dup"
 	}
 
-	grade_int, _ := strconv.Atoi(grade)
-	attack_int := p.getPoints(hitPoints[0])
-	hp_int := p.getPoints(hitPoints[1])
-	mp_int := p.getPoints(hitPoints[2])
-	defence_int := p.getPoints(defence)
-	price_int := p.getPoints(price)
+	gradeInt, _ := strconv.Atoi(grade)
+	attackInt := p.getPoints(hitPoints[0])
+	hpInt := p.getPoints(hitPoints[1])
+	mpInt := p.getPoints(hitPoints[2])
+	defenceInt := p.getPoints(defence)
+	priceInt := p.getPoints(price)
 
-	pokememe.Grade = grade_int
+	pokememe.Grade = gradeInt
 	pokememe.Name = name
 	pokememe.Description = description
-	pokememe.Attack = attack_int
-	pokememe.HP = hp_int
-	pokememe.MP = mp_int
-	pokememe.Defence = defence_int
-	pokememe.Price = price_int
+	pokememe.Attack = attackInt
+	pokememe.HP = hpInt
+	pokememe.MP = mpInt
+	pokememe.Defence = defenceInt
+	pokememe.Price = priceInt
 	if purchaseable {
 		pokememe.Purchaseable = true
 	} else {
 		pokememe.Purchaseable = false
 	}
-	pokememe.Image_url = image
-	pokememe.Player_id = player_raw.Id
-	pokememe.Created_at = time.Now().UTC()
+	pokememe.ImageURL = image
+	pokememe.PlayerID = playerRaw.ID
+	pokememe.CreatedAt = time.Now().UTC()
 
 	_, err4 := c.Db.NamedExec("INSERT INTO pokememes VALUES(NULL, :grade, :name, :description, :attack, :hp, :mp, :defence, :price, :purchaseable, :image_url, :player_id, :created_at)", &pokememe)
 	if err4 != nil {
@@ -227,9 +228,9 @@ func (p *Parsers) ParsePokememe(text string, player_raw dbmapping.Player) string
 	}
 	for i := range elements {
 		link := dbmapping.PokememeElement{}
-		link.Pokememe_id = pokememe.Id
-		link.Element_id = elements[i].Id
-		link.Created_at = time.Now().UTC()
+		link.PokememeID = pokememe.ID
+		link.ElementID = elements[i].ID
+		link.CreatedAt = time.Now().UTC()
 
 		_, err6 := c.Db.NamedExec("INSERT INTO pokememes_elements VALUES(NULL, :pokememe_id, :element_id, :created_at)", &link)
 		if err6 != nil {
@@ -239,9 +240,9 @@ func (p *Parsers) ParsePokememe(text string, player_raw dbmapping.Player) string
 	}
 	for i := range locations {
 		link := dbmapping.PokememeLocation{}
-		link.Pokememe_id = pokememe.Id
-		link.Location_id = locations[i].Id
-		link.Created_at = time.Now().UTC()
+		link.PokememeID = pokememe.ID
+		link.LocationID = locations[i].ID
+		link.CreatedAt = time.Now().UTC()
 
 		_, err7 := c.Db.NamedExec("INSERT INTO pokememes_locations VALUES(NULL, :pokememe_id, :location_id, :created_at)", &link)
 		if err7 != nil {
@@ -253,14 +254,16 @@ func (p *Parsers) ParsePokememe(text string, player_raw dbmapping.Player) string
 	return "ok"
 }
 
+// ReturnPoints returns to output points (ht, attack, mp...) formatted
+// like in PokememBroBot itself.
 func (p *Parsers) ReturnPoints(points int) string {
 	if points < 1000 {
 		return strconv.Itoa(points)
 	} else if points < 1000000 {
-		float_num := float64(points) / 1000.0
-		return strconv.FormatFloat(float_num, 'f', -1, 64) + "K"
+		floatNum := float64(points) / 1000.0
+		return strconv.FormatFloat(floatNum, 'f', -1, 64) + "K"
 	} else {
-		float_num := float64(points) / 1000000.0
-		return strconv.FormatFloat(float_num, 'f', -1, 64) + "M"
+		floatNum := float64(points) / 1000000.0
+		return strconv.FormatFloat(floatNum, 'f', -1, 64) + "M"
 	}
 }

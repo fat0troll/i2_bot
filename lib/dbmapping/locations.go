@@ -8,9 +8,10 @@ import (
 	"time"
 )
 
+// Location is a struct, which represents `locations` table item in databse.
 type Location struct {
-	Id         int       `db:"id"`
-	Symbol     string    `db:"symbol"`
-	Name       string    `db:"name"`
-	Created_at time.Time `db:"created_at"`
+	ID        int       `db:"id"`
+	Symbol    string    `db:"symbol"`
+	Name      string    `db:"name"`
+	CreatedAt time.Time `db:"created_at"`
 }

@@ -10,13 +10,14 @@ import (
 	"../dbmapping"
 )
 
-func (g *Getters) GetProfile(player_id int) (dbmapping.Profile, bool) {
-	profile_raw := dbmapping.Profile{}
-	err := c.Db.Get(&profile_raw, c.Db.Rebind("SELECT * FROM profiles WHERE player_id=? ORDER BY created_at DESC LIMIT 1"), player_id)
+// GetProfile returns last saved profile of player
+func (g *Getters) GetProfile(playerID int) (dbmapping.Profile, bool) {
+	profileRaw := dbmapping.Profile{}
+	err := c.Db.Get(&profileRaw, c.Db.Rebind("SELECT * FROM profiles WHERE player_id=? ORDER BY created_at DESC LIMIT 1"), playerID)
 	if err != nil {
 		log.Println(err)
-		return profile_raw, false
+		return profileRaw, false
 	}
 
-	return profile_raw, true
+	return profileRaw, true
 }

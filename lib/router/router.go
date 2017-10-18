@@ -12,18 +12,27 @@ import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
+// Router is a function-handling struct for router
 type Router struct{}
 
-// This function will route requests to appropriative modules
-// It will return "ok" or "fail"
-// If command doesn't exist, it's "fail"
+// RouteRequest decides, what to do with user input
 func (r *Router) RouteRequest(update tgbotapi.Update) string {
 	text := update.Message.Text
 
-	player_raw, ok := c.Getters.GetOrCreatePlayer(update.Message.From.ID)
+	playerRaw, ok := c.Getters.GetOrCreatePlayer(update.Message.From.ID)
 	if !ok {
 		// Silently fail
 		return "fail"
+	}
+
+	chatID := update.Message.Chat.ID
+	fromID := int64(update.Message.From.ID)
+	log.Println(chatID)
+	log.Println(fromID)
+	if chatID == fromID {
+		log.Println("Private chat")
+	} else {
+		log.Println("Group")
 	}
 
 	// Regular expressions
@@ -50,11 +59,11 @@ func (r *Router) RouteRequest(update tgbotapi.Update) string {
 			log.Printf("Forward from another user or bot. Ignoring")
 		} else {
 			log.Printf("Forward from PokememBro bot! Processing...")
-			if player_raw.Id != 0 {
+			if playerRaw.ID != 0 {
 				switch {
 				case pokememeMsg.MatchString(text):
 					log.Printf("Pokememe posted!")
-					status := c.Parsers.ParsePokememe(text, player_raw)
+					status := c.Parsers.ParsePokememe(text, playerRaw)
 					switch status {
 					case "ok":
 						c.Talkers.PokememeAddSuccessMessage(update)
@@ -65,7 +74,7 @@ func (r *Router) RouteRequest(update tgbotapi.Update) string {
 					}
 				case profileMsg.MatchString(text):
 					log.Printf("Profile posted!")
-					status := c.Parsers.ParseProfile(update, player_raw)
+					status := c.Parsers.ParseProfile(update, playerRaw)
 					switch status {
 					case "ok":
 						c.Talkers.ProfileAddSuccessMessage(update)
@@ -83,8 +92,8 @@ func (r *Router) RouteRequest(update tgbotapi.Update) string {
 		// Direct messages from user
 		switch {
 		case helloMsg.MatchString(text):
-			if player_raw.Id != 0 {
-				c.Talkers.HelloMessageAuthorized(update, player_raw)
+			if playerRaw.ID != 0 {
+				c.Talkers.HelloMessageAuthorized(update, playerRaw)
 			} else {
 				c.Talkers.HelloMessageUnauthorized(update)
 			}
@@ -107,17 +116,17 @@ func (r *Router) RouteRequest(update tgbotapi.Update) string {
 				c.Talkers.PokememesList(update, 1)
 			}
 		case pokememeInfoMsg.MatchString(text):
-			c.Talkers.PokememeInfo(update, player_raw)
+			c.Talkers.PokememeInfo(update, playerRaw)
 		// Profile info
 		case meMsg.MatchString(text):
-			if player_raw.Id != 0 {
-				c.Talkers.ProfileMessage(update, player_raw)
+			if playerRaw.ID != 0 {
+				c.Talkers.ProfileMessage(update, playerRaw)
 			} else {
 				c.Talkers.AnyMessageUnauthorized(update)
 			}
 		// Suggestions
 		case bestMsg.MatchString(text):
-			c.Talkers.BestPokememesList(update, player_raw)
+			c.Talkers.BestPokememesList(update, playerRaw)
 		// Easter eggs
 		case huMsg.MatchString(text):
 			c.Talkers.MatMessage(update)

@@ -3,6 +3,7 @@
 
 package migrationsinterface
 
+// MigrationsInterface implements Migrations for importing via appcontext.
 type MigrationsInterface interface {
 	Init()
 	Migrate() error

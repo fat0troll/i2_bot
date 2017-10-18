@@ -18,6 +18,7 @@ import (
 	"../talkers/talkersinterface"
 )
 
+// Context is an application context struct
 type Context struct {
 	Cfg        *config.Config
 	Bot        *tgbotapi.BotAPI
@@ -29,6 +30,7 @@ type Context struct {
 	Getters    gettersinterface.GettersInterface
 }
 
+// Init is a initialization function for context
 func (c *Context) Init() {
 	c.Cfg = config.New()
 	c.Cfg.Init()
@@ -36,28 +38,34 @@ func (c *Context) Init() {
 	c.Db = connections.DBInit(c.Cfg)
 }
 
+// RegisterRouterInterface registering router interface in application
 func (c *Context) RegisterRouterInterface(ri routerinterface.RouterInterface) {
 	c.Router = ri
 	c.Router.Init()
 }
 
+// RegisterMigrationsInterface registering migrations interface in application
 func (c *Context) RegisterMigrationsInterface(mi migrationsinterface.MigrationsInterface) {
 	c.Migrations = mi
 	c.Migrations.Init()
 }
 
+// RegisterParsersInterface registering parsers interface in application
 func (c *Context) RegisterParsersInterface(pi parsersinterface.ParsersInterface) {
 	c.Parsers = pi
 }
 
+// RegisterTalkersInterface registering talkers interface in application
 func (c *Context) RegisterTalkersInterface(ti talkersinterface.TalkersInterface) {
 	c.Talkers = ti
 }
 
+// RegisterGettersInterface registering getters interface in application
 func (c *Context) RegisterGettersInterface(gi gettersinterface.GettersInterface) {
 	c.Getters = gi
 }
 
+// RunDatabaseMigrations applies migrations on bot's startup
 func (c *Context) RunDatabaseMigrations() {
 	c.Migrations.SetDialect("mysql")
 	c.Migrations.Migrate()

@@ -10,8 +10,9 @@ import (
 	"../../dbmapping"
 )
 
+// ParsersInterface implements Parsers for importing via appcontext.
 type ParsersInterface interface {
-	ParsePokememe(text string, player_raw dbmapping.Player) string
-	ParseProfile(update tgbotapi.Update, player_raw dbmapping.Player) string
+	ParsePokememe(text string, playerRaw dbmapping.Player) string
+	ParseProfile(update tgbotapi.Update, playerRaw dbmapping.Player) string
 	ReturnPoints(points int) string
 }

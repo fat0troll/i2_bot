@@ -12,6 +12,7 @@ import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
+// DurakMessage is an easter egg
 func (t *Talkers) DurakMessage(update tgbotapi.Update) {
 	log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 
@@ -30,6 +31,7 @@ func (t *Talkers) DurakMessage(update tgbotapi.Update) {
 	c.Bot.Send(msg)
 }
 
+// MatMessage is an easter rgg
 func (t *Talkers) MatMessage(update tgbotapi.Update) {
 	log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 

@@ -12,8 +12,9 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-const VERSION = "0.29"
+const VERSION = "0.295"
 
+// DatabaseConnection handles database connection settings in config.yaml
 type DatabaseConnection struct {
 	Host     string `yaml:"host"`
 	Port     string `yaml:"port"`
@@ -22,15 +23,18 @@ type DatabaseConnection struct {
 	Database string `yaml:"database"`
 }
 
+// TelegramConnection handles settings for Telegram connection in config.yaml
 type TelegramConnection struct {
 	APIToken string `yaml:"api_token"`
 }
 
+// Config is a struct which represents config.yaml structure
 type Config struct {
 	Telegram TelegramConnection `yaml:"telegram_connection"`
 	Database DatabaseConnection `yaml:"database_connection"`
 }
 
+// Init is a configuration initializer
 func (c *Config) Init() {
 	fname, _ := filepath.Abs("./config.yml")
 	yamlFile, yerr := ioutil.ReadFile(fname)
@@ -44,6 +48,7 @@ func (c *Config) Init() {
 	}
 }
 
+// New creates new empty Config object
 func New() *Config {
 	c := &Config{}
 	return c
