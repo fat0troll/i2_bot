@@ -4,25 +4,25 @@
 package talkers
 
 import (
-    // stdlib
-    "log"
-    // local
-    "../appcontext"
-    "../talkers/talkersinterface"
+	// stdlib
+	"log"
+	// local
+	"../appcontext"
+	"../talkers/talkersinterface"
 )
 
 var (
-    c *appcontext.Context
+	c *appcontext.Context
 )
 
-type Talkers struct {}
+type Talkers struct{}
 
 func New(ac *appcontext.Context) {
-    c = ac
-    m := &Talkers{}
-    c.RegisterTalkersInterface(talkersinterface.TalkersInterface(m))
+	c = ac
+	m := &Talkers{}
+	c.RegisterTalkersInterface(talkersinterface.TalkersInterface(m))
 }
 
 func (t *Talkers) Init() {
-    log.Printf("Initializing responders...")
+	log.Printf("Initializing responders...")
 }

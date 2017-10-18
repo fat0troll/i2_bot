@@ -4,15 +4,15 @@
 package migrations
 
 import (
-    // stdlib
-    "database/sql"
-    "log"
+	// stdlib
+	"database/sql"
+	"log"
 )
 
 // First migration, added for testing purposes
 
 func HelloUp(tx *sql.Tx) error {
-    log.Printf("Migration framework loaded. All systems are OK.")
+	log.Printf("Migration framework loaded. All systems are OK.")
 
-    return nil
+	return nil
 }

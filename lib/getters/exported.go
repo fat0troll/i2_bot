@@ -4,25 +4,25 @@
 package getters
 
 import (
-    // stdlib
-    "log"
-    // local
-    "../appcontext"
-    "../getters/gettersinterface"
+	// stdlib
+	"log"
+	// local
+	"../appcontext"
+	"../getters/gettersinterface"
 )
 
 var (
-    c *appcontext.Context
+	c *appcontext.Context
 )
 
-type Getters struct {}
+type Getters struct{}
 
 func New(ac *appcontext.Context) {
-    c = ac
-    g := &Getters{}
-    c.RegisterGettersInterface(gettersinterface.GettersInterface(g))
+	c = ac
+	g := &Getters{}
+	c.RegisterGettersInterface(gettersinterface.GettersInterface(g))
 }
 
 func (g *Getters) Init() {
-    log.Printf("Initializing getters...")
+	log.Printf("Initializing getters...")
 }

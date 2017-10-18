@@ -4,24 +4,24 @@
 package migrations
 
 import (
-    // stdlib
-    "database/sql"
+	// stdlib
+	"database/sql"
 )
 
 func FixTimeElementUp(tx *sql.Tx) error {
-    _, err := tx.Exec("UPDATE `elements` SET league_id=3 WHERE symbol='⌛';")
-    if err != nil {
-        return err
-    }
+	_, err := tx.Exec("UPDATE `elements` SET league_id=3 WHERE symbol='⌛';")
+	if err != nil {
+		return err
+	}
 
-    return nil
+	return nil
 }
 
 func FixTimeElementDown(tx *sql.Tx) error {
-    _, err := tx.Exec("UPDATE `elements` SET league_id=1 WHERE symbol='⌛';")
-    if err != nil {
-        return err
-    }
+	_, err := tx.Exec("UPDATE `elements` SET league_id=1 WHERE symbol='⌛';")
+	if err != nil {
+		return err
+	}
 
-    return nil
+	return nil
 }

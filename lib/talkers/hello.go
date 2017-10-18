@@ -4,30 +4,30 @@
 package talkers
 
 import (
-    // 3rd party
+	// 3rd party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	// local
 	"../dbmapping"
 )
 
 func (t *Talkers) HelloMessageUnauthorized(update tgbotapi.Update) {
-    hello_message := "*Бот Инстинкта приветствует тебя!*\n\n"
-    hello_message += "Для начала работы с ботом, пожалуйста, перешли от бота игры @PokememBroBot профиль героя.\n"
-    hello_message += "Все дальнейшие действия с ботом возможны лишь при наличии профиля игрока."
+	hello_message := "*Бот Инстинкта приветствует тебя!*\n\n"
+	hello_message += "Для начала работы с ботом, пожалуйста, перешли от бота игры @PokememBroBot профиль героя.\n"
+	hello_message += "Все дальнейшие действия с ботом возможны лишь при наличии профиля игрока."
 
-    msg := tgbotapi.NewMessage(update.Message.Chat.ID, hello_message)
-    msg.ParseMode = "Markdown"
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, hello_message)
+	msg.ParseMode = "Markdown"
 
-    c.Bot.Send(msg)
+	c.Bot.Send(msg)
 }
 
 func (t *Talkers) HelloMessageAuthorized(update tgbotapi.Update, player_raw dbmapping.Player) {
-    hello_message := "*Бот Инстинкта приветствует тебя. Снова.*\n\n"
-    hello_message += "Привет, " + update.Message.From.FirstName + " " + update.Message.From.LastName + "!\n"
+	hello_message := "*Бот Инстинкта приветствует тебя. Снова.*\n\n"
+	hello_message += "Привет, " + update.Message.From.FirstName + " " + update.Message.From.LastName + "!\n"
 	hello_message += "Последнее обновление информации о тебе: " + player_raw.Updated_at.Format("02.01.2006 15:04:05 -0700")
 	hello_message += "\nПосмотреть информацию о себе: /me"
-    msg := tgbotapi.NewMessage(update.Message.Chat.ID, hello_message)
-    msg.ParseMode = "Markdown"
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, hello_message)
+	msg.ParseMode = "Markdown"
 
-    c.Bot.Send(msg)
+	c.Bot.Send(msg)
 }

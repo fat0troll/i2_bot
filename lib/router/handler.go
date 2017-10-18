@@ -4,16 +4,16 @@
 package router
 
 import (
-    // 3rd party
+	// 3rd party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
-type RouterHandler struct {}
+type RouterHandler struct{}
 
 func (rh RouterHandler) Init() {
-    r.Init()
+	r.Init()
 }
 
 func (rh RouterHandler) RouteRequest(update tgbotapi.Update) string {
-    return r.RouteRequest(update)
+	return r.RouteRequest(update)
 }

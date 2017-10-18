@@ -4,19 +4,19 @@
 package parsers
 
 import (
-    // local
-    "../appcontext"
-    "../parsers/parsersinterface"
+	// local
+	"../appcontext"
+	"../parsers/parsersinterface"
 )
 
 var (
-    c *appcontext.Context
+	c *appcontext.Context
 )
 
-type Parsers struct {}
+type Parsers struct{}
 
 func New(ac *appcontext.Context) {
-    c = ac
-    p := &Parsers{}
-    c.RegisterParsersInterface(parsersinterface.ParsersInterface(p))
+	c = ac
+	p := &Parsers{}
+	c.RegisterParsersInterface(parsersinterface.ParsersInterface(p))
 }

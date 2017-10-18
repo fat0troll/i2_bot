@@ -4,7 +4,7 @@
 package migrationsinterface
 
 type MigrationsInterface interface {
-    Init()
-    Migrate() error
-    SetDialect(dialect string) error
+	Init()
+	Migrate() error
+	SetDialect(dialect string) error
 }

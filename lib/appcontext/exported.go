@@ -4,10 +4,10 @@
 package appcontext
 
 var (
-    a *Context
+	a *Context
 )
 
 func New() *Context {
-    c := &Context{}
-    return c
+	c := &Context{}
+	return c
 }

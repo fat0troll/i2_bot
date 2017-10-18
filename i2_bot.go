@@ -6,9 +6,9 @@ package main
 import (
 	// stdlib
 	"time"
-    // 3rd-party
+	// 3rd-party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
-    // local
+	// local
 	"./lib/appcontext"
 	"./lib/getters"
 	"./lib/migrations"
@@ -44,6 +44,6 @@ func main() {
 			continue
 		}
 
-        c.Router.RouteRequest(update)
+		c.Router.RouteRequest(update)
 	}
 }

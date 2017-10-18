@@ -4,23 +4,23 @@
 package router
 
 import (
-    // stdlib
-    "log"
-    // local
-    "../appcontext"
+	// stdlib
+	"log"
+	// local
+	"../appcontext"
 )
 
 var (
-    c *appcontext.Context
-    r *Router
+	c *appcontext.Context
+	r *Router
 )
 
 func New(ac *appcontext.Context) {
-    c = ac
-    rh := RouterHandler{}
-    c.RegisterRouterInterface(rh)
+	c = ac
+	rh := RouterHandler{}
+	c.RegisterRouterInterface(rh)
 }
 
 func (r *Router) Init() {
-    log.Printf("Initialized request router...")
+	log.Printf("Initialized request router...")
 }

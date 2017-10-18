@@ -4,14 +4,14 @@
 package dbmapping
 
 import (
-    // stdlib
-    "time"
+	// stdlib
+	"time"
 )
 
 type Element struct {
-    Id              int             `db:"id"`
-    Symbol          string          `db:"symbol"`
-    Name            string          `db:"name"`
-    League_id       int             `db:"league_id"`
-    Created_at      *time.Time      `db:"created_at"`
+	Id         int        `db:"id"`
+	Symbol     string     `db:"symbol"`
+	Name       string     `db:"name"`
+	League_id  int        `db:"league_id"`
+	Created_at *time.Time `db:"created_at"`
 }

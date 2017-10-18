@@ -4,11 +4,11 @@
 package routerinterface
 
 import (
-    // 3rd party
+	// 3rd party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 type RouterInterface interface {
-    Init()
-    RouteRequest(update tgbotapi.Update) string
+	Init()
+	RouteRequest(update tgbotapi.Update) string
 }

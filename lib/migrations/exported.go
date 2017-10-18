@@ -4,17 +4,17 @@
 package migrations
 
 import (
-    // local
-    "../appcontext"
-    "../migrations/migrationsinterface"
+	// local
+	"../appcontext"
+	"../migrations/migrationsinterface"
 )
 
 var (
-    c *appcontext.Context
+	c *appcontext.Context
 )
 
 func New(ac *appcontext.Context) {
-    c = ac
-    m := &Migrations{}
-    c.RegisterMigrationsInterface(migrationsinterface.MigrationsInterface(m))
+	c = ac
+	m := &Migrations{}
+	c.RegisterMigrationsInterface(migrationsinterface.MigrationsInterface(m))
 }

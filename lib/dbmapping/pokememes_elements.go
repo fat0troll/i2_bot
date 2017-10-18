@@ -4,13 +4,13 @@
 package dbmapping
 
 import (
-    // stdlib
-    "time"
+	// stdlib
+	"time"
 )
 
 type PokememeElement struct {
-    Id              int             `db:"id"`
-    Pokememe_id     int             `db:"pokememe_id"`
-    Element_id      int             `db:"element_id"`
-    Created_at      time.Time       `db:"created_at"`
+	Id          int       `db:"id"`
+	Pokememe_id int       `db:"pokememe_id"`
+	Element_id  int       `db:"element_id"`
+	Created_at  time.Time `db:"created_at"`
 }

@@ -4,13 +4,13 @@
 package dbmapping
 
 import (
-    // stdlib
-    "time"
+	// stdlib
+	"time"
 )
 
 type League struct {
-    Id              int             `db:"id"`
-    Symbol          string          `db:"symbol"`
-    Name            string          `db:"name"`
-    Created_at      *time.Time      `db:"created_at"`
+	Id         int        `db:"id"`
+	Symbol     string     `db:"symbol"`
+	Name       string     `db:"name"`
+	Created_at *time.Time `db:"created_at"`
 }
