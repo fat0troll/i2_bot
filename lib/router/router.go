@@ -25,15 +25,13 @@ func (r *Router) RouteRequest(update tgbotapi.Update) string {
 		return "fail"
 	}
 
-	chatID := update.Message.Chat.ID
-	fromID := int64(update.Message.From.ID)
-	log.Println(chatID)
-	log.Println(fromID)
-	if chatID == fromID {
-		log.Println("Private chat")
-	} else {
-		log.Println("Group")
+	chatRaw, ok := c.Getters.GetOrCreateChat(&update)
+	if !ok {
+		return "fail"
 	}
+
+	log.Printf("Received message from chat ")
+	log.Println(chatRaw.TelegramID)
 
 	// Regular expressions
 	var durakMsg = regexp.MustCompile("(Д|д)(У|у)(Р|р)(А|а|Е|е|О|о)")

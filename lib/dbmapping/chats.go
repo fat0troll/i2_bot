@@ -10,9 +10,9 @@ import (
 
 // Chat is a struct, which represents `chats` table item in databse.
 type Chat struct {
-	ID         int        `db:"id"`
-	Name       string     `db:"name"`
-	ChatType   bool       `db:"chat_type"`
-	TelegramID int        `db:"telegram_id"`
-	CreatedAt  *time.Time `db:"created_at"`
+	ID         int       `db:"id"`
+	Name       string    `db:"name"`
+	ChatType   string    `db:"chat_type"`
+	TelegramID int       `db:"telegram_id"`
+	CreatedAt  time.Time `db:"created_at"`
 }
