@@ -13,6 +13,9 @@ import (
 // GettersInterface implements Getters for importing via appcontext.
 type GettersInterface interface {
 	Init()
+	CreateBroadcastMessage(playerRaw *dbmapping.Player, messageBody string, broadcastType string) (dbmapping.Broadcast, bool)
+	GetBroadcastMessageByID(messageID int) (dbmapping.Broadcast, bool)
+	UpdateBroadcastMessageStatus(messageID int, messageStatus string) (dbmapping.Broadcast, bool)
 	GetOrCreateChat(update *tgbotapi.Update) (dbmapping.Chat, bool)
 	GetChatByID(chatID int) (dbmapping.Chat, bool)
 	GetAllPrivateChats() ([]dbmapping.Chat, bool)

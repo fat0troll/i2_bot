@@ -50,6 +50,7 @@ func (r *Router) RouteRequest(update tgbotapi.Update) string {
 
 	// Owner commands
 	var sendAllMsg = regexp.MustCompile("/send_all(.+)")
+	var sendConfirmMsg = regexp.MustCompile(`/send_confirm(\s)(\d+)`)
 
 	// Forwards
 	var pokememeMsg = regexp.MustCompile("(Уровень)(.+)(Опыт)(.+)\n(Элементы:)(.+)\n(.+)(💙MP)")
@@ -131,7 +132,13 @@ func (r *Router) RouteRequest(update tgbotapi.Update) string {
 		// Admin commands
 		case sendAllMsg.MatchString(text):
 			if c.Getters.PlayerBetterThan(&playerRaw, "admin") {
-				c.Talkers.AdminBroadcastMessage(update)
+				c.Talkers.AdminBroadcastMessageCompose(update, &playerRaw)
+			} else {
+				c.Talkers.AnyMessageUnauthorized(update)
+			}
+		case sendConfirmMsg.MatchString(text):
+			if c.Getters.PlayerBetterThan(&playerRaw, "admin") {
+				c.Talkers.AdminBroadcastMessageSend(update, &playerRaw)
 			} else {
 				c.Talkers.AnyMessageUnauthorized(update)
 			}

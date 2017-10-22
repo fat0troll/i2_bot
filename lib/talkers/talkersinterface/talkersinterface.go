@@ -30,7 +30,8 @@ type TalkersInterface interface {
 	AnyMessageUnauthorized(update tgbotapi.Update)
 	GetterError(update tgbotapi.Update)
 
-	AdminBroadcastMessage(update tgbotapi.Update) string
+	AdminBroadcastMessageCompose(update tgbotapi.Update, playerRaw *dbmapping.Player) string
+	AdminBroadcastMessageSend(update tgbotapi.Update, playerRaw *dbmapping.Player) string	
 
 	DurakMessage(update tgbotapi.Update)
 	MatMessage(update tgbotapi.Update)
