@@ -15,8 +15,10 @@ type GettersInterface interface {
 	Init()
 	GetOrCreateChat(update *tgbotapi.Update) (dbmapping.Chat, bool)
 	GetChatByID(chatID int) (dbmapping.Chat, bool)
+	GetAllPrivateChats() ([]dbmapping.Chat, bool)
 	GetOrCreatePlayer(telegramID int) (dbmapping.Player, bool)
 	GetPlayerByID(playerID int) (dbmapping.Player, bool)
+	PlayerBetterThan(playerRaw *dbmapping.Player, powerLevel string) bool
 	GetProfile(playerID int) (dbmapping.Profile, bool)
 	GetPokememes() ([]dbmapping.PokememeFull, bool)
 	GetBestPokememes(playerID int) ([]dbmapping.PokememeFull, bool)

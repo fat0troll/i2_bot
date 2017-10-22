@@ -50,3 +50,21 @@ func (g *Getters) GetOrCreatePlayer(telegramID int) (dbmapping.Player, bool) {
 
 	return playerRaw, true
 }
+
+// PlayerBetterThan return true, if profile is more or equal powerful than
+// provided power level
+func (g *Getters) PlayerBetterThan(playerRaw *dbmapping.Player, powerLevel string) bool {
+	var isBetter = false
+	switch playerRaw.Status {
+	case "owner":
+		isBetter = true
+	case "admin":
+		if powerLevel != "owner" {
+			isBetter = true
+		}
+	default:
+		isBetter = false
+	}
+
+	return isBetter
+}

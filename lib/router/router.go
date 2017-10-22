@@ -48,6 +48,9 @@ func (r *Router) RouteRequest(update tgbotapi.Update) string {
 	var meMsg = regexp.MustCompile("/me\\z")
 	var bestMsg = regexp.MustCompile("/best\\z")
 
+	// Owner commands
+	var sendAllMsg = regexp.MustCompile("/send_all(.+)")
+
 	// Forwards
 	var pokememeMsg = regexp.MustCompile("(Уровень)(.+)(Опыт)(.+)\n(Элементы:)(.+)\n(.+)(💙MP)")
 	var profileMsg = regexp.MustCompile(`(Онлайн: )(\d+)\n(Турнир через)(.+)\n\n(.*)\n(Элементы)(.+)\n(.*)\n\n(.+)(Уровень)(.+)\n`)
@@ -97,7 +100,7 @@ func (r *Router) RouteRequest(update tgbotapi.Update) string {
 			}
 		// Help
 		case helpMsg.MatchString(text):
-			c.Talkers.HelpMessage(update)
+			c.Talkers.HelpMessage(update, &playerRaw)
 		// Pokememes info
 		case pokedexMsg.MatchString(text):
 			if strings.HasSuffix(text, "1") {
@@ -125,6 +128,13 @@ func (r *Router) RouteRequest(update tgbotapi.Update) string {
 		// Suggestions
 		case bestMsg.MatchString(text):
 			c.Talkers.BestPokememesList(update, playerRaw)
+		// Admin commands
+		case sendAllMsg.MatchString(text):
+			if c.Getters.PlayerBetterThan(&playerRaw, "admin") {
+				c.Talkers.AdminBroadcastMessage(update)
+			} else {
+				c.Talkers.AnyMessageUnauthorized(update)
+			}
 		// Easter eggs
 		case huMsg.MatchString(text):
 			c.Talkers.MatMessage(update)

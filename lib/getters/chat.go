@@ -54,3 +54,16 @@ func (g *Getters) GetOrCreateChat(telegramUpdate *tgbotapi.Update) (dbmapping.Ch
 
 	return chatRaw, true
 }
+
+// GetAllPrivateChats returns all private chats
+func (g *Getters) GetAllPrivateChats() ([]dbmapping.Chat, bool) {
+	privateChats := []dbmapping.Chat{}
+
+	err := c.Db.Select(&privateChats, "SELECT * FROM chats WHERE chat_type='private'")
+	if err != nil {
+		log.Println(err)
+		return privateChats, false
+	}
+
+	return privateChats, true
+}

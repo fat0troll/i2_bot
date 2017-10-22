@@ -15,7 +15,7 @@ type TalkersInterface interface {
 	Init()
 	HelloMessageUnauthorized(update tgbotapi.Update)
 	HelloMessageAuthorized(update tgbotapi.Update, playerRaw dbmapping.Player)
-	HelpMessage(update tgbotapi.Update)
+	HelpMessage(update tgbotapi.Update, playerRaw *dbmapping.Player)
 	PokememesList(update tgbotapi.Update, page int)
 	PokememeInfo(update tgbotapi.Update, playerRaw dbmapping.Player) string
 	BestPokememesList(update tgbotapi.Update, playerRaw dbmapping.Player) string
@@ -29,6 +29,8 @@ type TalkersInterface interface {
 
 	AnyMessageUnauthorized(update tgbotapi.Update)
 	GetterError(update tgbotapi.Update)
+
+	AdminBroadcastMessage(update tgbotapi.Update) string
 
 	DurakMessage(update tgbotapi.Update)
 	MatMessage(update tgbotapi.Update)
