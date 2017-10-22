@@ -18,7 +18,7 @@ import (
 func (t *Talkers) pokememesListing(update tgbotapi.Update, page int, pokememesArray []dbmapping.PokememeFull) {
 	message := "*Известные боту покемемы*\n"
 	message += "Список отсортирован по грейду и алфавиту.\n"
-	message += "Покедекс: " + strconv.Itoa(len(pokememesArray)) + " / 206\n"
+	message += "Покедекс: " + strconv.Itoa(len(pokememesArray)) + " / 219\n"
 	message += "Отображаем покемемов с " + strconv.Itoa(((page-1)*50)+1) + " по " + strconv.Itoa(page*50) + "\n"
 	if len(pokememesArray) > page*50 {
 		message += "Переход на следующую страницу: /pokedeks" + strconv.Itoa(page+1)

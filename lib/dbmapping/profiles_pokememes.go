@@ -13,7 +13,7 @@ type ProfilePokememe struct {
 	ID             int       `db:"id"`
 	ProfileID      int       `db:"profile_id"`
 	PokememeID     int       `db:"pokememe_id"`
-	PokememeLevel  int       `db:"pokememe_lvl"`
+	PokememeAttack int       `db:"pokememe_attack"`
 	PokememeRarity string    `db:"pokememe_rarity"`
 	CreatedAt      time.Time `db:"created_at"`
 }

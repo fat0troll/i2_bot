@@ -52,12 +52,8 @@ func (t *Talkers) ProfileMessage(update tgbotapi.Update, playerRaw dbmapping.Pla
 	for i := range profilePokememes {
 		for j := range pokememes {
 			if profilePokememes[i].PokememeID == pokememes[j].ID {
-				singleAttack := float64(pokememes[j].Attack)
-				singleAttack = singleAttack * float64(profilePokememes[i].PokememeLevel)
-				if profilePokememes[i].PokememeRarity == "rare" {
-					singleAttack = singleAttack * 1.15
-				}
-				attackPokememes += int(singleAttack)
+				singleAttack := profilePokememes[i].PokememeAttack
+				attackPokememes += singleAttack
 			}
 		}
 	}
@@ -81,18 +77,13 @@ func (t *Talkers) ProfileMessage(update tgbotapi.Update, playerRaw dbmapping.Pla
 	for i := range profilePokememes {
 		for j := range pokememes {
 			if profilePokememes[i].PokememeID == pokememes[j].ID {
-				singleAttack := float64(pokememes[j].Attack)
-				singleAttack = singleAttack * float64(profilePokememes[i].PokememeLevel)
-				if profilePokememes[i].PokememeRarity == "rare" {
-					singleAttack = singleAttack * 1.15
-				}
-
 				message += "\n" + strconv.Itoa(pokememes[j].Grade)
 				message += "⃣ " + pokememes[j].Name
-				message += " +" + c.Parsers.ReturnPoints(int(singleAttack)) + "⚔"
+				message += " +" + c.Parsers.ReturnPoints(profilePokememes[i].PokememeAttack) + "⚔"
 			}
 		}
 	}
+	message += "\nСтоимость покемемов на руках: " + c.Parsers.ReturnPoints(profileRaw.PokememesWealth) + "$"
 	message += "\n\n💳" + strconv.Itoa(playerRaw.TelegramID)
 	message += "\n⏰Последнее обновление профиля: " + profileRaw.CreatedAt.Format("02.01.2006 15:04:05")
 	message += "\n\nНе забывай обновляться, это важно для получения актуальной информации.\n\n"

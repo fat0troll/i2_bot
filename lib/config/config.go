@@ -12,7 +12,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-const VERSION = "0.295"
+const VERSION = "0.297"
 
 // DatabaseConnection handles database connection settings in config.yaml
 type DatabaseConnection struct {

@@ -25,20 +25,13 @@ func (p *Parsers) fillProfilePokememe(profileID int, meme string, attack string,
 		log.Println(err)
 	} else {
 		attackInt := p.getPoints(attack)
-		// Improve it. Game's precision is unstable
-		origAttack := float64(spkRaw.Attack)
-		if rarity == "rare" {
-			origAttack = origAttack * 1.1
-		}
-		level := int(float64(attackInt) / origAttack)
-
 		ppk := dbmapping.ProfilePokememe{}
 		ppk.ProfileID = profileID
 		ppk.PokememeID = spkRaw.ID
-		ppk.PokememeLevel = level
+		ppk.PokememeAttack = attackInt
 		ppk.PokememeRarity = rarity
 		ppk.CreatedAt = time.Now().UTC()
-		_, err2 := c.Db.NamedExec("INSERT INTO `profiles_pokememes` VALUES(NULL, :profile_id, :pokememe_id, :pokememe_lvl, :pokememe_rarity, :created_at)", &ppk)
+		_, err2 := c.Db.NamedExec("INSERT INTO `profiles_pokememes` VALUES(NULL, :profile_id, :pokememe_id, :pokememe_attack, :pokememe_rarity, :created_at)", &ppk)
 		if err2 != nil {
 			log.Println(err2)
 		}
@@ -72,6 +65,8 @@ func (p *Parsers) ParseProfile(update tgbotapi.Update, playerRaw dbmapping.Playe
 	pokeballsInt := 0
 	wealth := ""
 	wealthInt := 0
+	pokememesWealth := ""
+	pokememesWealthInt := 0
 	crystalls := ""
 	crystallsInt := 0
 	weapon := ""
@@ -151,13 +146,15 @@ func (p *Parsers) ParseProfile(update tgbotapi.Update, playerRaw dbmapping.Playe
 		}
 
 		if strings.HasPrefix(currentString, "🐱Покемемы: ") {
-			pkmnumRx := regexp.MustCompile("\\d+")
+			pkmnumRx := regexp.MustCompile(`(\d+)(\d|K|M|)`)
 			pkNumArray := pkmnumRx.FindAllString(currentString, -1)
-			if len(pkNumArray) < 2 {
+			if len(pkNumArray) < 3 {
 				log.Println("Pokememes count broken")
 				return "fail"
 			}
 			pokememesCount, _ := strconv.Atoi(pkNumArray[0])
+			pokememesWealth = pkNumArray[2]
+			pokememesWealthInt = p.getPoints(pokememesWealth)
 			if pokememesCount > 0 {
 				for pi := 0; pi < pokememesCount; pi++ {
 					pokememeString := string(profileRunesArray[i+1+pi])
@@ -192,6 +189,8 @@ func (p *Parsers) ParseProfile(update tgbotapi.Update, playerRaw dbmapping.Playe
 	log.Println(crystallsInt)
 	log.Printf("Weapon: " + weapon)
 	if len(pokememes) > 0 {
+		log.Printf("Hand cost: " + pokememesWealth)
+		log.Println(pokememesWealthInt)
 		for meme, attack := range pokememes {
 			log.Printf(meme + ": " + attack)
 		}
@@ -242,6 +241,7 @@ func (p *Parsers) ParseProfile(update tgbotapi.Update, playerRaw dbmapping.Playe
 	profileRaw.LevelID = levelInt
 	profileRaw.Pokeballs = pokeballsInt
 	profileRaw.Wealth = wealthInt
+	profileRaw.PokememesWealth = pokememesWealthInt
 	profileRaw.Exp = expInt
 	profileRaw.EggExp = eggexpInt
 	profileRaw.Power = powerInt
@@ -249,7 +249,7 @@ func (p *Parsers) ParseProfile(update tgbotapi.Update, playerRaw dbmapping.Playe
 	profileRaw.Crystalls = crystallsInt
 	profileRaw.CreatedAt = time.Now().UTC()
 
-	_, err3 := c.Db.NamedExec("INSERT INTO `profiles` VALUES(NULL, :player_id, :nickname, :telegram_nickname, :level_id, :pokeballs, :wealth, :exp, :egg_exp, :power, :weapon_id, :crystalls, :created_at)", &profileRaw)
+	_, err3 := c.Db.NamedExec("INSERT INTO `profiles` VALUES(NULL, :player_id, :nickname, :telegram_nickname, :level_id, :pokeballs, :wealth, :pokememes_wealth, :exp, :egg_exp, :power, :weapon_id, :crystalls, :created_at)", &profileRaw)
 	if err3 != nil {
 		log.Println(err3)
 		return "fail"
@@ -274,6 +274,18 @@ func (p *Parsers) ParseProfile(update tgbotapi.Update, playerRaw dbmapping.Playe
 		if strings.HasPrefix(meme, "🔸") {
 			rarity = "rare"
 			meme = strings.Replace(meme, "🔸", "", 1)
+		}
+		if strings.HasPrefix(meme, "🔶") {
+			rarity = "super rare"
+			meme = strings.Replace(meme, "🔶", "", 1)
+		}
+		if strings.HasPrefix(meme, "🔹") {
+			rarity = "liber"
+			meme = strings.Replace(meme, "🔹", "", 1)
+		}
+		if strings.HasPrefix(meme, "🔷") {
+			rarity = "super liber"
+			meme = strings.Replace(meme, "🔷", "", 1)
 		}
 		p.fillProfilePokememe(profileRaw.ID, meme, attack, rarity)
 	}

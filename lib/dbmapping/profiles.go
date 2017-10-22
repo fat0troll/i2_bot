@@ -17,6 +17,7 @@ type Profile struct {
 	LevelID          int       `db:"level_id"`
 	Pokeballs        int       `db:"pokeballs"`
 	Wealth           int       `db:"wealth"`
+	PokememesWealth  int       `db:"pokememes_wealth"`
 	Exp              int       `db:"exp"`
 	EggExp           int       `db:"egg_exp"`
 	Power            int       `db:"power"`
