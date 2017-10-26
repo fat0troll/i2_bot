@@ -8,10 +8,10 @@ import (
 	"log"
 	// 3rd-party
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/jmoiron/sqlx"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 	// local
-	"../config"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/config"
 )
 
 // BotInit initializes connection to Telegram

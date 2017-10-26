@@ -8,7 +8,7 @@ import (
 	"log"
 	"time"
 	// local
-	"../dbmapping"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 )
 
 // GetPlayerByID returns dbmapping.Player instance with given ID.

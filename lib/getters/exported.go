@@ -7,8 +7,8 @@ import (
 	// stdlib
 	"log"
 	// local
-	"../appcontext"
-	"../getters/gettersinterface"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/appcontext"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/getters/gettersinterface"
 )
 
 var (

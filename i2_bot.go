@@ -9,12 +9,12 @@ import (
 	// 3rd-party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	// local
-	"./lib/appcontext"
-	"./lib/getters"
-	"./lib/migrations"
-	"./lib/parsers"
-	"./lib/router"
-	"./lib/talkers"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/appcontext"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/getters"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/migrations"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/parsers"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/router"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/talkers"
 )
 
 var (

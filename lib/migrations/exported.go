@@ -5,8 +5,8 @@ package migrations
 
 import (
 	// local
-	"../appcontext"
-	"../migrations/migrationsinterface"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/appcontext"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/migrations/migrationsinterface"
 )
 
 var (

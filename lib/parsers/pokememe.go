@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 	// local
-	"../dbmapping"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 )
 
 // Internal functions

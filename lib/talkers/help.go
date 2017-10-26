@@ -7,8 +7,8 @@ import (
 	// 3rd party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	// local
-	"../config"
-	"../dbmapping"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/config"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 )
 
 // HelpMessage gives user all available commands

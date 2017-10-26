@@ -7,7 +7,7 @@ import (
 	// stdlib
 	"log"
 	// local
-	"../appcontext"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/appcontext"
 )
 
 var (

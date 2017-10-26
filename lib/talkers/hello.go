@@ -7,7 +7,7 @@ import (
 	// 3rd party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	// local
-	"../dbmapping"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 )
 
 // HelloMessageUnauthorized tell new user what to do.

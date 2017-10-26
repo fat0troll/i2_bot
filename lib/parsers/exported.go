@@ -5,8 +5,8 @@ package parsers
 
 import (
 	// local
-	"../appcontext"
-	"../parsers/parsersinterface"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/appcontext"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/parsers/parsersinterface"
 )
 
 var (

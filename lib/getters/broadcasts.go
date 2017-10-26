@@ -8,7 +8,7 @@ import (
 	"log"
 	"time"
 	// local
-	"../dbmapping"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 )
 
 // CreateBroadcastMessage creates broadcast message item in database

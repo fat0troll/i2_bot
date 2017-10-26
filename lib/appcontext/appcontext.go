@@ -8,14 +8,14 @@ import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/jmoiron/sqlx"
 	// local
-	"../config"
-	"../connections"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/config"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/connections"
 	// interfaces
-	"../getters/gettersinterface"
-	"../migrations/migrationsinterface"
-	"../parsers/parsersinterface"
-	"../router/routerinterface"
-	"../talkers/talkersinterface"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/getters/gettersinterface"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/migrations/migrationsinterface"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/parsers/parsersinterface"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/router/routerinterface"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/talkers/talkersinterface"
 )
 
 // Context is an application context struct

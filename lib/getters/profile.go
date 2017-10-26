@@ -7,7 +7,7 @@ import (
 	// stdlib
 	"log"
 	// local
-	"../dbmapping"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 )
 
 // GetProfile returns last saved profile of player

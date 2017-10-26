@@ -10,7 +10,7 @@ import (
 	// 3rd party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	// local
-	"../dbmapping"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 )
 
 // AdminBroadcastMessageCompose saves message for future broadcast
