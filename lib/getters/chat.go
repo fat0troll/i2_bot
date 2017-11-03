@@ -14,7 +14,7 @@ import (
 )
 
 // GetChatByID returns dbmapping.Chat instance with given ID.
-func (g *Getters) GetChatByID(chatID int) (dbmapping.Chat, bool) {
+func (g *Getters) GetChatByID(chatID int64) (dbmapping.Chat, bool) {
 	chatRaw := dbmapping.Chat{}
 	err := c.Db.Get(&chatRaw, c.Db.Rebind("SELECT * FROM chats WHERE id=?"), chatID)
 	if err != nil {
@@ -29,14 +29,30 @@ func (g *Getters) GetChatByID(chatID int) (dbmapping.Chat, bool) {
 // In case, when there is no chat with such ID, new chat will be created.
 func (g *Getters) GetOrCreateChat(telegramUpdate *tgbotapi.Update) (dbmapping.Chat, bool) {
 	chatRaw := dbmapping.Chat{}
+	log.Println("TGID: ", telegramUpdate.Message.Chat.ID)
 	err := c.Db.Get(&chatRaw, c.Db.Rebind("SELECT * FROM chats WHERE telegram_id=?"), telegramUpdate.Message.Chat.ID)
 	if err != nil {
 		log.Printf("Chat stream not found in database.")
 		log.Printf(err.Error())
 
-		chatRaw.Name = telegramUpdate.Message.Chat.FirstName + " " + telegramUpdate.Message.Chat.LastName
+		nameOfChat := ""
+		if telegramUpdate.Message.Chat.FirstName != "" {
+			nameOfChat += telegramUpdate.Message.Chat.FirstName
+		}
+		if telegramUpdate.Message.Chat.LastName != "" {
+			nameOfChat += " " + telegramUpdate.Message.Chat.LastName
+		}
+		if telegramUpdate.Message.Chat.Title != "" {
+			if nameOfChat != "" {
+				nameOfChat += " [" + telegramUpdate.Message.Chat.Title + "]"
+			} else {
+				nameOfChat = telegramUpdate.Message.Chat.Title
+			}
+		}
+
+		chatRaw.Name = nameOfChat
 		chatRaw.ChatType = telegramUpdate.Message.Chat.Type
-		chatRaw.TelegramID = int(telegramUpdate.Message.Chat.ID)
+		chatRaw.TelegramID = telegramUpdate.Message.Chat.ID
 		chatRaw.CreatedAt = time.Now().UTC()
 		_, err = c.Db.NamedExec("INSERT INTO chats VALUES(NULL, :name, :chat_type, :telegram_id, :created_at)", &chatRaw)
 		if err != nil {
@@ -66,4 +82,16 @@ func (g *Getters) GetAllPrivateChats() ([]dbmapping.Chat, bool) {
 	}
 
 	return privateChats, true
+}
+
+// UpdateChatTitle updates chat title in database
+func (g *Getters) UpdateChatTitle(chatRaw dbmapping.Chat, newTitle string) (dbmapping.Chat, bool) {
+	chatRaw.Name = newTitle
+	_, err := c.Db.NamedExec("UPDATE chats SET name=:name WHERE id=:id", &chatRaw)
+	if err != nil {
+		log.Println(err)
+		return chatRaw, false
+	}
+
+	return chatRaw, true
 }

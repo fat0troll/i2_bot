@@ -13,6 +13,6 @@ type Chat struct {
 	ID         int       `db:"id"`
 	Name       string    `db:"name"`
 	ChatType   string    `db:"chat_type"`
-	TelegramID int       `db:"telegram_id"`
+	TelegramID int64     `db:"telegram_id"`
 	CreatedAt  time.Time `db:"created_at"`
 }

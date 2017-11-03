@@ -20,7 +20,6 @@ func (t *Talkers) DurakMessage(update tgbotapi.Update) {
 	reactions = append(reactions, "Сам такой!",
 		"А ты типа нет?",
 		"Фу, как некультурно!",
-		"Профессор, если вы такой умный, то почему вы такой бедный? /donate",
 		"Попка – не дурак, Попка – самый непадающий бот!")
 
 	// Praise the Random Gods!

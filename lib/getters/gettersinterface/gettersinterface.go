@@ -17,8 +17,9 @@ type GettersInterface interface {
 	GetBroadcastMessageByID(messageID int) (dbmapping.Broadcast, bool)
 	UpdateBroadcastMessageStatus(messageID int, messageStatus string) (dbmapping.Broadcast, bool)
 	GetOrCreateChat(update *tgbotapi.Update) (dbmapping.Chat, bool)
-	GetChatByID(chatID int) (dbmapping.Chat, bool)
+	GetChatByID(chatID int64) (dbmapping.Chat, bool)
 	GetAllPrivateChats() ([]dbmapping.Chat, bool)
+	UpdateChatTitle(chatRaw dbmapping.Chat, newTitle string) (dbmapping.Chat, bool)
 	GetOrCreatePlayer(telegramID int) (dbmapping.Player, bool)
 	GetPlayerByID(playerID int) (dbmapping.Player, bool)
 	PlayerBetterThan(playerRaw *dbmapping.Player, powerLevel string) bool
