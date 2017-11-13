@@ -4,37 +4,34 @@
 package connections
 
 import (
-	// stdlib
-	"log"
-	// 3rd-party
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/jmoiron/sqlx"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
-	// local
+	"github.com/jmoiron/sqlx"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/config"
+	"lab.pztrn.name/golibs/mogrus"
 )
 
 // BotInit initializes connection to Telegram
-func BotInit(cfg *config.Config) *tgbotapi.BotAPI {
+func BotInit(cfg *config.Config, lg *mogrus.LoggerHandler) *tgbotapi.BotAPI {
 	bot, err := tgbotapi.NewBotAPI(cfg.Telegram.APIToken)
 	if err != nil {
-		log.Panic(err)
+		lg.Fatal(err.Error())
 	}
 
 	bot.Debug = true
 
-	log.Printf("Bot version: " + config.VERSION)
-	log.Printf("Authorized on account %s", bot.Self.UserName)
+	lg.Info("Bot version: " + config.VERSION)
+	lg.Info("Authorized on account @", bot.Self.UserName)
 
 	return bot
 }
 
 // DBInit initializes database connection
-func DBInit(cfg *config.Config) *sqlx.DB {
+func DBInit(cfg *config.Config, lg *mogrus.LoggerHandler) *sqlx.DB {
 	database, err := sqlx.Connect("mysql", cfg.Database.User+":"+cfg.Database.Password+"@tcp("+cfg.Database.Host+":"+cfg.Database.Port+")/"+cfg.Database.Database+"?parseTime=true&charset=utf8mb4,utf8")
 	if err != nil {
-		log.Fatal(err)
+		lg.Fatal(err)
 	}
-	log.Printf("Database connection established!")
+	lg.Info("Database connection established!")
 	return database
 }

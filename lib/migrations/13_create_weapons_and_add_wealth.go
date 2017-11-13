@@ -4,22 +4,22 @@
 package migrations
 
 import (
-	// stdlib
 	"database/sql"
 )
 
+// CreateWeaponsAndAddWealthUp creates `weapons` table and adds `wealth` column to `profiles`
 func CreateWeaponsAndAddWealthUp(tx *sql.Tx) error {
-	create_request := "CREATE TABLE `weapons` ("
-	create_request += "`id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID оружия',"
-	create_request += "`name` varchar(191) NOT NULL COMMENT 'Название оружия',"
-	create_request += "`power` int(11) NOT NULL COMMENT 'Атака оружия',"
-	create_request += "`price` int(11) NOT NULL COMMENT 'Цена в магазине',"
-	create_request += "`created_at` datetime NOT NULL COMMENT 'Добавлено в базу',"
-	create_request += "PRIMARY KEY (`id`),"
-	create_request += "UNIQUE KEY `id` (`id`),"
-	create_request += "KEY `weapons_created_at` (`created_at`)"
-	create_request += ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='Оружие';"
-	_, err := tx.Exec(create_request)
+	request := "CREATE TABLE `weapons` ("
+	request += "`id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID оружия',"
+	request += "`name` varchar(191) NOT NULL COMMENT 'Название оружия',"
+	request += "`power` int(11) NOT NULL COMMENT 'Атака оружия',"
+	request += "`price` int(11) NOT NULL COMMENT 'Цена в магазине',"
+	request += "`created_at` datetime NOT NULL COMMENT 'Добавлено в базу',"
+	request += "PRIMARY KEY (`id`),"
+	request += "UNIQUE KEY `id` (`id`),"
+	request += "KEY `weapons_created_at` (`created_at`)"
+	request += ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='Оружие';"
+	_, err := tx.Exec(request)
 	if err != nil {
 		return err
 	}
@@ -57,6 +57,7 @@ func CreateWeaponsAndAddWealthUp(tx *sql.Tx) error {
 	return nil
 }
 
+// CreateWeaponsAndAddWealthDown drops `weapons` table and `wealth` column of `profiles` table
 func CreateWeaponsAndAddWealthDown(tx *sql.Tx) error {
 	_, err := tx.Exec("ALTER TABLE `profiles` DROP COLUMN `wealth`;")
 	if err != nil {

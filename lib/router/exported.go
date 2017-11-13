@@ -4,25 +4,24 @@
 package router
 
 import (
-	// stdlib
-	"log"
-	// local
 	"lab.pztrn.name/fat0troll/i2_bot/lib/appcontext"
 )
 
 var (
 	c *appcontext.Context
-	r *Router
 )
+
+// Router is a function-handling struct for router
+type Router struct{}
 
 // New is an initialization function for appcontext
 func New(ac *appcontext.Context) {
 	c = ac
-	rh := RouterHandler{}
-	c.RegisterRouterInterface(rh)
+	r := &Router{}
+	c.RegisterRouterInterface(r)
 }
 
 // Init is an initialization function for package router
 func (r *Router) Init() {
-	log.Printf("Initialized request router...")
+	c.Log.Info("Initialized request router...")
 }

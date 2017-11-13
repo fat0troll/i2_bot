@@ -4,10 +4,10 @@
 package migrations
 
 import (
-	// stdlib
 	"database/sql"
 )
 
+// CreateBroadcastsUp creates `broadcasts` table
 func CreateBroadcastsUp(tx *sql.Tx) error {
 	request := "CREATE TABLE `broadcasts` ("
 	request += "`id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID сообщения',"
@@ -28,6 +28,7 @@ func CreateBroadcastsUp(tx *sql.Tx) error {
 	return nil
 }
 
+// CreateBroadcastsDown drops `broadcasts` table
 func CreateBroadcastsDown(tx *sql.Tx) error {
 	_, err := tx.Exec("DROP TABLE `broadcasts`;")
 	if err != nil {

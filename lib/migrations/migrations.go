@@ -4,16 +4,12 @@
 package migrations
 
 import (
-	// stdlib
-	"log"
-	// 3rd-party
 	"github.com/pressly/goose"
 )
 
-type Migrations struct{}
-
+// Init adds all migrations to applications
 func (m *Migrations) Init() {
-	log.Printf("Initializing migrations...")
+	c.Log.Info("Initializing migrations...")
 	// All migrations are here
 	goose.AddNamedMigration("1_hello.go", HelloUp, nil)
 	goose.AddNamedMigration("2_create_players.go", CreatePlayersUp, CreatePlayersDown)
@@ -35,13 +31,15 @@ func (m *Migrations) Init() {
 	goose.AddNamedMigration("18_add_pokememes_wealth.go", AddPokememesWealthUp, AddPokememesWealthDown)
 	goose.AddNamedMigration("19_create_broadcasts.go", CreateBroadcastsUp, CreateBroadcastsDown)
 	goose.AddNamedMigration("20_create_squads.go", CreateSquadsUp, CreateSquadsDown)
+	goose.AddNamedMigration("21_change_telegram_id_column.go", ChangeTelegramIDColumnUp, ChangeTelegramIDColumnDown)
 }
 
+// Migrate migrates database to current version
 func (m *Migrations) Migrate() error {
-	log.Printf("Starting database migrations...")
+	c.Log.Printf("Starting database migrations...")
 	err := goose.Up(c.Db.DB, ".")
 	if err != nil {
-		log.Fatal(err)
+		c.Log.Fatal(err)
 
 		return err
 	}
@@ -49,6 +47,7 @@ func (m *Migrations) Migrate() error {
 	return nil
 }
 
+// SetDialect sets dialect for migrations
 func (m *Migrations) SetDialect(dialect string) error {
 	return goose.SetDialect(dialect)
 }

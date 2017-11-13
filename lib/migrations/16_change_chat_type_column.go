@@ -4,10 +4,10 @@
 package migrations
 
 import (
-	// stdlib
 	"database/sql"
 )
 
+// ChangeChatTypeColumnUp changes `chat_type` column of `chats` table
 func ChangeChatTypeColumnUp(tx *sql.Tx) error {
 	_, err := tx.Exec("ALTER TABLE `chats` MODIFY `chat_type` varchar(191);")
 	if err != nil {
@@ -17,6 +17,7 @@ func ChangeChatTypeColumnUp(tx *sql.Tx) error {
 	return nil
 }
 
+// ChangeChatTypeColumnDown changes `chat_type` column of `chats` table
 func ChangeChatTypeColumnDown(tx *sql.Tx) error {
 	_, err := tx.Exec("ALTER TABLE `chats` MODIFY `chat_type` bool;")
 	if err != nil {

@@ -4,12 +4,11 @@
 package welcomerinterface
 
 import (
-	// 3rd party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 // WelcomerInterface implements Welcomer for importing via appcontex
 type WelcomerInterface interface {
 	Init()
-	WelcomeMessage(update tgbotapi.Update) string
+	WelcomeMessage(update *tgbotapi.Update) string
 }

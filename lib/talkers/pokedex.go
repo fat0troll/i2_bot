@@ -4,18 +4,15 @@
 package talkers
 
 import (
-	// stdlib
+	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 	"strconv"
 	"strings"
-	// 3rd party
-	"github.com/go-telegram-bot-api/telegram-bot-api"
-	// local
-	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 )
 
 // Internal functions
 
-func (t *Talkers) pokememesListing(update tgbotapi.Update, page int, pokememesArray []dbmapping.PokememeFull) {
+func (t *Talkers) pokememesListing(update *tgbotapi.Update, page int, pokememesArray []dbmapping.PokememeFull) {
 	message := "*Известные боту покемемы*\n"
 	message += "Список отсортирован по грейду и алфавиту.\n"
 	message += "Покедекс: " + strconv.Itoa(len(pokememesArray)) + " / 219\n"
@@ -62,7 +59,13 @@ func (t *Talkers) pokememesListing(update tgbotapi.Update, page int, pokememesAr
 // External functions
 
 // PokememesList lists all known pokememes
-func (t *Talkers) PokememesList(update tgbotapi.Update, page int) {
+func (t *Talkers) PokememesList(update *tgbotapi.Update) {
+	pageNumber := strings.Replace(update.Message.Text, "/pokedex", "", 1)
+	pageNumber = strings.Replace(pageNumber, "/pokedeks", "", 1)
+	page, _ := strconv.Atoi(pageNumber)
+	if page == 0 {
+		page = 1
+	}
 	pokememesArray, ok := c.Getters.GetPokememes()
 	if !ok {
 		t.GetterError(update)
@@ -72,7 +75,7 @@ func (t *Talkers) PokememesList(update tgbotapi.Update, page int) {
 }
 
 // PokememeInfo shows information about single pokememe based on internal ID
-func (t *Talkers) PokememeInfo(update tgbotapi.Update, playerRaw dbmapping.Player) string {
+func (t *Talkers) PokememeInfo(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
 	pokememeNumber := strings.Replace(update.Message.Text, "/pk", "", 1)
 	var calculatePossibilites = true
 	profileRaw, ok := c.Getters.GetProfile(playerRaw.ID)

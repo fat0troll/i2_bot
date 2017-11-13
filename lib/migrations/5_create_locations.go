@@ -4,21 +4,21 @@
 package migrations
 
 import (
-	// stdlib
 	"database/sql"
 )
 
+// CreateLocationsUp creates `locations` table and fills it with data
 func CreateLocationsUp(tx *sql.Tx) error {
-	create_request := "CREATE TABLE `locations` ("
-	create_request += "`id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID локации',"
-	create_request += "`symbol` varchar(191) COLLATE 'utf8mb4_unicode_520_ci' NOT NULL COMMENT 'Символ локации',"
-	create_request += "`name` varchar(191) NOT NULL COMMENT 'Имя локации',"
-	create_request += "`created_at` datetime NOT NULL COMMENT 'Добавлена в базу',"
-	create_request += "PRIMARY KEY (`id`),"
-	create_request += "UNIQUE KEY `id` (`id`),"
-	create_request += "KEY `locations_created_at` (`created_at`)"
-	create_request += ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='Локации';"
-	_, err := tx.Exec(create_request)
+	request := "CREATE TABLE `locations` ("
+	request += "`id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID локации',"
+	request += "`symbol` varchar(191) COLLATE 'utf8mb4_unicode_520_ci' NOT NULL COMMENT 'Символ локации',"
+	request += "`name` varchar(191) NOT NULL COMMENT 'Имя локации',"
+	request += "`created_at` datetime NOT NULL COMMENT 'Добавлена в базу',"
+	request += "PRIMARY KEY (`id`),"
+	request += "UNIQUE KEY `id` (`id`),"
+	request += "KEY `locations_created_at` (`created_at`)"
+	request += ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='Локации';"
+	_, err := tx.Exec(request)
 	if err != nil {
 		return err
 	}
@@ -52,6 +52,7 @@ func CreateLocationsUp(tx *sql.Tx) error {
 	return nil
 }
 
+// CreateLocationsDown drops `locations` table
 func CreateLocationsDown(tx *sql.Tx) error {
 	_, err := tx.Exec("DROP TABLE `locations`;")
 	if err != nil {

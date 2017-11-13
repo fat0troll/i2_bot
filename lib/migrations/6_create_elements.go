@@ -4,22 +4,22 @@
 package migrations
 
 import (
-	// stdlib
 	"database/sql"
 )
 
+// CreateElementsUp creates `elements` table and fills it with data
 func CreateElementsUp(tx *sql.Tx) error {
-	create_request := "CREATE TABLE `elements` ("
-	create_request += "`id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID элемента',"
-	create_request += "`symbol` varchar(191) COLLATE 'utf8mb4_unicode_520_ci' NOT NULL COMMENT 'Символ элемента',"
-	create_request += "`name` varchar(191) NOT NULL COMMENT 'Имя элемента',"
-	create_request += "`league_id` int(11) NOT NULL COMMENT 'ID родной лиги',"
-	create_request += "`created_at` datetime NOT NULL COMMENT 'Добавлен в базу',"
-	create_request += "PRIMARY KEY (`id`),"
-	create_request += "UNIQUE KEY `id` (`id`),"
-	create_request += "KEY `elements_created_at` (`created_at`)"
-	create_request += ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='Элементы';"
-	_, err := tx.Exec(create_request)
+	request := "CREATE TABLE `elements` ("
+	request += "`id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID элемента',"
+	request += "`symbol` varchar(191) COLLATE 'utf8mb4_unicode_520_ci' NOT NULL COMMENT 'Символ элемента',"
+	request += "`name` varchar(191) NOT NULL COMMENT 'Имя элемента',"
+	request += "`league_id` int(11) NOT NULL COMMENT 'ID родной лиги',"
+	request += "`created_at` datetime NOT NULL COMMENT 'Добавлен в базу',"
+	request += "PRIMARY KEY (`id`),"
+	request += "UNIQUE KEY `id` (`id`),"
+	request += "KEY `elements_created_at` (`created_at`)"
+	request += ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='Элементы';"
+	_, err := tx.Exec(request)
 	if err != nil {
 		return err
 	}
@@ -77,6 +77,7 @@ func CreateElementsUp(tx *sql.Tx) error {
 	return nil
 }
 
+// CreateElementsDown drops `elements` table
 func CreateElementsDown(tx *sql.Tx) error {
 	_, err := tx.Exec("DROP TABLE `elements`;")
 	if err != nil {

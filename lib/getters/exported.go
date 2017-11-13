@@ -4,9 +4,6 @@
 package getters
 
 import (
-	// stdlib
-	"log"
-	// local
 	"lab.pztrn.name/fat0troll/i2_bot/lib/appcontext"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/getters/gettersinterface"
 )
@@ -27,5 +24,5 @@ func New(ac *appcontext.Context) {
 
 // Init is a initialization function for package
 func (g *Getters) Init() {
-	log.Printf("Initializing getters...")
+	c.Log.Info("Initializing getters...")
 }

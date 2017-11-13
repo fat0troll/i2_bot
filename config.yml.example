@@ -8,3 +8,5 @@ database_connection:
     database: "i2_bot"
 notifications:
     group_id: "group_id"
+logs:
+    log_path: "./i2_bot.log"

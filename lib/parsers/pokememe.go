@@ -4,14 +4,11 @@
 package parsers
 
 import (
-	// stdlib
-	"log"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
-	// local
-	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 )
 
 // Internal functions
@@ -35,7 +32,7 @@ func (p *Parsers) getPoints(pointsStr string) int {
 // External functions
 
 // ParsePokememe parses pokememe, forwarded from PokememeBroBot, to database
-func (p *Parsers) ParsePokememe(text string, playerRaw dbmapping.Player) string {
+func (p *Parsers) ParsePokememe(text string, playerRaw *dbmapping.Player) string {
 	var defendablePokememe = false
 	pokememeStringsArray := strings.Split(text, "\n")
 	pokememeRunesArray := make([][]rune, 0)
@@ -60,7 +57,7 @@ func (p *Parsers) ParsePokememe(text string, playerRaw dbmapping.Player) string 
 
 	err := c.Db.Select(&elements, "SELECT * FROM elements WHERE symbol IN ('"+strings.Join(elementEmojis, "', '")+"')")
 	if err != nil {
-		log.Printf(err.Error())
+		c.Log.Error(err.Error())
 		return "fail"
 	}
 
@@ -68,8 +65,8 @@ func (p *Parsers) ParsePokememe(text string, playerRaw dbmapping.Player) string 
 	hitPointsRx := regexp.MustCompile("(\\d|\\.)+(K|M)?")
 	hitPoints := hitPointsRx.FindAllString(string(pokememeRunesArray[5]), -1)
 	if len(hitPoints) != 3 {
-		log.Printf("Can't parse hitpoints!")
-		log.Println(pokememeRunesArray[5])
+		c.Log.Error("Can't parse hitpoints!")
+		c.Log.Debug(pokememeRunesArray[5])
 		return "fail"
 	}
 
@@ -85,34 +82,34 @@ func (p *Parsers) ParsePokememe(text string, playerRaw dbmapping.Player) string 
 		// Actions for high-grade pokememes
 		defenceMatch := hitPointsRx.FindAllString(string(pokememeRunesArray[6]), -1)
 		if len(defenceMatch) < 1 {
-			log.Printf("Can't parse defence!")
-			log.Println(pokememeRunesArray[6])
+			c.Log.Error("Can't parse defence!")
+			c.Log.Debug(pokememeRunesArray[6])
 			return "fail"
 		}
 		defence = defenceMatch[0]
 		priceMatch := hitPointsRx.FindAllString(string(pokememeRunesArray[7]), -1)
 		if len(priceMatch) < 1 {
-			log.Printf("Can't parse price!")
-			log.Println(pokememeRunesArray[7])
+			c.Log.Error("Can't parse price!")
+			c.Log.Debug(pokememeRunesArray[7])
 			return "fail"
 		}
 		price = priceMatch[0]
 		locationsPrepare := strings.Split(string(pokememeRunesArray[8]), ": ")
 		if len(locationsPrepare) < 2 {
-			log.Printf("Can't parse locations!")
-			log.Println(pokememeRunesArray[8])
+			c.Log.Error("Can't parse locations!")
+			c.Log.Debug(pokememeRunesArray[8])
 			return "fail"
 		}
 		locationsNames := strings.Split(locationsPrepare[1], ", ")
 		if len(locationsNames) < 1 {
-			log.Printf("Can't parse locations!")
-			log.Println(locationsPrepare)
+			c.Log.Error("Can't parse locations!")
+			c.Log.Debug(locationsPrepare)
 			return "fail"
 		}
 
 		err2 := c.Db.Select(&locations, "SELECT * FROM locations WHERE name IN ('"+strings.Join(locationsNames, "', '")+"')")
 		if err2 != nil {
-			log.Printf(err2.Error())
+			c.Log.Error(err2.Error())
 			return "fail"
 		}
 		if strings.HasSuffix(string(pokememeRunesArray[9]), "Можно") {
@@ -124,27 +121,27 @@ func (p *Parsers) ParsePokememe(text string, playerRaw dbmapping.Player) string 
 		defence = hitPoints[0]
 		priceMatch := hitPointsRx.FindAllString(string(pokememeRunesArray[6]), -1)
 		if len(priceMatch) < 1 {
-			log.Printf("Can't parse price!")
-			log.Println(pokememeRunesArray[6])
+			c.Log.Error("Can't parse price!")
+			c.Log.Debug(pokememeRunesArray[6])
 			return "fail"
 		}
 		price = priceMatch[0]
 		locationsPrepare := strings.Split(string(pokememeRunesArray[7]), ": ")
 		if len(locationsPrepare) < 2 {
-			log.Printf("Can't parse locations!")
-			log.Println(pokememeRunesArray[7])
+			c.Log.Error("Can't parse locations!")
+			c.Log.Debug(pokememeRunesArray[7])
 			return "fail"
 		}
 		locationsNames := strings.Split(locationsPrepare[1], ", ")
 		if len(locationsNames) < 1 {
-			log.Printf("Can't parse locations!")
-			log.Println(locationsPrepare)
+			c.Log.Error("Can't parse locations!")
+			c.Log.Debug(locationsPrepare)
 			return "fail"
 		}
 
 		err2 := c.Db.Select(&locations, "SELECT * FROM locations WHERE name IN ('"+strings.Join(locationsNames, "', '")+"')")
 		if err2 != nil {
-			log.Printf(err2.Error())
+			c.Log.Error(err2.Error())
 			return "fail"
 		}
 		if strings.HasSuffix(string(pokememeRunesArray[8]), "Можно") {
@@ -156,37 +153,37 @@ func (p *Parsers) ParsePokememe(text string, playerRaw dbmapping.Player) string 
 	grade := string(pokememeRunesArray[0][0])
 	name := string(pokememeRunesArray[0][3:])
 	description := string(pokememeRunesArray[1])
-	log.Printf("Pokememe grade: " + grade)
-	log.Printf("Pokememe name: " + name)
-	log.Printf("Pokememe description: " + description)
-	log.Printf("Elements:")
+	c.Log.Debug("Pokememe grade: " + grade)
+	c.Log.Debug("Pokememe name: " + name)
+	c.Log.Debug("Pokememe description: " + description)
+	c.Log.Debug("Elements:")
 	for i := range elements {
-		log.Printf(elements[i].Symbol + " " + elements[i].Name)
+		c.Log.Debug(elements[i].Symbol + " " + elements[i].Name)
 	}
-	log.Printf("Attack: " + hitPoints[0])
-	log.Printf("HP: " + hitPoints[1])
-	log.Printf("MP: " + hitPoints[2])
-	log.Printf("Defence: " + defence)
-	log.Printf("Price: " + price)
-	log.Printf("Locations:")
+	c.Log.Debug("Attack: " + hitPoints[0])
+	c.Log.Debug("HP: " + hitPoints[1])
+	c.Log.Debug("MP: " + hitPoints[2])
+	c.Log.Debug("Defence: " + defence)
+	c.Log.Debug("Price: " + price)
+	c.Log.Debug("Locations:")
 	for i := range locations {
-		log.Printf(locations[i].Symbol + " " + locations[i].Name)
+		c.Log.Debug(locations[i].Symbol + " " + locations[i].Name)
 	}
 	if purchaseable {
-		log.Printf("Purchaseable")
+		c.Log.Debug("Purchaseable")
 	} else {
-		log.Printf("Non-purchaseable")
+		c.Log.Debug("Non-purchaseable")
 	}
-	log.Printf("Image: " + image)
+	c.Log.Debug("Image: " + image)
 
 	// Building pokememe
 	pokememe := dbmapping.Pokememe{}
 	// Checking if pokememe exists in database
 	err3 := c.Db.Get(&pokememe, c.Db.Rebind("SELECT * FROM pokememes WHERE grade='"+grade+"' AND name='"+name+"';"))
 	if err3 != nil {
-		log.Printf("Adding new pokememe...")
+		c.Log.Debug("Adding new pokememe...")
 	} else {
-		log.Printf("This pokememe already exist. Return specific error.")
+		c.Log.Info("This pokememe already exist. Return specific error.")
 		return "dup"
 	}
 
@@ -216,14 +213,14 @@ func (p *Parsers) ParsePokememe(text string, playerRaw dbmapping.Player) string 
 
 	_, err4 := c.Db.NamedExec("INSERT INTO pokememes VALUES(NULL, :grade, :name, :description, :attack, :hp, :mp, :defence, :price, :purchaseable, :image_url, :player_id, :created_at)", &pokememe)
 	if err4 != nil {
-		log.Printf(err4.Error())
+		c.Log.Error(err4.Error())
 		return "fail"
 	}
 
 	// Getting new pokememe
 	err5 := c.Db.Get(&pokememe, c.Db.Rebind("SELECT * FROM pokememes WHERE grade='"+grade+"' AND name='"+name+"';"))
 	if err5 != nil {
-		log.Printf("Pokememe isn't added!")
+		c.Log.Error("Pokememe isn't added!")
 		return "fail"
 	}
 	for i := range elements {
@@ -234,7 +231,7 @@ func (p *Parsers) ParsePokememe(text string, playerRaw dbmapping.Player) string 
 
 		_, err6 := c.Db.NamedExec("INSERT INTO pokememes_elements VALUES(NULL, :pokememe_id, :element_id, :created_at)", &link)
 		if err6 != nil {
-			log.Printf(err6.Error())
+			c.Log.Error(err6.Error())
 			return "fail"
 		}
 	}
@@ -246,7 +243,7 @@ func (p *Parsers) ParsePokememe(text string, playerRaw dbmapping.Player) string 
 
 		_, err7 := c.Db.NamedExec("INSERT INTO pokememes_locations VALUES(NULL, :pokememe_id, :location_id, :created_at)", &link)
 		if err7 != nil {
-			log.Printf(err7.Error())
+			c.Log.Error(err7.Error())
 			return "fail"
 		}
 	}

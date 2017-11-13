@@ -4,22 +4,22 @@
 package migrations
 
 import (
-	// stdlib
 	"database/sql"
 )
 
+// CreateChatsUp creates `chats` table
 func CreateChatsUp(tx *sql.Tx) error {
-	create_request := "CREATE TABLE `chats` ("
-	create_request += "`id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID чата',"
-	create_request += "`name` varchar(191) NOT NULL COMMENT 'Имя чата',"
-	create_request += "`chat_type` bool NOT NULL COMMENT 'Тип чата',"
-	create_request += "`telegram_id` int(11) NOT NULL COMMENT 'ID чата в Телеграме',"
-	create_request += "`created_at` datetime NOT NULL COMMENT 'Добавлен в базу',"
-	create_request += "PRIMARY KEY (`id`),"
-	create_request += "UNIQUE KEY `id` (`id`),"
-	create_request += "KEY `chats_created_at` (`created_at`)"
-	create_request += ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='Чаты';"
-	_, err := tx.Exec(create_request)
+	request := "CREATE TABLE `chats` ("
+	request += "`id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID чата',"
+	request += "`name` varchar(191) NOT NULL COMMENT 'Имя чата',"
+	request += "`chat_type` bool NOT NULL COMMENT 'Тип чата',"
+	request += "`telegram_id` int(11) NOT NULL COMMENT 'ID чата в Телеграме',"
+	request += "`created_at` datetime NOT NULL COMMENT 'Добавлен в базу',"
+	request += "PRIMARY KEY (`id`),"
+	request += "UNIQUE KEY `id` (`id`),"
+	request += "KEY `chats_created_at` (`created_at`)"
+	request += ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='Чаты';"
+	_, err := tx.Exec(request)
 	if err != nil {
 		return err
 	}
@@ -27,6 +27,7 @@ func CreateChatsUp(tx *sql.Tx) error {
 	return nil
 }
 
+// CreateChatsDown drops `chats` table
 func CreateChatsDown(tx *sql.Tx) error {
 	_, err := tx.Exec("DROP TABLE `chats`;")
 	if err != nil {

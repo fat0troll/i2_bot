@@ -4,15 +4,18 @@
 package migrations
 
 import (
-	// local
 	"lab.pztrn.name/fat0troll/i2_bot/lib/appcontext"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/migrations/migrationsinterface"
 )
+
+// Migrations handles all functions of migrations package
+type Migrations struct{}
 
 var (
 	c *appcontext.Context
 )
 
+// New is an initialization function for migrations package
 func New(ac *appcontext.Context) {
 	c = ac
 	m := &Migrations{}

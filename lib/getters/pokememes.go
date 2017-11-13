@@ -4,11 +4,8 @@
 package getters
 
 import (
-	// stdlib
-	"log"
-	"strconv"
-	// local
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
+	"strconv"
 )
 
 // Internal functions
@@ -18,25 +15,25 @@ func (g *Getters) formFullPokememes(pokememes []dbmapping.Pokememe) ([]dbmapping
 	elements := []dbmapping.Element{}
 	err := c.Db.Select(&elements, "SELECT * FROM elements")
 	if err != nil {
-		log.Println(err)
+		c.Log.Error(err)
 		return pokememesArray, false
 	}
 	locations := []dbmapping.Location{}
 	err = c.Db.Select(&locations, "SELECT * FROM locations")
 	if err != nil {
-		log.Println(err)
+		c.Log.Error(err)
 		return pokememesArray, false
 	}
 	pokememesElements := []dbmapping.PokememeElement{}
 	err = c.Db.Select(&pokememesElements, "SELECT * FROM pokememes_elements")
 	if err != nil {
-		log.Println(err)
+		c.Log.Error(err)
 		return pokememesArray, false
 	}
 	pokememesLocations := []dbmapping.PokememeLocation{}
 	err = c.Db.Select(&pokememesLocations, "SELECT * FROM pokememes_locations")
 	if err != nil {
-		log.Println(err)
+		c.Log.Error(err)
 		return pokememesArray, false
 	}
 
@@ -83,7 +80,7 @@ func (g *Getters) GetPokememes() ([]dbmapping.PokememeFull, bool) {
 	pokememes := []dbmapping.Pokememe{}
 	err := c.Db.Select(&pokememes, "SELECT * FROM pokememes ORDER BY grade asc, name asc")
 	if err != nil {
-		log.Println(err)
+		c.Log.Error(err)
 		return pokememesArray, false
 	}
 
@@ -111,7 +108,7 @@ func (g *Getters) GetBestPokememes(playerID int) ([]dbmapping.PokememeFull, bool
 	pokememes := []dbmapping.Pokememe{}
 	err := c.Db.Select(&pokememes, c.Db.Rebind("SELECT p.* FROM pokememes p, pokememes_elements pe, elements e WHERE e.league_id = ? AND p.grade = ? AND pe.element_id = e.id AND pe.pokememe_id = p.id ORDER BY p.attack DESC"), playerRaw.LeagueID, profileRaw.LevelID+1)
 	if err != nil {
-		log.Println(err)
+		c.Log.Error(err)
 		return pokememesArray, false
 	}
 
@@ -125,31 +122,31 @@ func (g *Getters) GetPokememeByID(pokememeID string) (dbmapping.PokememeFull, bo
 	pokememe := dbmapping.Pokememe{}
 	err := c.Db.Get(&pokememe, c.Db.Rebind("SELECT * FROM pokememes WHERE id=?"), pokememeID)
 	if err != nil {
-		log.Println(err)
+		c.Log.Error(err)
 		return fullPokememe, false
 	}
 	elements := []dbmapping.Element{}
 	err = c.Db.Select(&elements, "SELECT * FROM elements")
 	if err != nil {
-		log.Println(err)
+		c.Log.Error(err)
 		return fullPokememe, false
 	}
 	locations := []dbmapping.Location{}
 	err = c.Db.Select(&locations, "SELECT * FROM locations")
 	if err != nil {
-		log.Println(err)
+		c.Log.Error(err)
 		return fullPokememe, false
 	}
 	pokememesElements := []dbmapping.PokememeElement{}
 	err = c.Db.Select(&pokememesElements, "SELECT * FROM pokememes_elements WHERE pokememe_id='"+strconv.Itoa(pokememe.ID)+"'")
 	if err != nil {
-		log.Println(err)
+		c.Log.Error(err)
 		return fullPokememe, false
 	}
 	pokememesLocations := []dbmapping.PokememeLocation{}
 	err = c.Db.Select(&pokememesLocations, "SELECT * FROM pokememes_locations WHERE pokememe_id='"+strconv.Itoa(pokememe.ID)+"'")
 	if err != nil {
-		log.Println(err)
+		c.Log.Error(err)
 		return fullPokememe, false
 	}
 

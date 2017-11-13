@@ -4,9 +4,6 @@
 package welcomer
 
 import (
-	// stdlib
-	"log"
-	// local
 	"lab.pztrn.name/fat0troll/i2_bot/lib/appcontext"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/welcomer/welcomerinterface"
 )
@@ -15,7 +12,7 @@ var (
 	c *appcontext.Context
 )
 
-// Welcomer is a function-handling struct for talkers
+// Welcomer is a function-handling struct for welcomer
 type Welcomer struct{}
 
 // New is a appcontext initialization function
@@ -25,7 +22,7 @@ func New(ac *appcontext.Context) {
 	c.RegisterWelcomerInterface(welcomerinterface.WelcomerInterface(m))
 }
 
-// Init is an initialization function for talkers
+// Init is an initialization function for welcomer
 func (w *Welcomer) Init() {
-	log.Printf("Initializing Welcomer...")
+	c.Log.Info("Initializing Welcomer...")
 }

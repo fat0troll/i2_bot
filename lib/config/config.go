@@ -4,15 +4,13 @@
 package config
 
 import (
-	// stdlib
+	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"log"
 	"path/filepath"
-	// 3rd-party
-	"gopkg.in/yaml.v2"
 )
 
-const VERSION = "0.297"
+const VERSION = "0.35"
 
 // DatabaseConnection handles database connection settings in config.yaml
 type DatabaseConnection struct {
@@ -33,11 +31,17 @@ type NotificationsConnection struct {
 	GroupID string `yaml:"group_id"`
 }
 
+// LoggingConfig handles log file configuration
+type LoggingConfig struct {
+	LogPath string `yaml:"log_path"`
+}
+
 // Config is a struct which represents config.yaml structure
 type Config struct {
 	Telegram      TelegramConnection      `yaml:"telegram_connection"`
 	Database      DatabaseConnection      `yaml:"database_connection"`
 	Notifications NotificationsConnection `yaml:"notifications"`
+	Logs          LoggingConfig           `yaml:"logs"`
 }
 
 // Init is a configuration initializer

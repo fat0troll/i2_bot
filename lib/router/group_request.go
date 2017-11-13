@@ -4,15 +4,12 @@
 package router
 
 import (
-	// stdlib
-	"regexp"
-	// 3rd party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
-	// local
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
+	"regexp"
 )
 
-func (r *Router) routeGroupRequest(update tgbotapi.Update, playerRaw dbmapping.Player, chatRaw dbmapping.Chat) string {
+func (r *Router) routeGroupRequest(update *tgbotapi.Update, playerRaw *dbmapping.Player, chatRaw *dbmapping.Chat) string {
 	text := update.Message.Text
 	// Regular expressions
 	var durakMsg = regexp.MustCompile("(Д|д)(У|у)(Р|р)(А|а|Е|е|О|о)")
@@ -22,8 +19,11 @@ func (r *Router) routeGroupRequest(update tgbotapi.Update, playerRaw dbmapping.P
 	var piMsg = regexp.MustCompile("(П|п)(И|и)(З|з)(Д|д)")
 
 	// Welcomes
-	if update.Message.NewChatMember != nil {
-		return c.Welcomer.WelcomeMessage(update)
+	if update.Message.NewChatMembers != nil {
+		newUsers := *update.Message.NewChatMembers
+		if len(newUsers) > 0 {
+			return c.Welcomer.WelcomeMessage(update)
+		}
 	}
 	// New chat names
 	if update.Message.NewChatTitle != "" {

@@ -4,10 +4,10 @@
 package migrations
 
 import (
-	// stdlib
 	"database/sql"
 )
 
+// FixTimeElementUp fixes time element emoji
 func FixTimeElementUp(tx *sql.Tx) error {
 	_, err := tx.Exec("UPDATE `elements` SET league_id=3 WHERE symbol='⌛';")
 	if err != nil {
@@ -17,6 +17,7 @@ func FixTimeElementUp(tx *sql.Tx) error {
 	return nil
 }
 
+// FixTimeElementDown returns fucked up emoji of time element for sanity
 func FixTimeElementDown(tx *sql.Tx) error {
 	_, err := tx.Exec("UPDATE `elements` SET league_id=1 WHERE symbol='⌛';")
 	if err != nil {

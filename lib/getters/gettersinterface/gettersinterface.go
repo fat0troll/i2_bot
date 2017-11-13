@@ -4,9 +4,7 @@
 package gettersinterface
 
 import (
-	// 3rd-party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
-	// local
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 )
 
@@ -21,7 +19,7 @@ type GettersInterface interface {
 	GetAllPrivateChats() ([]dbmapping.Chat, bool)
 	GetAllGroupChats() ([]dbmapping.Chat, bool)
 	GetAllGroupChatsWithSquads() ([]dbmapping.SquadChat, bool)
-	UpdateChatTitle(chatRaw dbmapping.Chat, newTitle string) (dbmapping.Chat, bool)
+	UpdateChatTitle(chatRaw *dbmapping.Chat, newTitle string) (*dbmapping.Chat, bool)
 	GetOrCreatePlayer(telegramID int) (dbmapping.Player, bool)
 	GetPlayerByID(playerID int) (dbmapping.Player, bool)
 	PlayerBetterThan(playerRaw *dbmapping.Player, powerLevel string) bool

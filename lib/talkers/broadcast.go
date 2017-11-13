@@ -4,17 +4,14 @@
 package talkers
 
 import (
-	// stdlib
 	"strconv"
 	"strings"
-	// 3rd party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
-	// local
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 )
 
 // AdminBroadcastMessageCompose saves message for future broadcast
-func (t *Talkers) AdminBroadcastMessageCompose(update tgbotapi.Update, playerRaw *dbmapping.Player) string {
+func (t *Talkers) AdminBroadcastMessageCompose(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
 	broadcastingMessageBody := strings.Replace(update.Message.Text, "/send_all ", "", 1)
 
 	messageRaw, ok := c.Getters.CreateBroadcastMessage(playerRaw, broadcastingMessageBody, "all")
@@ -50,7 +47,7 @@ func (t *Talkers) AdminBroadcastMessageCompose(update tgbotapi.Update, playerRaw
 }
 
 // AdminBroadcastMessageSend sends saved message to all private chats
-func (t *Talkers) AdminBroadcastMessageSend(update tgbotapi.Update, playerRaw *dbmapping.Player) string {
+func (t *Talkers) AdminBroadcastMessageSend(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
 	messageNum := strings.Replace(update.Message.Text, "/send_confirm ", "", 1)
 	messageNumInt, _ := strconv.Atoi(messageNum)
 	messageRaw, ok := c.Getters.GetBroadcastMessageByID(messageNumInt)

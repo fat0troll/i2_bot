@@ -4,15 +4,13 @@
 package talkers
 
 import (
-	// 3rd party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
-	// local
 	"lab.pztrn.name/fat0troll/i2_bot/lib/config"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 )
 
 // HelpMessage gives user all available commands
-func (t *Talkers) HelpMessage(update tgbotapi.Update, playerRaw *dbmapping.Player) {
+func (t *Talkers) HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) {
 	message := "*Бот Инстинкта Enchanched.*\n\n"
 	message += "Текущая версия: *" + config.VERSION + "*\n\n"
 	message += "Список команд\n\n"
@@ -22,6 +20,7 @@ func (t *Talkers) HelpMessage(update tgbotapi.Update, playerRaw *dbmapping.Playe
 	if c.Getters.PlayerBetterThan(playerRaw, "admin") {
 		message += "+ /send\\_all _текст_ — отправить сообщение всем пользователям бота\n"
 		message += "+ /group\\_chats — получить список групп, в которых работает бот.\n"
+		message += "+ /pin _текст_ — отправить сообщение во все группы, где находится бот. Сообщение будет автоматически запинено.\n"
 	}
 	message += "+ /help – выводит данное сообщение\n"
 

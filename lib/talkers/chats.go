@@ -4,14 +4,12 @@
 package talkers
 
 import (
-	// stdlib
-	"strconv"
-	// 3rd party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"strconv"
 )
 
-// GroupsList lists all known pokememes
-func (t *Talkers) GroupsList(update tgbotapi.Update) string {
+// GroupsList lists all chats where bot exist
+func (t *Talkers) GroupsList(update *tgbotapi.Update) string {
 	groupChats, ok := c.Getters.GetAllGroupChatsWithSquads()
 	if !ok {
 		return "fail"

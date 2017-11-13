@@ -4,10 +4,10 @@
 package migrations
 
 import (
-	// stdlib
 	"database/sql"
 )
 
+// ChangeProfilePokememesColumnsUp prepares database for latest game update in mid-October
 func ChangeProfilePokememesColumnsUp(tx *sql.Tx) error {
 	_, err := tx.Exec("ALTER TABLE `profiles_pokememes` ADD COLUMN `pokememe_attack` INT(11) NOT NULL DEFAULT 0 COMMENT 'Атака покемема' AFTER `pokememe_id`;;")
 	if err != nil {
@@ -22,6 +22,7 @@ func ChangeProfilePokememesColumnsUp(tx *sql.Tx) error {
 	return nil
 }
 
+// ChangeProfilePokememesColumnsDown restores mid-October behaviour
 func ChangeProfilePokememesColumnsDown(tx *sql.Tx) error {
 	_, err := tx.Exec("ALTER TABLE `profiles_pokememes` ADD COLUMN `pokememe_lvl` INT(11) NOT NULL DEFAULT 0 COMMENT 'Уровень покемема' AFTER `pokememe_id`;;")
 	if err != nil {

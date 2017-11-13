@@ -4,10 +4,10 @@
 package migrations
 
 import (
-	// stdlib
 	"database/sql"
 )
 
+// UpdateLocationsUp fixes some fuckup with locations' emoji
 func UpdateLocationsUp(tx *sql.Tx) error {
 	_, err := tx.Exec("UPDATE `locations` SET symbol='⛪' WHERE symbol=':church:';")
 	if err != nil {
@@ -25,6 +25,7 @@ func UpdateLocationsUp(tx *sql.Tx) error {
 	return nil
 }
 
+// UpdateLocationsDown returns location emoji fuckup for sanity purposes
 func UpdateLocationsDown(tx *sql.Tx) error {
 	_, err := tx.Exec("UPDATE `locations` SET symbol=':church:' WHERE symbol='⛪'';")
 	if err != nil {

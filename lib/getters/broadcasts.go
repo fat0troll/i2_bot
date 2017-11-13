@@ -4,11 +4,8 @@
 package getters
 
 import (
-	// stdlib
-	"log"
-	"time"
-	// local
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
+	"time"
 )
 
 // CreateBroadcastMessage creates broadcast message item in database
@@ -21,12 +18,12 @@ func (g *Getters) CreateBroadcastMessage(playerRaw *dbmapping.Player, messageBod
 	messageRaw.CreatedAt = time.Now().UTC()
 	_, err := c.Db.NamedExec("INSERT INTO broadcasts VALUES(NULL, :text, :broadcast_type, :status, :author_id, :created_at)", &messageRaw)
 	if err != nil {
-		log.Printf(err.Error())
+		c.Log.Error(err.Error())
 		return messageRaw, false
 	}
 	err2 := c.Db.Get(&messageRaw, c.Db.Rebind("SELECT * FROM broadcasts WHERE author_id=? AND text=?"), messageRaw.AuthorID, messageRaw.Text)
 	if err2 != nil {
-		log.Println(err2)
+		c.Log.Error(err2)
 		return messageRaw, false
 	}
 
@@ -38,7 +35,7 @@ func (g *Getters) GetBroadcastMessageByID(messageID int) (dbmapping.Broadcast, b
 	messageRaw := dbmapping.Broadcast{}
 	err := c.Db.Get(&messageRaw, c.Db.Rebind("SELECT * FROM broadcasts WHERE id=?"), messageID)
 	if err != nil {
-		log.Println(err)
+		c.Log.Error(err)
 		return messageRaw, false
 	}
 
@@ -50,18 +47,18 @@ func (g *Getters) UpdateBroadcastMessageStatus(messageID int, messageStatus stri
 	messageRaw := dbmapping.Broadcast{}
 	err := c.Db.Get(&messageRaw, c.Db.Rebind("SELECT * FROM broadcasts WHERE id=?"), messageID)
 	if err != nil {
-		log.Println(err)
+		c.Log.Error(err.Error())
 		return messageRaw, false
 	}
 	messageRaw.Status = messageStatus
 	_, err = c.Db.NamedExec("UPDATE broadcasts SET status=:status WHERE id=:id", &messageRaw)
 	if err != nil {
-		log.Printf(err.Error())
+		c.Log.Error(err.Error())
 		return messageRaw, false
 	}
 	err = c.Db.Get(&messageRaw, c.Db.Rebind("SELECT * FROM broadcasts WHERE author_id=? AND text=?"), messageRaw.AuthorID, messageRaw.Text)
 	if err != nil {
-		log.Println(err)
+		c.Log.Error(err.Error())
 		return messageRaw, false
 	}
 

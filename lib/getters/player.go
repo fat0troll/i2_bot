@@ -4,11 +4,8 @@
 package getters
 
 import (
-	// stdlib
-	"log"
-	"time"
-	// local
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
+	"time"
 )
 
 // GetPlayerByID returns dbmapping.Player instance with given ID.
@@ -16,7 +13,7 @@ func (g *Getters) GetPlayerByID(playerID int) (dbmapping.Player, bool) {
 	playerRaw := dbmapping.Player{}
 	err := c.Db.Get(&playerRaw, c.Db.Rebind("SELECT * FROM players WHERE id=?"), playerID)
 	if err != nil {
-		log.Println(err)
+		c.Log.Error(err.Error())
 		return playerRaw, false
 	}
 
@@ -29,8 +26,8 @@ func (g *Getters) GetOrCreatePlayer(telegramID int) (dbmapping.Player, bool) {
 	playerRaw := dbmapping.Player{}
 	err := c.Db.Get(&playerRaw, c.Db.Rebind("SELECT * FROM players WHERE telegram_id=?"), telegramID)
 	if err != nil {
-		log.Printf("Message user not found in database.")
-		log.Printf(err.Error())
+		c.Log.Error("Message user not found in database.")
+		c.Log.Error(err.Error())
 
 		// Create "nobody" user
 		playerRaw.TelegramID = telegramID
@@ -40,11 +37,11 @@ func (g *Getters) GetOrCreatePlayer(telegramID int) (dbmapping.Player, bool) {
 		playerRaw.UpdatedAt = time.Now().UTC()
 		_, err = c.Db.NamedExec("INSERT INTO players VALUES(NULL, :telegram_id, :league_id, :status, :created_at, :updated_at)", &playerRaw)
 		if err != nil {
-			log.Printf(err.Error())
+			c.Log.Error(err.Error())
 			return playerRaw, false
 		}
 	} else {
-		log.Printf("Message user found in database.")
+		c.Log.Debug("Message user found in database.")
 	}
 
 	return playerRaw, true

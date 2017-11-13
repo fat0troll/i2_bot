@@ -4,17 +4,13 @@
 package talkers
 
 import (
-	// stdlib
-	"log"
-	"strconv"
-	// 3rd party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
-	// local
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
+	"strconv"
 )
 
 // ProfileMessage shows current player's profile
-func (t *Talkers) ProfileMessage(update tgbotapi.Update, playerRaw dbmapping.Player) string {
+func (t *Talkers) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
 	profileRaw, ok := c.Getters.GetProfile(playerRaw.ID)
 	if !ok {
 		c.Talkers.AnyMessageUnauthorized(update)
@@ -23,29 +19,29 @@ func (t *Talkers) ProfileMessage(update tgbotapi.Update, playerRaw dbmapping.Pla
 	league := dbmapping.League{}
 	err := c.Db.Get(&league, c.Db.Rebind("SELECT * FROM leagues WHERE id=?"), playerRaw.LeagueID)
 	if err != nil {
-		log.Println(err)
+		c.Log.Error(err)
 	}
 	level := dbmapping.Level{}
 	err = c.Db.Get(&level, c.Db.Rebind("SELECT * FROM levels WHERE id=?"), profileRaw.LevelID)
 	if err != nil {
-		log.Println(err)
+		c.Log.Error(err)
 	}
 	weapon := dbmapping.Weapon{}
 	if profileRaw.WeaponID != 0 {
 		err = c.Db.Get(&weapon, c.Db.Rebind("SELECT * FROM weapons WHERE id=?"), profileRaw.WeaponID)
 		if err != nil {
-			log.Println(err)
+			c.Log.Error(err)
 		}
 	}
 	profilePokememes := []dbmapping.ProfilePokememe{}
 	err = c.Db.Select(&profilePokememes, c.Db.Rebind("SELECT * FROM profiles_pokememes WHERE profile_id=?"), profileRaw.ID)
 	if err != nil {
-		log.Println(err)
+		c.Log.Error(err)
 	}
 	pokememes := []dbmapping.Pokememe{}
 	err = c.Db.Select(&pokememes, c.Db.Rebind("SELECT * FROM pokememes"))
 	if err != nil {
-		log.Println(err)
+		c.Log.Error(err)
 	}
 
 	attackPokememes := 0

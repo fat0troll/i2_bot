@@ -4,21 +4,21 @@
 package migrations
 
 import (
-	// stdlib
 	"database/sql"
 )
 
+// CreateLeaguesUp creates `leagues` table and fills it with data
 func CreateLeaguesUp(tx *sql.Tx) error {
-	create_request := "CREATE TABLE `leagues` ("
-	create_request += "`id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID лиги',"
-	create_request += "`symbol` varchar(191) COLLATE 'utf8mb4_unicode_520_ci' NOT NULL COMMENT 'Символ лиги',"
-	create_request += "`name` varchar(191) NOT NULL COMMENT 'Имя лиги',"
-	create_request += "`created_at` datetime NOT NULL COMMENT 'Добавлена в базу',"
-	create_request += "PRIMARY KEY (`id`),"
-	create_request += "UNIQUE KEY `id` (`id`),"
-	create_request += "KEY `leagues_created_at` (`created_at`)"
-	create_request += ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='Лиги';"
-	_, err := tx.Exec(create_request)
+	request := "CREATE TABLE `leagues` ("
+	request += "`id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'ID лиги',"
+	request += "`symbol` varchar(191) COLLATE 'utf8mb4_unicode_520_ci' NOT NULL COMMENT 'Символ лиги',"
+	request += "`name` varchar(191) NOT NULL COMMENT 'Имя лиги',"
+	request += "`created_at` datetime NOT NULL COMMENT 'Добавлена в базу',"
+	request += "PRIMARY KEY (`id`),"
+	request += "UNIQUE KEY `id` (`id`),"
+	request += "KEY `leagues_created_at` (`created_at`)"
+	request += ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='Лиги';"
+	_, err := tx.Exec(request)
 	if err != nil {
 		return err
 	}
@@ -40,6 +40,7 @@ func CreateLeaguesUp(tx *sql.Tx) error {
 	return nil
 }
 
+// CreateLeaguesDown drops `leagues` table
 func CreateLeaguesDown(tx *sql.Tx) error {
 	_, err := tx.Exec("DROP TABLE `leagues`;")
 	if err != nil {

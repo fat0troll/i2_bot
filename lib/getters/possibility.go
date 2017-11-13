@@ -3,11 +3,6 @@
 
 package getters
 
-import (
-	// stdlib
-	"log"
-)
-
 // PossibilityRequiredPokeballs returns possibility of catching pokememe
 // It's based on location, grade of pokememe and current level of player
 func (g *Getters) PossibilityRequiredPokeballs(location int, grade int, lvl int) (float64, int) {
@@ -69,7 +64,7 @@ func (g *Getters) PossibilityRequiredPokeballs(location int, grade int, lvl int)
 
 	err := c.Db.Get(&pokememesCount, c.Db.Rebind("SELECT count(*) FROM pokememes p, pokememes_locations pl WHERE p.grade = ? AND pl.location_id = ? AND pl.pokememe_id = p.id;"), grade, location)
 	if err != nil {
-		log.Println(err)
+		c.Log.Error(err)
 	}
 
 	if basePossibility != 0 && pokememesCount != 0 {

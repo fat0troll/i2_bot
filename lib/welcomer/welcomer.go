@@ -4,14 +4,12 @@
 package welcomer
 
 import (
-	// stdlib
-	"time"
-	// 3rd party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"time"
 )
 
-func (w *Welcomer) groupWelcomeUser(update tgbotapi.Update) string {
-	playerRaw, ok := c.Getters.GetOrCreatePlayer(update.Message.NewChatMember.ID)
+func (w *Welcomer) groupWelcomeUser(update *tgbotapi.Update, newUser *tgbotapi.User) string {
+	playerRaw, ok := c.Getters.GetOrCreatePlayer(newUser.ID)
 	if !ok {
 		return "fail"
 	}
@@ -19,7 +17,7 @@ func (w *Welcomer) groupWelcomeUser(update tgbotapi.Update) string {
 	profileRaw, profileExist := c.Getters.GetProfile(playerRaw.ID)
 
 	message := "*Бот Инстинкта приветствует тебя, *@"
-	message += update.Message.NewChatMember.UserName
+	message += newUser.UserName
 	message += "*!*\n\n"
 
 	if profileExist {
@@ -29,13 +27,13 @@ func (w *Welcomer) groupWelcomeUser(update tgbotapi.Update) string {
 		} else {
 			message += "Обнови профиль, отправив его боту в личку. Так надо."
 
-			w.alertSpyUser(update)
+			w.alertSpyUser(update, newUser)
 		}
 	} else {
 		// newbie
 		message += "Добавь себе бота @i2\\_bot в список контактов и скинь в него игровой профиль. Это важно для успешной игры!\n"
 
-		w.alertUserWithoutProfile(update)
+		w.alertUserWithoutProfile(update, newUser)
 	}
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
@@ -46,7 +44,7 @@ func (w *Welcomer) groupWelcomeUser(update tgbotapi.Update) string {
 	return "ok"
 }
 
-func (w *Welcomer) groupStartMessage(update tgbotapi.Update) string {
+func (w *Welcomer) groupStartMessage(update *tgbotapi.Update) string {
 	message := "*Бот Инстинкта приветствует этот чатик!*\n\n"
 	message += "На слубже здравого смысла с " + time.Now().Format("02.01.2006 15:04:05") + "."
 
@@ -59,10 +57,16 @@ func (w *Welcomer) groupStartMessage(update tgbotapi.Update) string {
 }
 
 // WelcomeMessage welcomes new user on group or bot itself
-func (w *Welcomer) WelcomeMessage(update tgbotapi.Update) string {
-	if (update.Message.NewChatMember.UserName == "i2_bot") || (update.Message.NewChatMember.UserName == "i2_dev_bot") {
-		return w.groupStartMessage(update)
+func (w *Welcomer) WelcomeMessage(update *tgbotapi.Update) string {
+	newUsers := *update.Message.NewChatMembers
+	for i := range newUsers {
+		if (newUsers[i].UserName == "i2_bot") || (newUsers[i].UserName == "i2_dev_bot") {
+			w.groupStartMessage(update)
+		}
+
+		newUser := newUsers[i]
+		w.groupWelcomeUser(update, &newUser)
 	}
 
-	return w.groupWelcomeUser(update)
+	return "ok"
 }

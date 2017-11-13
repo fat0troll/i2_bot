@@ -4,18 +4,17 @@
 package main
 
 import (
-	// stdlib
-	"time"
-	// 3rd-party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
-	// local
 	"lab.pztrn.name/fat0troll/i2_bot/lib/appcontext"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/forwarder"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/getters"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/migrations"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/parsers"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/pinner"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/router"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/talkers"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/welcomer"
+	"time"
 )
 
 var (
@@ -28,10 +27,16 @@ func main() {
 	router.New(c)
 	migrations.New(c)
 	c.RunDatabaseMigrations()
+	forwarder.New(c)
 	parsers.New(c)
+	pinner.New(c)
 	talkers.New(c)
 	getters.New(c)
 	welcomer.New(c)
+
+	c.Log.Info("=======================")
+	c.Log.Info("= i2_bot initialized. =")
+	c.Log.Info("=======================")
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
@@ -46,6 +51,6 @@ func main() {
 			continue
 		}
 
-		c.Router.RouteRequest(update)
+		c.Router.RouteRequest(&update)
 	}
 }

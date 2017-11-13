@@ -4,20 +4,16 @@
 package talkers
 
 import (
-	// stdlib
-	"log"
-	"strconv"
-	// 3rd party
 	"github.com/go-telegram-bot-api/telegram-bot-api"
-	// local
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
+	"strconv"
 )
 
 // BestPokememesList shows list for catching based on player league and grade
-func (t *Talkers) BestPokememesList(update tgbotapi.Update, playerRaw dbmapping.Player) string {
+func (t *Talkers) BestPokememesList(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
 	pokememes, ok := c.Getters.GetBestPokememes(playerRaw.ID)
 	if !ok {
-		log.Printf("Cannot get pokememes from getter!")
+		c.Log.Error("Cannot get pokememes from getter!")
 		return "fail"
 	}
 

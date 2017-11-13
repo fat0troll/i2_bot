@@ -10,8 +10,8 @@
 [[projects]]
   name = "github.com/go-telegram-bot-api/telegram-bot-api"
   packages = ["."]
-  revision = "0a57807db79efce7f6719fbb2c0e0f83fda79aec"
-  version = "v4.6"
+  revision = "2022d04b94f50056a09962b1ac81cdd821d20a55"
+  version = "v4.6.1"
 
 [[projects]]
   branch = "master"
@@ -26,10 +26,28 @@
   version = "v2.1.0"
 
 [[projects]]
+  name = "github.com/sirupsen/logrus"
+  packages = ["."]
+  revision = "f006c2ac4710855cf0f916dd6b77acf6b048dc6e"
+  version = "v1.0.3"
+
+[[projects]]
   name = "github.com/technoweenie/multipartstreamer"
   packages = ["."]
   revision = "a90a01d73ae432e2611d178c18367fbaa13e0154"
   version = "v1.0.1"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/crypto"
+  packages = ["ssh/terminal"]
+  revision = "9f005a07e0d31d45e6656d241bb5c0f2efd4bc94"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/sys"
+  packages = ["unix","windows"]
+  revision = "665f6529cca930e27b831a0d1dafffbe1c172924"
 
 [[projects]]
   branch = "v2"
@@ -37,9 +55,15 @@
   packages = ["."]
   revision = "eb3733d160e74a9c7e442f435eb3bea458e1d19f"
 
+[[projects]]
+  branch = "master"
+  name = "lab.pztrn.name/golibs/mogrus"
+  packages = ["."]
+  revision = "a888e29e1fff06c2e6ebc607055a02de22a6ddae"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "5020a2712e7a565f5f7ed84b6ea5fe7a369303903dc3dfeb0de03777806f585e"
+  inputs-digest = "3e9df6d446d8789d138790622cf19935d4331f9903af640d13654c07b9f433a5"
   solver-name = "gps-cdcl"
   solver-version = 1

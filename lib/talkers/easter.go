@@ -4,18 +4,13 @@
 package talkers
 
 import (
-	// stdlib
-	"log"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"math/rand"
 	"time"
-	// 3rd party
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 // DurakMessage is an easter egg
-func (t *Talkers) DurakMessage(update tgbotapi.Update) {
-	log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
-
+func (t *Talkers) DurakMessage(update *tgbotapi.Update) {
 	reactions := make([]string, 0)
 	reactions = append(reactions, "Сам такой!",
 		"А ты типа нет?",
@@ -31,9 +26,7 @@ func (t *Talkers) DurakMessage(update tgbotapi.Update) {
 }
 
 // MatMessage is an easter rgg
-func (t *Talkers) MatMessage(update tgbotapi.Update) {
-	log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
-
+func (t *Talkers) MatMessage(update *tgbotapi.Update) {
 	reactions := make([]string, 0)
 	reactions = append(reactions, "Фу, как некультурно!",
 		"Иди рот с мылом помой",
