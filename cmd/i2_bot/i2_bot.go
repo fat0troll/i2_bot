@@ -15,6 +15,7 @@ import (
 	"lab.pztrn.name/fat0troll/i2_bot/lib/parsers"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/router"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/talkers"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/welcomer"
 )
 
 var (
@@ -30,6 +31,7 @@ func main() {
 	parsers.New(c)
 	talkers.New(c)
 	getters.New(c)
+	welcomer.New(c)
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60

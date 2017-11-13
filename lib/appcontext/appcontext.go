@@ -16,6 +16,7 @@ import (
 	"lab.pztrn.name/fat0troll/i2_bot/lib/parsers/parsersinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/router/routerinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/talkers/talkersinterface"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/welcomer/welcomerinterface"
 )
 
 // Context is an application context struct
@@ -28,6 +29,7 @@ type Context struct {
 	Db         *sqlx.DB
 	Talkers    talkersinterface.TalkersInterface
 	Getters    gettersinterface.GettersInterface
+	Welcomer   welcomerinterface.WelcomerInterface
 }
 
 // Init is a initialization function for context
@@ -63,6 +65,11 @@ func (c *Context) RegisterTalkersInterface(ti talkersinterface.TalkersInterface)
 // RegisterGettersInterface registering getters interface in application
 func (c *Context) RegisterGettersInterface(gi gettersinterface.GettersInterface) {
 	c.Getters = gi
+}
+
+// RegisterWelcomerInterface registering welcomer interface in application
+func (c *Context) RegisterWelcomerInterface(wi welcomerinterface.WelcomerInterface) {
+	c.Welcomer = wi
 }
 
 // RunDatabaseMigrations applies migrations on bot's startup

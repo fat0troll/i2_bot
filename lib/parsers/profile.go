@@ -219,10 +219,9 @@ func (p *Parsers) ParseProfile(update tgbotapi.Update, playerRaw dbmapping.Playe
 	} else if playerRaw.LeagueID != league.ID {
 		// Duplicate profile: user changed league, beware!
 		playerRaw.LeagueID = league.ID
-		playerRaw.SquadID = 0
 		playerRaw.Status = "league_changed"
 		playerRaw.CreatedAt = time.Now().UTC()
-		_, err5 := c.Db.NamedExec("INSERT INTO players VALUES(NULL, :telegram_id, :league_id, :squad_id, :status, :created_at, :updated_at)", &playerRaw)
+		_, err5 := c.Db.NamedExec("INSERT INTO players VALUES(NULL, :telegram_id, :league_id, :status, :created_at, :updated_at)", &playerRaw)
 		if err5 != nil {
 			log.Println(err5)
 			return "fail"

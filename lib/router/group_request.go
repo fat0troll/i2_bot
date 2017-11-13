@@ -23,7 +23,7 @@ func (r *Router) routeGroupRequest(update tgbotapi.Update, playerRaw dbmapping.P
 
 	// Welcomes
 	if update.Message.NewChatMember != nil {
-		return c.Talkers.WelcomeMessage(update)
+		return c.Welcomer.WelcomeMessage(update)
 	}
 	// New chat names
 	if update.Message.NewChatTitle != "" {

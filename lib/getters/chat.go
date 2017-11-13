@@ -84,6 +84,50 @@ func (g *Getters) GetAllPrivateChats() ([]dbmapping.Chat, bool) {
 	return privateChats, true
 }
 
+// GetAllGroupChats returns all group chats
+func (g *Getters) GetAllGroupChats() ([]dbmapping.Chat, bool) {
+	groupChats := []dbmapping.Chat{}
+
+	err := c.Db.Select(&groupChats, "SELECT * FROM chats WHERE chat_type IN ('group', 'supergroup')")
+	if err != nil {
+		log.Println(err)
+		return groupChats, false
+	}
+
+	return groupChats, true
+}
+
+// GetAllGroupChatsWithSquads returns all group chats with squads
+func (g *Getters) GetAllGroupChatsWithSquads() ([]dbmapping.SquadChat, bool) {
+	chatsSquads := []dbmapping.SquadChat{}
+	groupChats := []dbmapping.Chat{}
+
+	err := c.Db.Select(&groupChats, "SELECT * FROM chats WHERE chat_type IN ('group', 'supergroup')")
+	if err != nil {
+		log.Println(err)
+		return chatsSquads, false
+	}
+
+	for i := range groupChats {
+		chatSquad := dbmapping.SquadChat{}
+		squad := dbmapping.Squad{}
+		err = c.Db.Select(&squad, c.Db.Rebind("SELECT * FROM squads WHERE chat_id="), groupChats[i].ID)
+		if err != nil {
+			log.Println(err)
+			chatSquad.IsSquad = false
+		} else {
+			chatSquad.IsSquad = true
+		}
+
+		chatSquad.Squad = squad
+		chatSquad.Chat = groupChats[i]
+
+		chatsSquads = append(chatsSquads, chatSquad)
+	}
+
+	return chatsSquads, true
+}
+
 // UpdateChatTitle updates chat title in database
 func (g *Getters) UpdateChatTitle(chatRaw dbmapping.Chat, newTitle string) (dbmapping.Chat, bool) {
 	chatRaw.Name = newTitle

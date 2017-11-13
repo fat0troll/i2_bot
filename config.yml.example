@@ -6,3 +6,5 @@ database_connection:
     user: "i2_bot"
     password: "i2_bot"
     database: "i2_bot"
+notifications:
+    group_id: "group_id"

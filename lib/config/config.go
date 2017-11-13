@@ -28,10 +28,16 @@ type TelegramConnection struct {
 	APIToken string `yaml:"api_token"`
 }
 
+// NotificationsConnection handles settings for notifications
+type NotificationsConnection struct {
+	GroupID string `yaml:"group_id"`
+}
+
 // Config is a struct which represents config.yaml structure
 type Config struct {
-	Telegram TelegramConnection `yaml:"telegram_connection"`
-	Database DatabaseConnection `yaml:"database_connection"`
+	Telegram      TelegramConnection      `yaml:"telegram_connection"`
+	Database      DatabaseConnection      `yaml:"database_connection"`
+	Notifications NotificationsConnection `yaml:"notifications"`
 }
 
 // Init is a configuration initializer

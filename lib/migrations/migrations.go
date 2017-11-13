@@ -34,6 +34,7 @@ func (m *Migrations) Init() {
 	goose.AddNamedMigration("17_change_profile_pokememes_columns.go", ChangeProfilePokememesColumnsUp, ChangeProfilePokememesColumnsDown)
 	goose.AddNamedMigration("18_add_pokememes_wealth.go", AddPokememesWealthUp, AddPokememesWealthDown)
 	goose.AddNamedMigration("19_create_broadcasts.go", CreateBroadcastsUp, CreateBroadcastsDown)
+	goose.AddNamedMigration("20_create_squads.go", CreateSquadsUp, CreateSquadsDown)
 }
 
 func (m *Migrations) Migrate() error {

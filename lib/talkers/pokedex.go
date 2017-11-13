@@ -44,6 +44,14 @@ func (t *Talkers) pokememesListing(update tgbotapi.Update, page int, pokememesAr
 		}
 	}
 
+	if len(pokememesArray) > page*50 {
+		message += "\n"
+		message += "Переход на следующую страницу: /pokedeks" + strconv.Itoa(page+1)
+	}
+	if page > 1 {
+		message += "\nПереход на предыдущую страницу: /pokedeks" + strconv.Itoa(page-1)
+	}
+
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ParseMode = "Markdown"
 

@@ -13,7 +13,6 @@ type Player struct {
 	ID         int       `db:"id"`
 	TelegramID int       `db:"telegram_id"`
 	LeagueID   int       `db:"league_id"`
-	SquadID    int       `db:"squad_id"`
 	Status     string    `db:"status"`
 	CreatedAt  time.Time `db:"created_at"`
 	UpdatedAt  time.Time `db:"updated_at"`

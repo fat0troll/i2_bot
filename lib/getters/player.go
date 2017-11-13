@@ -35,11 +35,10 @@ func (g *Getters) GetOrCreatePlayer(telegramID int) (dbmapping.Player, bool) {
 		// Create "nobody" user
 		playerRaw.TelegramID = telegramID
 		playerRaw.LeagueID = 0
-		playerRaw.SquadID = 0
 		playerRaw.Status = "nobody"
 		playerRaw.CreatedAt = time.Now().UTC()
 		playerRaw.UpdatedAt = time.Now().UTC()
-		_, err = c.Db.NamedExec("INSERT INTO players VALUES(NULL, :telegram_id, :league_id, :squad_id, :status, :created_at, :updated_at)", &playerRaw)
+		_, err = c.Db.NamedExec("INSERT INTO players VALUES(NULL, :telegram_id, :league_id, :status, :created_at, :updated_at)", &playerRaw)
 		if err != nil {
 			log.Printf(err.Error())
 			return playerRaw, false

@@ -135,6 +135,14 @@ func (r *Router) routePrivateRequest(update tgbotapi.Update, playerRaw dbmapping
 
 				c.Talkers.AnyMessageUnauthorized(update)
 				return "fail"
+			case update.Message.Command() == "group_chats":
+				if c.Getters.PlayerBetterThan(&playerRaw, "admin") {
+					c.Talkers.GroupsList(update)
+					return "ok"
+				}
+
+				c.Talkers.AnyMessageUnauthorized(update)
+				return "fail"
 			}
 		}
 	}
