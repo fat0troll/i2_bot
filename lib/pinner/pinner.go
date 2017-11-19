@@ -15,7 +15,7 @@ func (p *Pinner) PinMessageToAllChats(update *tgbotapi.Update) string {
 		return "fail"
 	}
 
-	groupChats, ok := c.Getters.GetAllGroupChats()
+	groupChats, ok := c.Chatter.GetAllGroupChats()
 	if !ok {
 		return "fail"
 	}

@@ -78,8 +78,23 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 				return "fail"
 			case update.Message.Command() == "group_chats":
 				if c.Getters.PlayerBetterThan(playerRaw, "admin") {
-					c.Talkers.GroupsList(update)
+					c.Chatter.GroupsList(update)
 					return "ok"
+				}
+
+				c.Talkers.AnyMessageUnauthorized(update)
+				return "fail"
+			case update.Message.Command() == "squads":
+				if c.Getters.PlayerBetterThan(playerRaw, "admin") {
+					c.Squader.SquadsList(update)
+					return "ok"
+				}
+
+				c.Talkers.AnyMessageUnauthorized(update)
+				return "fail"
+			case update.Message.Command() == "make_squad":
+				if c.Getters.PlayerBetterThan(playerRaw, "admin") {
+					return c.Squader.CreateSquad(update)
 				}
 
 				c.Talkers.AnyMessageUnauthorized(update)

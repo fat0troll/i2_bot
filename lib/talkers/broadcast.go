@@ -4,10 +4,10 @@
 package talkers
 
 import (
-	"strconv"
-	"strings"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
+	"strconv"
+	"strings"
 )
 
 // AdminBroadcastMessageCompose saves message for future broadcast
@@ -63,7 +63,7 @@ func (t *Talkers) AdminBroadcastMessageSend(update *tgbotapi.Update, playerRaw *
 
 	broadcastingMessageBody := messageRaw.Text
 
-	privateChats, ok := c.Getters.GetAllPrivateChats()
+	privateChats, ok := c.Chatter.GetAllPrivateChats()
 	if !ok {
 		return "fail"
 	}

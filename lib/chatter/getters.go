@@ -1,7 +1,7 @@
 // i2_bot – Instinct PokememBro Bot
 // Copyright (c) 2017 Vladimir "fat0troll" Hodakov
 
-package getters
+package chatter
 
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
@@ -9,8 +9,43 @@ import (
 	"time"
 )
 
+func (ct *Chatter) getAllGroupChatsWithSquads() ([]dbmapping.ChatSquad, bool) {
+	chatsSquads := []dbmapping.ChatSquad{}
+	groupChats := []dbmapping.Chat{}
+
+	err := c.Db.Select(&groupChats, "SELECT * FROM chats WHERE chat_type IN ('group', 'supergroup')")
+	if err != nil {
+		c.Log.Error(err)
+		return chatsSquads, false
+	}
+
+	for i := range groupChats {
+		chatSquad := dbmapping.ChatSquad{}
+		squad := dbmapping.Squad{}
+		err = c.Db.Get(&squad, c.Db.Rebind("SELECT * FROM squads WHERE chat_id=?"), groupChats[i].ID)
+		if err != nil {
+			c.Log.Debug(err)
+		} else {
+			chatSquad.ChatRole = "squad"
+		}
+		err = c.Db.Get(&squad, c.Db.Rebind("SELECT * FROM squads WHERE flood_chat_id=?"), groupChats[i].ID)
+		if err != nil {
+			c.Log.Debug(err)
+		} else {
+			chatSquad.ChatRole = "flood"
+		}
+
+		chatSquad.Squad = squad
+		chatSquad.Chat = groupChats[i]
+
+		chatsSquads = append(chatsSquads, chatSquad)
+	}
+
+	return chatsSquads, true
+}
+
 // GetChatByID returns dbmapping.Chat instance with given ID.
-func (g *Getters) GetChatByID(chatID int64) (dbmapping.Chat, bool) {
+func (ct *Chatter) GetChatByID(chatID int64) (dbmapping.Chat, bool) {
 	chatRaw := dbmapping.Chat{}
 	err := c.Db.Get(&chatRaw, c.Db.Rebind("SELECT * FROM chats WHERE id=?"), chatID)
 	if err != nil {
@@ -23,7 +58,7 @@ func (g *Getters) GetChatByID(chatID int64) (dbmapping.Chat, bool) {
 
 // GetOrCreateChat seeks for chat in database via Telegram update.
 // In case, when there is no chat with such ID, new chat will be created.
-func (g *Getters) GetOrCreateChat(telegramUpdate *tgbotapi.Update) (dbmapping.Chat, bool) {
+func (ct *Chatter) GetOrCreateChat(telegramUpdate *tgbotapi.Update) (dbmapping.Chat, bool) {
 	chatRaw := dbmapping.Chat{}
 	c.Log.Debug("TGID: ", telegramUpdate.Message.Chat.ID)
 	err := c.Db.Get(&chatRaw, c.Db.Rebind("SELECT * FROM chats WHERE telegram_id=?"), telegramUpdate.Message.Chat.ID)
@@ -68,7 +103,7 @@ func (g *Getters) GetOrCreateChat(telegramUpdate *tgbotapi.Update) (dbmapping.Ch
 }
 
 // GetAllPrivateChats returns all private chats
-func (g *Getters) GetAllPrivateChats() ([]dbmapping.Chat, bool) {
+func (ct *Chatter) GetAllPrivateChats() ([]dbmapping.Chat, bool) {
 	privateChats := []dbmapping.Chat{}
 
 	err := c.Db.Select(&privateChats, "SELECT * FROM chats WHERE chat_type='private'")
@@ -81,7 +116,7 @@ func (g *Getters) GetAllPrivateChats() ([]dbmapping.Chat, bool) {
 }
 
 // GetAllGroupChats returns all group chats
-func (g *Getters) GetAllGroupChats() ([]dbmapping.Chat, bool) {
+func (ct *Chatter) GetAllGroupChats() ([]dbmapping.Chat, bool) {
 	groupChats := []dbmapping.Chat{}
 
 	err := c.Db.Select(&groupChats, "SELECT * FROM chats WHERE chat_type IN ('group', 'supergroup')")
@@ -91,47 +126,4 @@ func (g *Getters) GetAllGroupChats() ([]dbmapping.Chat, bool) {
 	}
 
 	return groupChats, true
-}
-
-// GetAllGroupChatsWithSquads returns all group chats with squads
-func (g *Getters) GetAllGroupChatsWithSquads() ([]dbmapping.SquadChat, bool) {
-	chatsSquads := []dbmapping.SquadChat{}
-	groupChats := []dbmapping.Chat{}
-
-	err := c.Db.Select(&groupChats, "SELECT * FROM chats WHERE chat_type IN ('group', 'supergroup')")
-	if err != nil {
-		c.Log.Error(err)
-		return chatsSquads, false
-	}
-
-	for i := range groupChats {
-		chatSquad := dbmapping.SquadChat{}
-		squad := dbmapping.Squad{}
-		err = c.Db.Select(&squad, c.Db.Rebind("SELECT * FROM squads WHERE chat_id="), groupChats[i].ID)
-		if err != nil {
-			c.Log.Debug(err)
-			chatSquad.IsSquad = false
-		} else {
-			chatSquad.IsSquad = true
-		}
-
-		chatSquad.Squad = squad
-		chatSquad.Chat = groupChats[i]
-
-		chatsSquads = append(chatsSquads, chatSquad)
-	}
-
-	return chatsSquads, true
-}
-
-// UpdateChatTitle updates chat title in database
-func (g *Getters) UpdateChatTitle(chatRaw *dbmapping.Chat, newTitle string) (*dbmapping.Chat, bool) {
-	chatRaw.Name = newTitle
-	_, err := c.Db.NamedExec("UPDATE chats SET name=:name WHERE id=:id", &chatRaw)
-	if err != nil {
-		c.Log.Error(err)
-		return chatRaw, false
-	}
-
-	return chatRaw, true
 }

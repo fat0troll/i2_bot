@@ -6,6 +6,7 @@ package appcontext
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/jmoiron/sqlx"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/chatter/chatterinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/config"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/connections"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/forwarder/forwarderinterface"
@@ -14,6 +15,7 @@ import (
 	"lab.pztrn.name/fat0troll/i2_bot/lib/parsers/parsersinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/pinner/pinnerinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/router/routerinterface"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/squader/squaderinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/talkers/talkersinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/welcomer/welcomerinterface"
 	"lab.pztrn.name/golibs/mogrus"
@@ -34,6 +36,8 @@ type Context struct {
 	Getters    gettersinterface.GettersInterface
 	Welcomer   welcomerinterface.WelcomerInterface
 	Pinner     pinnerinterface.PinnerInterface
+	Chatter    chatterinterface.ChatterInterface
+	Squader    squaderinterface.SquaderInterface
 }
 
 // Init is a initialization function for context
@@ -104,6 +108,18 @@ func (c *Context) RegisterPinnerInterface(pi pinnerinterface.PinnerInterface) {
 func (c *Context) RegisterForwarderInterface(fi forwarderinterface.ForwarderInterface) {
 	c.Forwarder = fi
 	c.Forwarder.Init()
+}
+
+// RegisterChatterInterface registers chatter interface in application
+func (c *Context) RegisterChatterInterface(ci chatterinterface.ChatterInterface) {
+	c.Chatter = ci
+	c.Chatter.Init()
+}
+
+// RegisterSquaderInterface registers squader interface in application
+func (c *Context) RegisterSquaderInterface(si squaderinterface.SquaderInterface) {
+	c.Squader = si
+	c.Squader.Init()
 }
 
 // RunDatabaseMigrations applies migrations on bot's startup

@@ -31,8 +31,6 @@ type TalkersInterface interface {
 	AdminBroadcastMessageCompose(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
 	AdminBroadcastMessageSend(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
 
-	GroupsList(update *tgbotapi.Update) string
-
 	DurakMessage(update *tgbotapi.Update)
 	MatMessage(update *tgbotapi.Update)
 }

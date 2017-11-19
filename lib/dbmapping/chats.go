@@ -15,3 +15,10 @@ type Chat struct {
 	TelegramID int64     `db:"telegram_id"`
 	CreatedAt  time.Time `db:"created_at"`
 }
+
+// ChatSquad is a stuct, which combines information about chats and squads
+type ChatSquad struct {
+	Chat     Chat
+	Squad    Squad
+	ChatRole string
+}

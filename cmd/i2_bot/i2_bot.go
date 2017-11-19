@@ -6,12 +6,14 @@ package main
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/appcontext"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/chatter"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/forwarder"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/getters"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/migrations"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/parsers"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/pinner"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/router"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/squader"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/talkers"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/welcomer"
 	"time"
@@ -33,6 +35,8 @@ func main() {
 	talkers.New(c)
 	getters.New(c)
 	welcomer.New(c)
+	chatter.New(c)
+	squader.New(c)
 
 	c.Log.Info("=======================")
 	c.Log.Info("= i2_bot initialized. =")

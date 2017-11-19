@@ -27,7 +27,17 @@ func (r *Router) routeGroupRequest(update *tgbotapi.Update, playerRaw *dbmapping
 	}
 	// New chat names
 	if update.Message.NewChatTitle != "" {
-		_, ok := c.Getters.UpdateChatTitle(chatRaw, update.Message.NewChatTitle)
+		_, ok := c.Chatter.UpdateChatTitle(chatRaw, update.Message.NewChatTitle)
+		if ok {
+			return "ok"
+		}
+
+		return "fail"
+	}
+
+	// New chat IDs (usually on supergroup creation)
+	if (update.Message.MigrateToChatID != 0) && (update.Message.MigrateFromChatID != 0) {
+		_, ok := c.Chatter.UpdateChatTelegramID(update)
 		if ok {
 			return "ok"
 		}

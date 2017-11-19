@@ -15,7 +15,7 @@ func (r *Router) RouteRequest(update *tgbotapi.Update) string {
 		return "fail"
 	}
 
-	chatRaw, ok := c.Getters.GetOrCreateChat(update)
+	chatRaw, ok := c.Chatter.GetOrCreateChat(update)
 	if !ok {
 		return "fail"
 	}
