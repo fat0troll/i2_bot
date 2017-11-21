@@ -18,8 +18,8 @@ func (t *Talkers) AnyMessageUnauthorized(update *tgbotapi.Update) {
 	c.Bot.Send(msg)
 }
 
-// GetterError throws when bot can't get something
-func (t *Talkers) GetterError(update *tgbotapi.Update) {
+// BotError throws when bot can't do something
+func (t *Talkers) BotError(update *tgbotapi.Update) {
 	message := "Ой, внутренняя ошибка в боте :(\n\n"
 	message += "Напиши @fat0troll, приложив форвардом последние сообщения до этого.\n"
 

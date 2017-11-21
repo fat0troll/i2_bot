@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 )
 
-const VERSION = "0.35"
+const VERSION = "0.51"
 
 // DatabaseConnection handles database connection settings in config.yaml
 type DatabaseConnection struct {

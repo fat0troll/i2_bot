@@ -1,7 +1,7 @@
 // i2_bot – Instinct PokememBro Bot
 // Copyright (c) 2017 Vladimir "fat0troll" Hodakov
 
-package parsers
+package users
 
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
@@ -14,13 +14,13 @@ import (
 
 // Internal functions
 
-func (p *Parsers) fillProfilePokememe(profileID int, meme string, attack string, rarity string) {
+func (u *Users) fillProfilePokememe(profileID int, meme string, attack string, rarity string) {
 	spkRaw := dbmapping.Pokememe{}
 	err := c.Db.Get(&spkRaw, c.Db.Rebind("SELECT * FROM pokememes WHERE name='"+meme+"';"))
 	if err != nil {
 		c.Log.Error(err.Error())
 	} else {
-		attackInt := p.getPoints(attack)
+		attackInt := c.Statistics.GetPoints(attack)
 		ppk := dbmapping.ProfilePokememe{}
 		ppk.ProfileID = profileID
 		ppk.PokememeID = spkRaw.ID
@@ -37,7 +37,7 @@ func (p *Parsers) fillProfilePokememe(profileID int, meme string, attack string,
 // External functions
 
 // ParseProfile parses user profile, forwarded from PokememBroBot, to database
-func (p *Parsers) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
+func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
 	text := update.Message.Text
 	c.Log.Info(text)
 
@@ -78,6 +78,7 @@ func (p *Parsers) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 			err1 := c.Db.Get(&league, c.Db.Rebind("SELECT * FROM leagues WHERE symbol='"+string(currentRunes[0])+"'"))
 			if err1 != nil {
 				c.Log.Error(err1.Error())
+				u.profileAddFailureMessage(update)
 				return "fail"
 			}
 			for j := range currentRunes {
@@ -91,6 +92,7 @@ func (p *Parsers) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 			levelArray := levelRx.FindAllString(currentString, -1)
 			if len(levelArray) < 1 {
 				c.Log.Error("Level string broken")
+				u.profileAddFailureMessage(update)
 				return "fail"
 			}
 			level = levelArray[0]
@@ -102,6 +104,7 @@ func (p *Parsers) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 			expArray := expRx.FindAllString(currentString, -1)
 			if len(expArray) < 4 {
 				c.Log.Error("Exp string broken")
+				u.profileAddFailureMessage(update)
 				return "fail"
 			}
 			exp = expArray[0]
@@ -115,6 +118,7 @@ func (p *Parsers) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 			pkbArray := pkbRx.FindAllString(currentString, -1)
 			if len(pkbArray) < 2 {
 				c.Log.Error("Pokeballs string broken")
+				u.profileAddFailureMessage(update)
 				return "fail"
 			}
 			pokeballs = pkbArray[1]
@@ -126,12 +130,13 @@ func (p *Parsers) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 			wealthArray := wealthRx.FindAllString(currentString, -1)
 			if len(wealthArray) < 2 {
 				c.Log.Error("Wealth string broken")
+				u.profileAddFailureMessage(update)
 				return "fail"
 			}
 			wealth = wealthArray[0]
-			wealthInt = p.getPoints(wealth)
+			wealthInt = c.Statistics.GetPoints(wealth)
 			crystalls = wealthArray[1]
-			crystallsInt = p.getPoints(crystalls)
+			crystallsInt = c.Statistics.GetPoints(crystalls)
 		}
 
 		if strings.HasPrefix(currentString, "🔫") {
@@ -146,11 +151,12 @@ func (p *Parsers) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 			pkNumArray := pkmnumRx.FindAllString(currentString, -1)
 			if len(pkNumArray) < 3 {
 				c.Log.Error("Pokememes count broken")
+				u.profileAddFailureMessage(update)
 				return "fail"
 			}
 			pokememesCount, _ := strconv.Atoi(pkNumArray[0])
 			pokememesWealth = pkNumArray[2]
-			pokememesWealthInt = p.getPoints(pokememesWealth)
+			pokememesWealthInt = c.Statistics.GetPoints(pokememesWealth)
 			if pokememesCount > 0 {
 				for pi := 0; pi < pokememesCount; pi++ {
 					pokememeString := string(profileRunesArray[i+1+pi])
@@ -162,7 +168,7 @@ func (p *Parsers) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 					pkName = strings.TrimSuffix(pkName, " ")
 					pkName = strings.Split(pkName, "⃣ ")[1]
 					pokememes[pkName] = pkAttack
-					powerInt += p.getPoints(pkAttack)
+					powerInt += c.Statistics.GetPoints(pkAttack)
 				}
 			}
 		}
@@ -210,6 +216,7 @@ func (p *Parsers) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 		_, err4 := c.Db.NamedExec("UPDATE `players` SET league_id=:league_id, status=:status WHERE id=:id", &playerRaw)
 		if err4 != nil {
 			c.Log.Error(err4.Error())
+			u.profileAddFailureMessage(update)
 			return "fail"
 		}
 	} else if playerRaw.LeagueID != league.ID {
@@ -220,11 +227,13 @@ func (p *Parsers) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 		_, err5 := c.Db.NamedExec("INSERT INTO players VALUES(NULL, :telegram_id, :league_id, :status, :created_at, :updated_at)", &playerRaw)
 		if err5 != nil {
 			c.Log.Error(err5.Error())
+			u.profileAddFailureMessage(update)
 			return "fail"
 		}
 		err6 := c.Db.Get(&playerRaw, c.Db.Rebind("SELECT * FROM players WHERE telegram_id='"+strconv.Itoa(playerRaw.TelegramID)+"' AND league_id='"+strconv.Itoa(league.ID)+"';"))
 		if err6 != nil {
 			c.Log.Error(err6.Error())
+			u.profileAddFailureMessage(update)
 			return "fail"
 		}
 	}
@@ -247,6 +256,7 @@ func (p *Parsers) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 	_, err3 := c.Db.NamedExec("INSERT INTO `profiles` VALUES(NULL, :player_id, :nickname, :telegram_nickname, :level_id, :pokeballs, :wealth, :pokememes_wealth, :exp, :egg_exp, :power, :weapon_id, :crystalls, :created_at)", &profileRaw)
 	if err3 != nil {
 		c.Log.Error(err3.Error())
+		u.profileAddFailureMessage(update)
 		return "fail"
 	}
 
@@ -254,6 +264,7 @@ func (p *Parsers) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 	if err8 != nil {
 		c.Log.Error(err8.Error())
 		c.Log.Error("Profile isn't added!")
+		u.profileAddFailureMessage(update)
 		return "fail"
 	}
 
@@ -261,6 +272,7 @@ func (p *Parsers) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 	_, err7 := c.Db.NamedExec("UPDATE `players` SET updated_at=:updated_at WHERE id=:id", &playerRaw)
 	if err7 != nil {
 		c.Log.Error(err7.Error())
+		u.profileAddFailureMessage(update)
 		return "fail"
 	}
 
@@ -282,8 +294,9 @@ func (p *Parsers) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 			rarity = "super liber"
 			meme = strings.Replace(meme, "🔷", "", 1)
 		}
-		p.fillProfilePokememe(profileRaw.ID, meme, attack, rarity)
+		u.fillProfilePokememe(profileRaw.ID, meme, attack, rarity)
 	}
 
+	u.profileAddSuccessMessage(update)
 	return "ok"
 }

@@ -1,7 +1,7 @@
 // i2_bot – Instinct PokememBro Bot
 // Copyright (c) 2017 Vladimir "fat0troll" Hodakov
 
-package talkers
+package users
 
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
@@ -10,8 +10,8 @@ import (
 )
 
 // ProfileMessage shows current player's profile
-func (t *Talkers) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
-	profileRaw, ok := c.Getters.GetProfile(playerRaw.ID)
+func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
+	profileRaw, ok := u.GetProfile(playerRaw.ID)
 	if !ok {
 		c.Talkers.AnyMessageUnauthorized(update)
 		return "fail"
@@ -60,13 +60,13 @@ func (t *Talkers) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.P
 	message += "\n👤 " + strconv.Itoa(profileRaw.LevelID)
 	message += " | 🎓 " + strconv.Itoa(profileRaw.Exp) + "/" + strconv.Itoa(level.MaxExp)
 	message += " | 🥚 " + strconv.Itoa(profileRaw.EggExp) + "/" + strconv.Itoa(level.MaxEgg)
-	message += "\n💲" + c.Parsers.ReturnPoints(profileRaw.Wealth)
+	message += "\n💲" + c.Statistics.GetPrintablePoints(profileRaw.Wealth)
 	message += " |💎" + strconv.Itoa(profileRaw.Crystalls)
 	message += " |⭕" + strconv.Itoa(profileRaw.Pokeballs)
-	message += "\n⚔Атака: 1 + " + c.Parsers.ReturnPoints(weapon.Power) + " + " + c.Parsers.ReturnPoints(attackPokememes) + "\n"
+	message += "\n⚔Атака: 1 + " + c.Statistics.GetPrintablePoints(weapon.Power) + " + " + c.Statistics.GetPrintablePoints(attackPokememes) + "\n"
 
 	if profileRaw.WeaponID != 0 {
-		message += "\n🔫Оружие: " + weapon.Name + " " + c.Parsers.ReturnPoints(weapon.Power) + "⚔"
+		message += "\n🔫Оружие: " + weapon.Name + " " + c.Statistics.GetPrintablePoints(weapon.Power) + "⚔"
 	}
 
 	message += "\n🐱Покемемы:"
@@ -75,11 +75,11 @@ func (t *Talkers) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.P
 			if profilePokememes[i].PokememeID == pokememes[j].ID {
 				message += "\n" + strconv.Itoa(pokememes[j].Grade)
 				message += "⃣ " + pokememes[j].Name
-				message += " +" + c.Parsers.ReturnPoints(profilePokememes[i].PokememeAttack) + "⚔"
+				message += " +" + c.Statistics.GetPrintablePoints(profilePokememes[i].PokememeAttack) + "⚔"
 			}
 		}
 	}
-	message += "\nСтоимость покемемов на руках: " + c.Parsers.ReturnPoints(profileRaw.PokememesWealth) + "$"
+	message += "\nСтоимость покемемов на руках: " + c.Statistics.GetPrintablePoints(profileRaw.PokememesWealth) + "$"
 	message += "\n\n💳" + strconv.Itoa(playerRaw.TelegramID)
 	message += "\n⏰Последнее обновление профиля: " + profileRaw.CreatedAt.Format("02.01.2006 15:04:05")
 	message += "\n\nНе забывай обновляться, это важно для получения актуальной информации.\n\n"

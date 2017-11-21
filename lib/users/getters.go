@@ -1,15 +1,27 @@
 // i2_bot – Instinct PokememBro Bot
 // Copyright (c) 2017 Vladimir "fat0troll" Hodakov
 
-package getters
+package users
 
 import (
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 	"time"
 )
 
+// GetProfile returns last saved profile of player
+func (u *Users) GetProfile(playerID int) (dbmapping.Profile, bool) {
+	profileRaw := dbmapping.Profile{}
+	err := c.Db.Get(&profileRaw, c.Db.Rebind("SELECT * FROM profiles WHERE player_id=? ORDER BY created_at DESC LIMIT 1"), playerID)
+	if err != nil {
+		c.Log.Error(err)
+		return profileRaw, false
+	}
+
+	return profileRaw, true
+}
+
 // GetPlayerByID returns dbmapping.Player instance with given ID.
-func (g *Getters) GetPlayerByID(playerID int) (dbmapping.Player, bool) {
+func (u *Users) GetPlayerByID(playerID int) (dbmapping.Player, bool) {
 	playerRaw := dbmapping.Player{}
 	err := c.Db.Get(&playerRaw, c.Db.Rebind("SELECT * FROM players WHERE id=?"), playerID)
 	if err != nil {
@@ -22,7 +34,7 @@ func (g *Getters) GetPlayerByID(playerID int) (dbmapping.Player, bool) {
 
 // GetOrCreatePlayer seeks for player in database via Telegram ID.
 // In case, when there is no player with such ID, new player will be created.
-func (g *Getters) GetOrCreatePlayer(telegramID int) (dbmapping.Player, bool) {
+func (u *Users) GetOrCreatePlayer(telegramID int) (dbmapping.Player, bool) {
 	playerRaw := dbmapping.Player{}
 	err := c.Db.Get(&playerRaw, c.Db.Rebind("SELECT * FROM players WHERE telegram_id=?"), telegramID)
 	if err != nil {
@@ -49,7 +61,7 @@ func (g *Getters) GetOrCreatePlayer(telegramID int) (dbmapping.Player, bool) {
 
 // PlayerBetterThan return true, if profile is more or equal powerful than
 // provided power level
-func (g *Getters) PlayerBetterThan(playerRaw *dbmapping.Player, powerLevel string) bool {
+func (u *Users) PlayerBetterThan(playerRaw *dbmapping.Player, powerLevel string) bool {
 	var isBetter = false
 	switch playerRaw.Status {
 	case "owner":

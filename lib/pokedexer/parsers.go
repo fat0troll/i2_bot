@@ -1,9 +1,10 @@
 // i2_bot – Instinct PokememBro Bot
 // Copyright (c) 2017 Vladimir "fat0troll" Hodakov
 
-package parsers
+package pokedexer
 
 import (
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 	"regexp"
 	"strconv"
@@ -11,28 +12,9 @@ import (
 	"time"
 )
 
-// Internal functions
-
-func (p *Parsers) getPoints(pointsStr string) int {
-	value := 0
-	if strings.HasSuffix(pointsStr, "K") {
-		valueNumber := strings.Replace(pointsStr, "K", "", 1)
-		valueFloat, _ := strconv.ParseFloat(valueNumber, 64)
-		value = int(valueFloat * 1000)
-	} else if strings.HasSuffix(pointsStr, "M") {
-		valueNumber := strings.Replace(pointsStr, "M", "", 1)
-		valueFloat, _ := strconv.ParseFloat(valueNumber, 64)
-		value = int(valueFloat * 1000000)
-	} else {
-		value, _ = strconv.Atoi(pointsStr)
-	}
-	return value
-}
-
-// External functions
-
 // ParsePokememe parses pokememe, forwarded from PokememeBroBot, to database
-func (p *Parsers) ParsePokememe(text string, playerRaw *dbmapping.Player) string {
+func (p *Pokedexer) ParsePokememe(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
+	text := update.Message.Text
 	var defendablePokememe = false
 	pokememeStringsArray := strings.Split(text, "\n")
 	pokememeRunesArray := make([][]rune, 0)
@@ -58,6 +40,7 @@ func (p *Parsers) ParsePokememe(text string, playerRaw *dbmapping.Player) string
 	err := c.Db.Select(&elements, "SELECT * FROM elements WHERE symbol IN ('"+strings.Join(elementEmojis, "', '")+"')")
 	if err != nil {
 		c.Log.Error(err.Error())
+		p.pokememeAddFailureMessage(update)
 		return "fail"
 	}
 
@@ -67,6 +50,7 @@ func (p *Parsers) ParsePokememe(text string, playerRaw *dbmapping.Player) string
 	if len(hitPoints) != 3 {
 		c.Log.Error("Can't parse hitpoints!")
 		c.Log.Debug(pokememeRunesArray[5])
+		p.pokememeAddFailureMessage(update)
 		return "fail"
 	}
 
@@ -84,6 +68,7 @@ func (p *Parsers) ParsePokememe(text string, playerRaw *dbmapping.Player) string
 		if len(defenceMatch) < 1 {
 			c.Log.Error("Can't parse defence!")
 			c.Log.Debug(pokememeRunesArray[6])
+			p.pokememeAddFailureMessage(update)
 			return "fail"
 		}
 		defence = defenceMatch[0]
@@ -91,6 +76,7 @@ func (p *Parsers) ParsePokememe(text string, playerRaw *dbmapping.Player) string
 		if len(priceMatch) < 1 {
 			c.Log.Error("Can't parse price!")
 			c.Log.Debug(pokememeRunesArray[7])
+			p.pokememeAddFailureMessage(update)
 			return "fail"
 		}
 		price = priceMatch[0]
@@ -98,18 +84,21 @@ func (p *Parsers) ParsePokememe(text string, playerRaw *dbmapping.Player) string
 		if len(locationsPrepare) < 2 {
 			c.Log.Error("Can't parse locations!")
 			c.Log.Debug(pokememeRunesArray[8])
+			p.pokememeAddFailureMessage(update)
 			return "fail"
 		}
 		locationsNames := strings.Split(locationsPrepare[1], ", ")
 		if len(locationsNames) < 1 {
 			c.Log.Error("Can't parse locations!")
 			c.Log.Debug(locationsPrepare)
+			p.pokememeAddFailureMessage(update)
 			return "fail"
 		}
 
 		err2 := c.Db.Select(&locations, "SELECT * FROM locations WHERE name IN ('"+strings.Join(locationsNames, "', '")+"')")
 		if err2 != nil {
 			c.Log.Error(err2.Error())
+			p.pokememeAddFailureMessage(update)
 			return "fail"
 		}
 		if strings.HasSuffix(string(pokememeRunesArray[9]), "Можно") {
@@ -123,6 +112,7 @@ func (p *Parsers) ParsePokememe(text string, playerRaw *dbmapping.Player) string
 		if len(priceMatch) < 1 {
 			c.Log.Error("Can't parse price!")
 			c.Log.Debug(pokememeRunesArray[6])
+			p.pokememeAddFailureMessage(update)
 			return "fail"
 		}
 		price = priceMatch[0]
@@ -130,18 +120,21 @@ func (p *Parsers) ParsePokememe(text string, playerRaw *dbmapping.Player) string
 		if len(locationsPrepare) < 2 {
 			c.Log.Error("Can't parse locations!")
 			c.Log.Debug(pokememeRunesArray[7])
+			p.pokememeAddFailureMessage(update)
 			return "fail"
 		}
 		locationsNames := strings.Split(locationsPrepare[1], ", ")
 		if len(locationsNames) < 1 {
 			c.Log.Error("Can't parse locations!")
 			c.Log.Debug(locationsPrepare)
+			p.pokememeAddFailureMessage(update)
 			return "fail"
 		}
 
 		err2 := c.Db.Select(&locations, "SELECT * FROM locations WHERE name IN ('"+strings.Join(locationsNames, "', '")+"')")
 		if err2 != nil {
 			c.Log.Error(err2.Error())
+			p.pokememeAddFailureMessage(update)
 			return "fail"
 		}
 		if strings.HasSuffix(string(pokememeRunesArray[8]), "Можно") {
@@ -184,15 +177,16 @@ func (p *Parsers) ParsePokememe(text string, playerRaw *dbmapping.Player) string
 		c.Log.Debug("Adding new pokememe...")
 	} else {
 		c.Log.Info("This pokememe already exist. Return specific error.")
+		p.pokememeAddDuplicateMessage(update)
 		return "dup"
 	}
 
 	gradeInt, _ := strconv.Atoi(grade)
-	attackInt := p.getPoints(hitPoints[0])
-	hpInt := p.getPoints(hitPoints[1])
-	mpInt := p.getPoints(hitPoints[2])
-	defenceInt := p.getPoints(defence)
-	priceInt := p.getPoints(price)
+	attackInt := c.Statistics.GetPoints(hitPoints[0])
+	hpInt := c.Statistics.GetPoints(hitPoints[1])
+	mpInt := c.Statistics.GetPoints(hitPoints[2])
+	defenceInt := c.Statistics.GetPoints(defence)
+	priceInt := c.Statistics.GetPoints(price)
 
 	pokememe.Grade = gradeInt
 	pokememe.Name = name
@@ -214,6 +208,7 @@ func (p *Parsers) ParsePokememe(text string, playerRaw *dbmapping.Player) string
 	_, err4 := c.Db.NamedExec("INSERT INTO pokememes VALUES(NULL, :grade, :name, :description, :attack, :hp, :mp, :defence, :price, :purchaseable, :image_url, :player_id, :created_at)", &pokememe)
 	if err4 != nil {
 		c.Log.Error(err4.Error())
+		p.pokememeAddFailureMessage(update)
 		return "fail"
 	}
 
@@ -221,6 +216,7 @@ func (p *Parsers) ParsePokememe(text string, playerRaw *dbmapping.Player) string
 	err5 := c.Db.Get(&pokememe, c.Db.Rebind("SELECT * FROM pokememes WHERE grade='"+grade+"' AND name='"+name+"';"))
 	if err5 != nil {
 		c.Log.Error("Pokememe isn't added!")
+		p.pokememeAddFailureMessage(update)
 		return "fail"
 	}
 	for i := range elements {
@@ -232,6 +228,7 @@ func (p *Parsers) ParsePokememe(text string, playerRaw *dbmapping.Player) string
 		_, err6 := c.Db.NamedExec("INSERT INTO pokememes_elements VALUES(NULL, :pokememe_id, :element_id, :created_at)", &link)
 		if err6 != nil {
 			c.Log.Error(err6.Error())
+			p.pokememeAddFailureMessage(update)
 			return "fail"
 		}
 	}
@@ -244,23 +241,11 @@ func (p *Parsers) ParsePokememe(text string, playerRaw *dbmapping.Player) string
 		_, err7 := c.Db.NamedExec("INSERT INTO pokememes_locations VALUES(NULL, :pokememe_id, :location_id, :created_at)", &link)
 		if err7 != nil {
 			c.Log.Error(err7.Error())
+			p.pokememeAddFailureMessage(update)
 			return "fail"
 		}
 	}
 
+	p.pokememeAddSuccessMessage(update)
 	return "ok"
-}
-
-// ReturnPoints returns to output points (ht, attack, mp...) formatted
-// like in PokememBroBot itself.
-func (p *Parsers) ReturnPoints(points int) string {
-	if points < 1000 {
-		return strconv.Itoa(points)
-	} else if points < 1000000 {
-		floatNum := float64(points) / 1000.0
-		return strconv.FormatFloat(floatNum, 'f', -1, 64) + "K"
-	} else {
-		floatNum := float64(points) / 1000000.0
-		return strconv.FormatFloat(floatNum, 'f', -1, 64) + "M"
-	}
 }

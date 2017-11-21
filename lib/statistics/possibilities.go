@@ -1,11 +1,11 @@
 // i2_bot – Instinct PokememBro Bot
 // Copyright (c) 2017 Vladimir "fat0troll" Hodakov
 
-package getters
+package statistics
 
 // PossibilityRequiredPokeballs returns possibility of catching pokememe
 // It's based on location, grade of pokememe and current level of player
-func (g *Getters) PossibilityRequiredPokeballs(location int, grade int, lvl int) (float64, int) {
+func (s *Statistics) PossibilityRequiredPokeballs(location int, grade int, lvl int) (float64, int) {
 	var basePossibility float64
 	var requiredPokeballs int
 	var percentile float64

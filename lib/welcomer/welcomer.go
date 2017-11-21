@@ -9,12 +9,12 @@ import (
 )
 
 func (w *Welcomer) groupWelcomeUser(update *tgbotapi.Update, newUser *tgbotapi.User) string {
-	playerRaw, ok := c.Getters.GetOrCreatePlayer(newUser.ID)
+	playerRaw, ok := c.Users.GetOrCreatePlayer(newUser.ID)
 	if !ok {
 		return "fail"
 	}
 
-	profileRaw, profileExist := c.Getters.GetProfile(playerRaw.ID)
+	profileRaw, profileExist := c.Users.GetProfile(playerRaw.ID)
 
 	message := "*Бот Инстинкта приветствует тебя, *@"
 	message += newUser.UserName
@@ -52,21 +52,6 @@ func (w *Welcomer) groupStartMessage(update *tgbotapi.Update) string {
 	msg.ParseMode = "Markdown"
 
 	c.Bot.Send(msg)
-
-	return "ok"
-}
-
-// WelcomeMessage welcomes new user on group or bot itself
-func (w *Welcomer) WelcomeMessage(update *tgbotapi.Update) string {
-	newUsers := *update.Message.NewChatMembers
-	for i := range newUsers {
-		if (newUsers[i].UserName == "i2_bot") || (newUsers[i].UserName == "i2_dev_bot") {
-			w.groupStartMessage(update)
-		}
-
-		newUser := newUsers[i]
-		w.groupWelcomeUser(update, &newUser)
-	}
 
 	return "ok"
 }

@@ -24,5 +24,5 @@ func New(ac *appcontext.Context) {
 
 // Init is a initialization function for package
 func (f *Forwarder) Init() {
-	c.Log.Info("Initializing forwarder...")
+	c.Log.Info("Initializing Forwarder...")
 }

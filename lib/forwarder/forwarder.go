@@ -20,33 +20,14 @@ func (f *Forwarder) ProcessForward(update *tgbotapi.Update, playerRaw *dbmapping
 	case pokememeMsg.MatchString(text):
 		c.Log.Debug("Pokememe posted!")
 		if playerRaw.LeagueID == 1 {
-			status := c.Parsers.ParsePokememe(text, playerRaw)
-			switch status {
-			case "ok":
-				c.Talkers.PokememeAddSuccessMessage(update)
-				return "ok"
-			case "dup":
-				c.Talkers.PokememeAddDuplicateMessage(update)
-				return "ok"
-			case "fail":
-				c.Talkers.PokememeAddFailureMessage(update)
-				return "fail"
-			}
+			return c.Pokedexer.ParsePokememe(update, playerRaw)
 		} else {
 			c.Talkers.AnyMessageUnauthorized(update)
 			return "fail"
 		}
 	case profileMsg.MatchString(text):
 		c.Log.Debug("Profile posted!")
-		status := c.Parsers.ParseProfile(update, playerRaw)
-		switch status {
-		case "ok":
-			c.Talkers.ProfileAddSuccessMessage(update)
-			return "ok"
-		case "fail":
-			c.Talkers.ProfileAddFailureMessage(update)
-			return "fail"
-		}
+		return c.Users.ParseProfile(update, playerRaw)
 	default:
 		c.Log.Debug(text)
 	}

@@ -9,7 +9,7 @@ import (
 
 // RouteRequest decides, what to do with user input
 func (r *Router) RouteRequest(update *tgbotapi.Update) string {
-	playerRaw, ok := c.Getters.GetOrCreatePlayer(update.Message.From.ID)
+	playerRaw, ok := c.Users.GetOrCreatePlayer(update.Message.From.ID)
 	if !ok {
 		// Silently fail
 		return "fail"

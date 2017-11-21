@@ -1,15 +1,14 @@
 // i2_bot – Instinct PokememBro Bot
 // Copyright (c) 2017 Vladimir "fat0troll" Hodakov
 
-package getters
+package broadcaster
 
 import (
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 	"time"
 )
 
-// CreateBroadcastMessage creates broadcast message item in database
-func (g *Getters) CreateBroadcastMessage(playerRaw *dbmapping.Player, messageBody string, broadcastType string) (dbmapping.Broadcast, bool) {
+func (b *Broadcaster) createBroadcastMessage(playerRaw *dbmapping.Player, messageBody string, broadcastType string) (dbmapping.Broadcast, bool) {
 	messageRaw := dbmapping.Broadcast{}
 	messageRaw.Text = messageBody
 	messageRaw.Status = "new"
@@ -30,8 +29,7 @@ func (g *Getters) CreateBroadcastMessage(playerRaw *dbmapping.Player, messageBod
 	return messageRaw, true
 }
 
-// GetBroadcastMessageByID returns dbmapping.Broadcast instance with given ID.
-func (g *Getters) GetBroadcastMessageByID(messageID int) (dbmapping.Broadcast, bool) {
+func (b *Broadcaster) getBroadcastMessageByID(messageID int) (dbmapping.Broadcast, bool) {
 	messageRaw := dbmapping.Broadcast{}
 	err := c.Db.Get(&messageRaw, c.Db.Rebind("SELECT * FROM broadcasts WHERE id=?"), messageID)
 	if err != nil {
@@ -42,8 +40,7 @@ func (g *Getters) GetBroadcastMessageByID(messageID int) (dbmapping.Broadcast, b
 	return messageRaw, true
 }
 
-// UpdateBroadcastMessageStatus updates broadcast message status
-func (g *Getters) UpdateBroadcastMessageStatus(messageID int, messageStatus string) (dbmapping.Broadcast, bool) {
+func (b *Broadcaster) updateBroadcastMessageStatus(messageID int, messageStatus string) (dbmapping.Broadcast, bool) {
 	messageRaw := dbmapping.Broadcast{}
 	err := c.Db.Get(&messageRaw, c.Db.Rebind("SELECT * FROM broadcasts WHERE id=?"), messageID)
 	if err != nil {

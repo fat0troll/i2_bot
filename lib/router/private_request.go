@@ -33,51 +33,51 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 			switch {
 			case update.Message.Command() == "start":
 				if playerRaw.ID != 0 {
-					c.Talkers.HelloMessageAuthorized(update, playerRaw)
+					c.Welcomer.PrivateWelcomeMessageAuthorized(update, playerRaw)
 					return "ok"
 				}
 
-				c.Talkers.HelloMessageUnauthorized(update)
+				c.Welcomer.PrivateWelcomeMessageUnauthorized(update)
 				return "ok"
 			case update.Message.Command() == "help":
 				c.Talkers.HelpMessage(update, playerRaw)
 				return "ok"
 			// Pokememes info
 			case pokedexMsg.MatchString(text):
-				c.Talkers.PokememesList(update)
+				c.Pokedexer.PokememesList(update)
 				return "ok"
 			case pokememeInfoMsg.MatchString(text):
-				c.Talkers.PokememeInfo(update, playerRaw)
+				c.Pokedexer.PokememeInfo(update, playerRaw)
 				return "ok"
 			case update.Message.Command() == "me":
 				if playerRaw.ID != 0 {
-					c.Talkers.ProfileMessage(update, playerRaw)
+					c.Users.ProfileMessage(update, playerRaw)
 					return "ok"
 				}
 
 				c.Talkers.AnyMessageUnauthorized(update)
 				return "fail"
 			case update.Message.Command() == "best":
-				c.Talkers.BestPokememesList(update, playerRaw)
+				c.Pokedexer.BestPokememesList(update, playerRaw)
 				return "ok"
 			case update.Message.Command() == "send_all":
-				if c.Getters.PlayerBetterThan(playerRaw, "admin") {
-					c.Talkers.AdminBroadcastMessageCompose(update, playerRaw)
+				if c.Users.PlayerBetterThan(playerRaw, "admin") {
+					c.Broadcaster.AdminBroadcastMessageCompose(update, playerRaw)
 					return "ok"
 				}
 
 				c.Talkers.AnyMessageUnauthorized(update)
 				return "fail"
 			case update.Message.Command() == "send_confirm":
-				if c.Getters.PlayerBetterThan(playerRaw, "admin") {
-					c.Talkers.AdminBroadcastMessageSend(update, playerRaw)
+				if c.Users.PlayerBetterThan(playerRaw, "admin") {
+					c.Broadcaster.AdminBroadcastMessageSend(update, playerRaw)
 					return "ok"
 				}
 
 				c.Talkers.AnyMessageUnauthorized(update)
 				return "fail"
 			case update.Message.Command() == "group_chats":
-				if c.Getters.PlayerBetterThan(playerRaw, "admin") {
+				if c.Users.PlayerBetterThan(playerRaw, "admin") {
 					c.Chatter.GroupsList(update)
 					return "ok"
 				}
@@ -85,7 +85,7 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 				c.Talkers.AnyMessageUnauthorized(update)
 				return "fail"
 			case update.Message.Command() == "squads":
-				if c.Getters.PlayerBetterThan(playerRaw, "admin") {
+				if c.Users.PlayerBetterThan(playerRaw, "admin") {
 					c.Squader.SquadsList(update)
 					return "ok"
 				}
@@ -93,14 +93,14 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 				c.Talkers.AnyMessageUnauthorized(update)
 				return "fail"
 			case update.Message.Command() == "make_squad":
-				if c.Getters.PlayerBetterThan(playerRaw, "admin") {
+				if c.Users.PlayerBetterThan(playerRaw, "admin") {
 					return c.Squader.CreateSquad(update)
 				}
 
 				c.Talkers.AnyMessageUnauthorized(update)
 				return "fail"
 			case update.Message.Command() == "pin":
-				if c.Getters.PlayerBetterThan(playerRaw, "admin") {
+				if c.Users.PlayerBetterThan(playerRaw, "admin") {
 					return c.Pinner.PinMessageToAllChats(update)
 				}
 

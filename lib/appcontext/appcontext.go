@@ -6,17 +6,19 @@ package appcontext
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/jmoiron/sqlx"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/broadcaster/broadcasterinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/chatter/chatterinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/config"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/connections"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/forwarder/forwarderinterface"
-	"lab.pztrn.name/fat0troll/i2_bot/lib/getters/gettersinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/migrations/migrationsinterface"
-	"lab.pztrn.name/fat0troll/i2_bot/lib/parsers/parsersinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/pinner/pinnerinterface"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/pokedexer/pokedexerinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/router/routerinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/squader/squaderinterface"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/statistics/statisticsinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/talkers/talkersinterface"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/users/usersinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/welcomer/welcomerinterface"
 	"lab.pztrn.name/golibs/mogrus"
 	"os"
@@ -24,20 +26,22 @@ import (
 
 // Context is an application context struct
 type Context struct {
-	Cfg        *config.Config
-	Log        *mogrus.LoggerHandler
-	Bot        *tgbotapi.BotAPI
-	Forwarder  forwarderinterface.ForwarderInterface
-	Migrations migrationsinterface.MigrationsInterface
-	Router     routerinterface.RouterInterface
-	Parsers    parsersinterface.ParsersInterface
-	Db         *sqlx.DB
-	Talkers    talkersinterface.TalkersInterface
-	Getters    gettersinterface.GettersInterface
-	Welcomer   welcomerinterface.WelcomerInterface
-	Pinner     pinnerinterface.PinnerInterface
-	Chatter    chatterinterface.ChatterInterface
-	Squader    squaderinterface.SquaderInterface
+	Cfg         *config.Config
+	Log         *mogrus.LoggerHandler
+	Bot         *tgbotapi.BotAPI
+	Forwarder   forwarderinterface.ForwarderInterface
+	Migrations  migrationsinterface.MigrationsInterface
+	Router      routerinterface.RouterInterface
+	Pokedexer   pokedexerinterface.PokedexerInterface
+	Db          *sqlx.DB
+	Talkers     talkersinterface.TalkersInterface
+	Broadcaster broadcasterinterface.BroadcasterInterface
+	Welcomer    welcomerinterface.WelcomerInterface
+	Pinner      pinnerinterface.PinnerInterface
+	Chatter     chatterinterface.ChatterInterface
+	Squader     squaderinterface.SquaderInterface
+	Users       usersinterface.UsersInterface
+	Statistics  statisticsinterface.StatisticsInterface
 }
 
 // Init is a initialization function for context
@@ -75,9 +79,9 @@ func (c *Context) RegisterMigrationsInterface(mi migrationsinterface.MigrationsI
 	c.Migrations.Init()
 }
 
-// RegisterParsersInterface registering parsers interface in application
-func (c *Context) RegisterParsersInterface(pi parsersinterface.ParsersInterface) {
-	c.Parsers = pi
+// RegisterPokedexerInterface registering parsers interface in application
+func (c *Context) RegisterPokedexerInterface(pi pokedexerinterface.PokedexerInterface) {
+	c.Pokedexer = pi
 }
 
 // RegisterTalkersInterface registering talkers interface in application
@@ -86,10 +90,10 @@ func (c *Context) RegisterTalkersInterface(ti talkersinterface.TalkersInterface)
 	c.Talkers.Init()
 }
 
-// RegisterGettersInterface registering getters interface in application
-func (c *Context) RegisterGettersInterface(gi gettersinterface.GettersInterface) {
-	c.Getters = gi
-	c.Getters.Init()
+// RegisterBroadcasterInterface registering broadcaster interface in application
+func (c *Context) RegisterBroadcasterInterface(bi broadcasterinterface.BroadcasterInterface) {
+	c.Broadcaster = bi
+	c.Broadcaster.Init()
 }
 
 // RegisterWelcomerInterface registering welcomer interface in application
@@ -120,6 +124,18 @@ func (c *Context) RegisterChatterInterface(ci chatterinterface.ChatterInterface)
 func (c *Context) RegisterSquaderInterface(si squaderinterface.SquaderInterface) {
 	c.Squader = si
 	c.Squader.Init()
+}
+
+// RegisterUsersInterface registers users interface in application
+func (c *Context) RegisterUsersInterface(ui usersinterface.UsersInterface) {
+	c.Users = ui
+	c.Users.Init()
+}
+
+// RegisterStatisticsInterface registers statistics interface in application
+func (c *Context) RegisterStatisticsInterface(si statisticsinterface.StatisticsInterface) {
+	c.Statistics = si
+	c.Statistics.Init()
 }
 
 // RunDatabaseMigrations applies migrations on bot's startup

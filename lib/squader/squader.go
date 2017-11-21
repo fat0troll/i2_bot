@@ -74,7 +74,7 @@ func (s *Squader) createSquad(update *tgbotapi.Update, chatID int, floodChatID i
 	if err != nil {
 		c.Log.Debug(err)
 
-		playerRaw, ok := c.Getters.GetOrCreatePlayer(update.Message.From.ID)
+		playerRaw, ok := c.Users.GetOrCreatePlayer(update.Message.From.ID)
 		if !ok {
 			return squad, "fail"
 		}
@@ -240,8 +240,8 @@ func (s *Squader) SquadStatictics(squadID int) string {
 	for i := range squadMembers {
 		fullInfo := dbmapping.SquadPlayerFull{}
 
-		playerRaw, _ := c.Getters.GetPlayerByID(squadMembers[i].PlayerID)
-		profileRaw, _ := c.Getters.GetProfile(playerRaw.ID)
+		playerRaw, _ := c.Users.GetPlayerByID(squadMembers[i].PlayerID)
+		profileRaw, _ := c.Users.GetProfile(playerRaw.ID)
 
 		fullInfo.Squad = squad
 		fullInfo.Player = playerRaw

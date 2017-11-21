@@ -24,5 +24,5 @@ func New(ac *appcontext.Context) {
 
 // Init is an initialization function for talkers
 func (t *Talkers) Init() {
-	c.Log.Info("Initializing responders...")
+	c.Log.Info("Initializing common Responders...")
 }

@@ -1,7 +1,7 @@
 // i2_bot – Instinct PokememBro Bot
 // Copyright (c) 2017 Vladimir "fat0troll" Hodakov
 
-package getters
+package pokedexer
 
 import (
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
@@ -10,7 +10,7 @@ import (
 
 // Internal functions
 
-func (g *Getters) formFullPokememes(pokememes []dbmapping.Pokememe) ([]dbmapping.PokememeFull, bool) {
+func (p *Pokedexer) formFullPokememes(pokememes []dbmapping.Pokememe) ([]dbmapping.PokememeFull, bool) {
 	pokememesArray := []dbmapping.PokememeFull{}
 	elements := []dbmapping.Element{}
 	err := c.Db.Select(&elements, "SELECT * FROM elements")
@@ -75,7 +75,7 @@ func (g *Getters) formFullPokememes(pokememes []dbmapping.Pokememe) ([]dbmapping
 // External functions
 
 // GetPokememes returns all existing pokememes, known by bot
-func (g *Getters) GetPokememes() ([]dbmapping.PokememeFull, bool) {
+func (p *Pokedexer) GetPokememes() ([]dbmapping.PokememeFull, bool) {
 	pokememesArray := []dbmapping.PokememeFull{}
 	pokememes := []dbmapping.Pokememe{}
 	err := c.Db.Select(&pokememes, "SELECT * FROM pokememes ORDER BY grade asc, name asc")
@@ -84,18 +84,17 @@ func (g *Getters) GetPokememes() ([]dbmapping.PokememeFull, bool) {
 		return pokememesArray, false
 	}
 
-	pokememesArray, ok := g.formFullPokememes(pokememes)
+	pokememesArray, ok := p.formFullPokememes(pokememes)
 	return pokememesArray, ok
 }
 
-// GetBestPokememes returns all pokememes, which will be good for player to catch
-func (g *Getters) GetBestPokememes(playerID int) ([]dbmapping.PokememeFull, bool) {
+func (p *Pokedexer) getBestPokememes(playerID int) ([]dbmapping.PokememeFull, bool) {
 	pokememesArray := []dbmapping.PokememeFull{}
-	playerRaw, ok := g.GetPlayerByID(playerID)
+	playerRaw, ok := c.Users.GetPlayerByID(playerID)
 	if !ok {
 		return pokememesArray, ok
 	}
-	profileRaw, ok := g.GetProfile(playerID)
+	profileRaw, ok := c.Users.GetProfile(playerID)
 	if !ok {
 		return pokememesArray, ok
 	}
@@ -112,12 +111,12 @@ func (g *Getters) GetBestPokememes(playerID int) ([]dbmapping.PokememeFull, bool
 		return pokememesArray, false
 	}
 
-	pokememesArray, ok = g.formFullPokememes(pokememes)
+	pokememesArray, ok = p.formFullPokememes(pokememes)
 	return pokememesArray, ok
 }
 
-// GetPokememeByUD returns single pokememe based on internal ID in database
-func (g *Getters) GetPokememeByID(pokememeID string) (dbmapping.PokememeFull, bool) {
+// GetPokememeByID returns single pokememe based on internal ID in database
+func (p *Pokedexer) GetPokememeByID(pokememeID string) (dbmapping.PokememeFull, bool) {
 	fullPokememe := dbmapping.PokememeFull{}
 	pokememe := dbmapping.Pokememe{}
 	err := c.Db.Get(&pokememe, c.Db.Rebind("SELECT * FROM pokememes WHERE id=?"), pokememeID)
