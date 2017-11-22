@@ -57,6 +57,12 @@
 
 [[projects]]
   branch = "master"
+  name = "lab.pztrn.name/golibs/flagger"
+  packages = ["."]
+  revision = "5cf6a6dd8fe8a4f37d1bb1e3deb5121c6e923668"
+
+[[projects]]
+  branch = "master"
   name = "lab.pztrn.name/golibs/mogrus"
   packages = ["."]
   revision = "a888e29e1fff06c2e6ebc607055a02de22a6ddae"
@@ -64,6 +70,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "3e9df6d446d8789d138790622cf19935d4331f9903af640d13654c07b9f433a5"
+  inputs-digest = "72b8805a04554297ce6fcb28ecaad016e3398624e90621de1b067cfe2f662e40"
   solver-name = "gps-cdcl"
   solver-version = 1

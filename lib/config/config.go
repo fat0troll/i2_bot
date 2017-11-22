@@ -6,10 +6,11 @@ package config
 import (
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
-	"log"
+	"lab.pztrn.name/golibs/mogrus"
 	"path/filepath"
 )
 
+// VERSION is the urrent bot's version
 const VERSION = "0.51"
 
 // DatabaseConnection handles database connection settings in config.yaml
@@ -45,11 +46,13 @@ type Config struct {
 }
 
 // Init is a configuration initializer
-func (c *Config) Init() {
-	fname, _ := filepath.Abs("./config.yml")
+func (c *Config) Init(log *mogrus.LoggerHandler, configPath string) {
+	fname, _ := filepath.Abs(configPath)
 	yamlFile, yerr := ioutil.ReadFile(fname)
 	if yerr != nil {
 		log.Fatal("Can't read config file")
+	} else {
+		log.Info("Using " + configPath + " as config file.")
 	}
 
 	yperr := yaml.Unmarshal(yamlFile, c)

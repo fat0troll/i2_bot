@@ -20,51 +20,78 @@ import (
 	"lab.pztrn.name/fat0troll/i2_bot/lib/talkers/talkersinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/users/usersinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/welcomer/welcomerinterface"
+	"lab.pztrn.name/golibs/flagger"
 	"lab.pztrn.name/golibs/mogrus"
 	"os"
 )
 
 // Context is an application context struct
 type Context struct {
-	Cfg         *config.Config
-	Log         *mogrus.LoggerHandler
-	Bot         *tgbotapi.BotAPI
-	Forwarder   forwarderinterface.ForwarderInterface
-	Migrations  migrationsinterface.MigrationsInterface
-	Router      routerinterface.RouterInterface
-	Pokedexer   pokedexerinterface.PokedexerInterface
-	Db          *sqlx.DB
-	Talkers     talkersinterface.TalkersInterface
-	Broadcaster broadcasterinterface.BroadcasterInterface
-	Welcomer    welcomerinterface.WelcomerInterface
-	Pinner      pinnerinterface.PinnerInterface
-	Chatter     chatterinterface.ChatterInterface
-	Squader     squaderinterface.SquaderInterface
-	Users       usersinterface.UsersInterface
-	Statistics  statisticsinterface.StatisticsInterface
+	StartupFlags *flagger.Flagger
+	Cfg          *config.Config
+	Log          *mogrus.LoggerHandler
+	Bot          *tgbotapi.BotAPI
+	Forwarder    forwarderinterface.ForwarderInterface
+	Migrations   migrationsinterface.MigrationsInterface
+	Router       routerinterface.RouterInterface
+	Pokedexer    pokedexerinterface.PokedexerInterface
+	Db           *sqlx.DB
+	Talkers      talkersinterface.TalkersInterface
+	Broadcaster  broadcasterinterface.BroadcasterInterface
+	Welcomer     welcomerinterface.WelcomerInterface
+	Pinner       pinnerinterface.PinnerInterface
+	Chatter      chatterinterface.ChatterInterface
+	Squader      squaderinterface.SquaderInterface
+	Users        usersinterface.UsersInterface
+	Statistics   statisticsinterface.StatisticsInterface
 }
 
 // Init is a initialization function for context
 func (c *Context) Init() {
-	c.Cfg = config.New()
-	c.Cfg.Init()
-
 	l := mogrus.New()
 	l.Initialize()
 
 	log := l.CreateLogger("i2_bot")
 	log.CreateOutput("stdout", os.Stdout, true, "debug")
+	c.Log = log
+
+	c.StartupFlags = flagger.New(c.Log)
+	c.StartupFlags.Initialize()
+
+	// Adding available startup flags here
+	configFlag := flagger.Flag{}
+	configFlag.Name = "config"
+	configFlag.Description = "Configuration file path"
+	configFlag.Type = "string"
+	configFlag.DefaultValue = "./config.yaml"
+	err := c.StartupFlags.AddFlag(&configFlag)
+	if err != nil {
+		c.Log.Errorln(err)
+	}
+	c.StartupFlags.Parse()
+
+	configPath, err := c.StartupFlags.GetStringValue("config")
+	if err != nil {
+		c.Log.Errorln(err)
+		c.Log.Fatal("Can't get config file parameter from command line. Exiting.")
+	}
+
+	c.Cfg = config.New()
+	c.Cfg.Init(c.Log, configPath)
 
 	logFile, err := os.OpenFile(c.Cfg.Logs.LogPath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0660)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	log.CreateOutput("file="+c.Cfg.Logs.LogPath, logFile, true, "debug")
-
-	c.Log = log
+	c.Log.CreateOutput("file="+c.Cfg.Logs.LogPath, logFile, true, "debug")
 
 	c.Bot = connections.BotInit(c.Cfg, c.Log)
 	c.Db = connections.DBInit(c.Cfg, c.Log)
+}
+
+// InitializeStartupFlags gives information about available startup flags
+func (c *Context) InitializeStartupFlags() {
+
 }
 
 // RegisterRouterInterface registering router interface in application

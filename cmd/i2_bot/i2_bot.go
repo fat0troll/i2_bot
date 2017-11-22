@@ -28,6 +28,7 @@ var (
 func main() {
 	c := appcontext.New()
 	c.Init()
+
 	router.New(c)
 	migrations.New(c)
 	c.RunDatabaseMigrations()
