@@ -11,7 +11,7 @@ import (
 )
 
 // VERSION is the urrent bot's version
-const VERSION = "0.51"
+const VERSION = "0.6"
 
 // DatabaseConnection handles database connection settings in config.yaml
 type DatabaseConnection struct {

@@ -15,6 +15,8 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 	// Commands with regexps
 	var pokedexMsg = regexp.MustCompile("/pokede(x|ks)\\d?\\z")
 	var pokememeInfoMsg = regexp.MustCompile("/pk(\\d+)")
+	var usersMsg = regexp.MustCompile("/users\\d?\\z")
+	var squadInfoMsg = regexp.MustCompile("/show_squad(\\d+)\\z")
 
 	if update.Message.ForwardFrom != nil {
 		if update.Message.ForwardFrom.ID != 360402625 {
@@ -42,7 +44,6 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 			case update.Message.Command() == "help":
 				c.Talkers.HelpMessage(update, playerRaw)
 				return "ok"
-			// Pokememes info
 			case pokedexMsg.MatchString(text):
 				c.Pokedexer.PokememesList(update)
 				return "ok"
@@ -85,13 +86,7 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 				c.Talkers.AnyMessageUnauthorized(update)
 				return "fail"
 			case update.Message.Command() == "squads":
-				if c.Users.PlayerBetterThan(playerRaw, "admin") {
-					c.Squader.SquadsList(update)
-					return "ok"
-				}
-
-				c.Talkers.AnyMessageUnauthorized(update)
-				return "fail"
+				return c.Squader.SquadsList(update, playerRaw)
 			case update.Message.Command() == "make_squad":
 				if c.Users.PlayerBetterThan(playerRaw, "admin") {
 					return c.Squader.CreateSquad(update)
@@ -106,6 +101,22 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 
 				c.Talkers.AnyMessageUnauthorized(update)
 				return "fail"
+
+			case usersMsg.MatchString(text):
+				if c.Users.PlayerBetterThan(playerRaw, "admin") {
+					return c.Users.UsersList(update)
+				}
+
+				c.Talkers.AnyMessageUnauthorized(update)
+				return "fail"
+
+			case update.Message.Command() == "squad_add_user":
+				return c.Squader.AddUserToSquad(update, playerRaw)
+			case update.Message.Command() == "squad_add_commander":
+				return c.Squader.AddUserToSquad(update, playerRaw)
+
+			case squadInfoMsg.MatchString(text):
+				return c.Squader.SquadInfo(update, playerRaw)
 			}
 		}
 	}

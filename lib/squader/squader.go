@@ -12,6 +12,46 @@ import (
 	"time"
 )
 
+func (s *Squader) getPlayersForSquad(squadID int) ([]dbmapping.SquadPlayerFull, bool) {
+	players := []dbmapping.SquadPlayerFull{}
+	playersRaw := []dbmapping.Player{}
+	squadPlayers := []dbmapping.SquadPlayer{}
+
+	squad, ok := s.GetSquadByID(squadID)
+	if !ok {
+		return players, false
+	}
+
+	err := c.Db.Select(&playersRaw, c.Db.Rebind("SELECT p.* FROM players p, squads_players sp WHERE p.id = sp.player_id AND sp.squad_id=?"), squad.Squad.ID)
+	if err != nil {
+		c.Log.Error(err.Error())
+		return players, false
+	}
+
+	err = c.Db.Select(&squadPlayers, c.Db.Rebind("SELECT * FROM squads_players WHERE squad_id=?"), squad.Squad.ID)
+	if err != nil {
+		c.Log.Error(err.Error())
+		return players, false
+	}
+
+	for i := range playersRaw {
+		for ii := range squadPlayers {
+			if squadPlayers[ii].PlayerID == playersRaw[i].ID {
+				playerWithProfile := dbmapping.SquadPlayerFull{}
+				profile, _ := c.Users.GetProfile(playersRaw[i].ID)
+				playerWithProfile.Profile = profile
+				playerWithProfile.Player = playersRaw[i]
+				playerWithProfile.Squad = squad
+				playerWithProfile.UserRole = squadPlayers[ii].UserType
+
+				players = append(players, playerWithProfile)
+			}
+		}
+	}
+
+	return players, true
+}
+
 func (s *Squader) getAllSquadsWithChats() ([]dbmapping.SquadChat, bool) {
 	squadsWithChats := []dbmapping.SquadChat{}
 	squads := []dbmapping.Squad{}
@@ -122,6 +162,31 @@ func (s *Squader) getSquadByChatID(update *tgbotapi.Update, chatID int) (dbmappi
 	return squad, "ok"
 }
 
+func (s *Squader) getUserRoleForSquad(squadID int, playerID int) string {
+	squadPlayer := dbmapping.SquadPlayer{}
+	err := c.Db.Get(&squadPlayer, c.Db.Rebind("SELECT * FROM squads_players WHERE squad_id=? AND player_id=?"), squadID, playerID)
+	if err != nil {
+		c.Log.Debug(err.Error())
+		return "nobody"
+	}
+
+	return squadPlayer.UserType
+}
+
+func (s *Squader) isUserAnyCommander(playerID int) bool {
+	squadPlayers := []dbmapping.SquadPlayer{}
+	err := c.Db.Select(&squadPlayers, c.Db.Rebind("SELECT * FROM squads_players WHERE player_id=?"), playerID)
+	if err != nil {
+		c.Log.Debug(err.Error())
+	}
+
+	if len(squadPlayers) > 0 {
+		return true
+	}
+
+	return false
+}
+
 func (s *Squader) squadCreationDuplicate(update *tgbotapi.Update) string {
 	message := "*Отряд уже существует*\n"
 	message += "Проверьте, правильно ли вы ввели команду, и повторите попытку."
@@ -158,7 +223,107 @@ func (s *Squader) squadCreationSuccess(update *tgbotapi.Update) string {
 	return "fail"
 }
 
+func (s *Squader) squadUserAdditionFailure(update *tgbotapi.Update) string {
+	message := "*Не удалось добавить игрока в отряд*\n"
+	message += "Проверьте, правильно ли вы ввели команду, и повторите попытку. Кроме того, возможно, что у пользователя нет профиля в боте."
+
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
+	msg.ParseMode = "Markdown"
+
+	c.Bot.Send(msg)
+
+	return "fail"
+}
+
+func (s *Squader) squadUserAdditionSuccess(update *tgbotapi.Update) string {
+	message := "*Игрок добавлен в отряд*\n"
+	message += "Теперь вы можете дать ему ссылку для входа в чаты отряда."
+
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
+	msg.ParseMode = "Markdown"
+
+	c.Bot.Send(msg)
+
+	return "ok"
+}
+
 // External functions
+
+// AddUserToSquad adds user to squad
+func (s *Squader) AddUserToSquad(update *tgbotapi.Update, adderRaw *dbmapping.Player) string {
+	command := update.Message.Command()
+	commandArugments := update.Message.CommandArguments()
+	userType := "user"
+	if command == "squad_add_commander" {
+		userType = "commander"
+	}
+	argumentsRx := regexp.MustCompile(`(\d+)\s(\d+)`)
+	if !argumentsRx.MatchString(commandArugments) {
+		return s.squadUserAdditionFailure(update)
+	}
+
+	argumentNumbers := strings.Split(commandArugments, " ")
+	if len(argumentNumbers) < 2 {
+		return s.squadUserAdditionFailure(update)
+	}
+	squadID, _ := strconv.Atoi(argumentNumbers[0])
+	if squadID == 0 {
+		return s.squadUserAdditionFailure(update)
+	}
+	playerID, _ := strconv.Atoi(argumentNumbers[1])
+	if playerID == 0 {
+		return s.squadUserAdditionFailure(update)
+	}
+
+	playerRaw, ok := c.Users.GetPlayerByID(playerID)
+	if !ok {
+		return s.squadUserAdditionFailure(update)
+	}
+	squadRaw := dbmapping.Squad{}
+	err := c.Db.Get(&squadRaw, c.Db.Rebind("SELECT * FROM squads WHERE id=?"), squadID)
+	if err != nil {
+		c.Log.Error(err.Error())
+		return s.squadUserAdditionFailure(update)
+	}
+	_, ok = c.Users.GetProfile(playerRaw.ID)
+	if !ok {
+		return s.squadUserAdditionFailure(update)
+	}
+
+	if !c.Users.PlayerBetterThan(adderRaw, "admin") {
+		if userType == "commander" {
+			c.Talkers.AnyMessageUnauthorized(update)
+			return "fail"
+		}
+
+		if s.getUserRoleForSquad(squadRaw.ID, adderRaw.ID) != "commander" {
+			c.Talkers.AnyMessageUnauthorized(update)
+			return "fail"
+		}
+	}
+
+	if !c.Users.PlayerBetterThan(&playerRaw, "admin") {
+		if playerRaw.LeagueID != 1 {
+			return s.squadUserAdditionFailure(update)
+		}
+	}
+
+	// All checks are passed here, creating new item in database
+	playerSquad := dbmapping.SquadPlayer{}
+	playerSquad.SquadID = squadRaw.ID
+	playerSquad.PlayerID = playerRaw.ID
+	playerSquad.UserType = userType
+	playerSquad.AuthorID = adderRaw.ID
+	playerSquad.CreatedAt = time.Now().UTC()
+
+	_, err = c.Db.NamedExec("INSERT INTO squads_players VALUES(NULL, :squad_id, :player_id, :user_type, :author_id, :created_at)", &playerSquad)
+	if err != nil {
+		c.Log.Error(err.Error())
+		return s.squadUserAdditionFailure(update)
+	}
+
+	return s.squadUserAdditionSuccess(update)
+}
 
 // CreateSquad creates new squad from chat if not already exist
 func (s *Squader) CreateSquad(update *tgbotapi.Update) string {
@@ -190,68 +355,4 @@ func (s *Squader) CreateSquad(update *tgbotapi.Update) string {
 	}
 
 	return s.squadCreationSuccess(update)
-}
-
-// SquadsList lists all squads
-func (s *Squader) SquadsList(update *tgbotapi.Update) string {
-	squads, ok := s.getAllSquadsWithChats()
-	if !ok {
-		return "fail"
-	}
-
-	message := "*Наши отряды:*\n"
-
-	for i := range squads {
-		message += "---\n"
-		message += "[#" + strconv.Itoa(squads[i].Squad.ID) + "] _" + squads[i].Chat.Name
-		message += "_ /show\\_squad" + strconv.Itoa(squads[i].Squad.ID) + "\n"
-		message += "Telegram ID: " + strconv.FormatInt(squads[i].Chat.TelegramID, 10) + "\n"
-		message += "Флудилка отряда: _" + squads[i].FloodChat.Name + "_\n"
-		message += "Статистика отряда:\n"
-		message += s.SquadStatictics(squads[i].Squad.ID)
-	}
-
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ParseMode = "Markdown"
-
-	c.Bot.Send(msg)
-
-	return "ok"
-}
-
-// SquadStatictics generates statistics message snippet. Public due to usage in chats list
-func (s *Squader) SquadStatictics(squadID int) string {
-	squadMembersWithInformation := []dbmapping.SquadPlayerFull{}
-	squadMembers := []dbmapping.SquadPlayer{}
-	squad := dbmapping.Squad{}
-
-	err := c.Db.Get(&squad, c.Db.Rebind("SELECT * FROM squads WHERE id=?"), squadID)
-	if err != nil {
-		c.Log.Error(err.Error())
-		return "Отряда не существует!"
-	}
-
-	err = c.Db.Select(&squadMembers, c.Db.Rebind("SELECT * FROM squads_players WHERE squad_id=?"), squadID)
-	if err != nil {
-		c.Log.Error(err.Error())
-		return "Невозможно получить информацию о данном отряде. Возможно, он пуст или произошла ошибка."
-	}
-
-	for i := range squadMembers {
-		fullInfo := dbmapping.SquadPlayerFull{}
-
-		playerRaw, _ := c.Users.GetPlayerByID(squadMembers[i].PlayerID)
-		profileRaw, _ := c.Users.GetProfile(playerRaw.ID)
-
-		fullInfo.Squad = squad
-		fullInfo.Player = playerRaw
-		fullInfo.Profile = profileRaw
-
-		squadMembersWithInformation = append(squadMembersWithInformation, fullInfo)
-	}
-
-	message := "Количество человек в отряде: " + strconv.Itoa(len(squadMembersWithInformation))
-	message += "\n"
-
-	return message
 }

@@ -23,7 +23,7 @@ func (ct *Chatter) GroupsList(update *tgbotapi.Update) string {
 		message += "Telegram ID: " + strconv.FormatInt(groupChats[i].Chat.TelegramID, 10) + "\n"
 		if groupChats[i].ChatRole == "squad" {
 			message += "Статистика отряда:\n"
-			message += c.Squader.SquadStatictics(groupChats[i].Squad.ID)
+			message += c.Statistics.SquadStatictics(groupChats[i].Squad.ID)
 		} else if groupChats[i].ChatRole == "flood" {
 			message += "Является флудочатом отряда №" + strconv.Itoa(groupChats[i].Squad.ID) + "\n"
 		} else {

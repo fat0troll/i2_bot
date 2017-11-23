@@ -12,13 +12,15 @@ type SquadPlayer struct {
 	ID        int       `db:"id"`
 	SquadID   int       `db:"squad_id"`
 	PlayerID  int       `db:"player_id"`
+	UserType  string    `db:"user_type"`
 	AuthorID  int       `db:"author_id"`
 	CreatedAt time.Time `db:"created_at"`
 }
 
 // SquadPlayerFull is a struct, which handles all related information
 type SquadPlayerFull struct {
-	Squad   Squad
-	Player  Player
-	Profile Profile
+	Squad    SquadChat
+	Player   Player
+	Profile  Profile
+	UserRole string
 }

@@ -7,6 +7,8 @@ package statisticsinterface
 type StatisticsInterface interface {
 	Init()
 
+	SquadStatictics(squadID int) string
+
 	GetPoints(pointsStr string) int
 	GetPrintablePoints(points int) string
 

@@ -5,11 +5,48 @@ package users
 
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
+	"strconv"
 )
 
 // Internal functions for Users package
 
-// profileAddSuccessMessage shows profile addition success message
+func (u *Users) getUsersWithProfiles() ([]dbmapping.PlayerProfile, bool) {
+	usersArray := []dbmapping.PlayerProfile{}
+	players := []dbmapping.Player{}
+	err := c.Db.Select(&players, "SELECT * FROM players")
+	if err != nil {
+		c.Log.Error(err)
+		return usersArray, false
+	}
+
+	for i := range players {
+		playerWithProfile := dbmapping.PlayerProfile{}
+		profile, ok := u.GetProfile(players[i].ID)
+		if !ok {
+			playerWithProfile.HaveProfile = false
+		} else {
+			playerWithProfile.HaveProfile = true
+		}
+		playerWithProfile.Profile = profile
+		playerWithProfile.Player = players[i]
+
+		league := dbmapping.League{}
+		if players[i].LeagueID != 0 {
+			err = c.Db.Get(&league, c.Db.Rebind("SELECT * FROM leagues WHERE id=?"), players[i].LeagueID)
+			if err != nil {
+				c.Log.Error(err.Error())
+				return usersArray, false
+			}
+		}
+		playerWithProfile.League = league
+
+		usersArray = append(usersArray, playerWithProfile)
+	}
+
+	return usersArray, true
+}
+
 func (u *Users) profileAddSuccessMessage(update *tgbotapi.Update) {
 	message := "*Профиль успешно обновлен.*\n\n"
 	message += "Функциональность бота держится на актуальности профилей. Обновляйся почаще, и да пребудет с тобой Рандом!\n"
@@ -22,10 +59,57 @@ func (u *Users) profileAddSuccessMessage(update *tgbotapi.Update) {
 	c.Bot.Send(msg)
 }
 
-// profileAddFailureMessage shows profile addition failure message
 func (u *Users) profileAddFailureMessage(update *tgbotapi.Update) {
 	message := "*Неудачно получилось :(*\n\n"
 	message += "Случилась жуткая ошибка, и мы не смогли записать профиль в базу. Напиши @fat0troll, он разберется."
+
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
+	msg.ParseMode = "Markdown"
+
+	c.Bot.Send(msg)
+}
+
+func (u *Users) usersList(update *tgbotapi.Update, page int, usersArray []dbmapping.PlayerProfile) {
+	message := "*Зарегистрированные пользователи бота*\n"
+	message += "Список отсортирован по ID регистрации.\n"
+	message += "Количество зарегистрированных пользователей: " + strconv.Itoa(len(usersArray)) + "\n"
+	message += "Отображаем пользователей с " + strconv.Itoa(((page-1)*25)+1) + " по " + strconv.Itoa(page*25) + "\n"
+	if len(usersArray) > page*25 {
+		message += "Переход на следующую страницу: /users" + strconv.Itoa(page+1)
+	}
+	if page > 1 {
+		message += "\nПереход на предыдущую страницу: /users" + strconv.Itoa(page-1)
+	}
+	message += "\n\n"
+
+	for i := range usersArray {
+		if (i+1 > 25*(page-1)) && (i+1 < (25*page)+1) {
+			message += "#" + strconv.Itoa(usersArray[i].Player.ID)
+			if usersArray[i].HaveProfile {
+				message += " " + usersArray[i].League.Symbol
+				message += " " + usersArray[i].Profile.Nickname
+				if usersArray[i].Profile.TelegramNickname != "" {
+					message += " (@" + usersArray[i].Profile.TelegramNickname + ")"
+				}
+				message += "\n"
+				message += "Telegram ID: " + strconv.Itoa(usersArray[i].Player.TelegramID) + "\n"
+				message += "Последнее обновление: " + usersArray[i].Profile.CreatedAt.Format("02.01.2006 15:04:05") + "\n"
+			} else {
+				message += " _без профиля_\n"
+				message += "Telegram ID: " + strconv.Itoa(usersArray[i].Player.TelegramID) + "\n"
+			}
+		}
+	}
+
+	if len(usersArray) > page*50 {
+		message += "\n"
+		message += "Переход на следующую страницу: /users" + strconv.Itoa(page+1)
+	}
+	if page > 1 {
+		message += "\nПереход на предыдущую страницу: /users" + strconv.Itoa(page-1)
+	}
+
+	message += "\nЧтобы добавить пользователя в отряд, введите команду /squad\\_add\\_user _X Y_ или /squad\\_add\\_commander _X Y_, где _X_ — ID отряда (посмотреть все отряды можно командой /squads), а _Y_ — ID пользователя из списка выше."
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ParseMode = "Markdown"

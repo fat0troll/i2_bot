@@ -16,3 +16,11 @@ type Player struct {
 	CreatedAt  time.Time `db:"created_at"`
 	UpdatedAt  time.Time `db:"updated_at"`
 }
+
+// PlayerProfile is a struch which handles all user information
+type PlayerProfile struct {
+	Player      Player
+	Profile     Profile
+	League      League
+	HaveProfile bool
+}

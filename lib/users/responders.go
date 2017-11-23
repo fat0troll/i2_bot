@@ -7,6 +7,7 @@ import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 	"strconv"
+	"strings"
 )
 
 // ProfileMessage shows current player's profile
@@ -81,8 +82,28 @@ func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 	}
 	message += "\nСтоимость покемемов на руках: " + c.Statistics.GetPrintablePoints(profileRaw.PokememesWealth) + "$"
 	message += "\n\n💳" + strconv.Itoa(playerRaw.TelegramID)
-	message += "\n⏰Последнее обновление профиля: " + profileRaw.CreatedAt.Format("02.01.2006 15:04:05")
-	message += "\n\nНе забывай обновляться, это важно для получения актуальной информации.\n\n"
+
+	if playerRaw.Status == "owner" {
+		message += "\n\nСтатус в боте: _владелец_"
+	} else if playerRaw.Status == "admin" {
+		message += "\n\nСтатус в боте: _администратор_"
+	} else {
+		message += "\n\nСтатус в боте: _игрок_"
+	}
+
+	squadRoles, ok := c.Squader.GetUserRolesInSquads(playerRaw)
+	if ok && len(squadRoles) > 0 {
+		for i := range squadRoles {
+			if squadRoles[i].UserRole == "commander" {
+				message += "\nКомандир отряда " + squadRoles[i].Squad.Chat.Name
+			} else {
+				message += "\nУчастник отряда " + squadRoles[i].Squad.Chat.Name
+			}
+		}
+	}
+
+	message += "\n\n⏰Последнее обновление профиля: " + profileRaw.CreatedAt.Format("02.01.2006 15:04:05")
+	message += "\nНе забывай обновляться, это важно для получения актуальной информации.\n\n"
 	message += "/best – посмотреть лучших покемемов для поимки"
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
@@ -91,4 +112,22 @@ func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 	c.Bot.Send(msg)
 
 	return "ok"
+}
+
+// UsersList lists all known users
+func (u *Users) UsersList(update *tgbotapi.Update) string {
+	pageNumber := strings.Replace(update.Message.Text, "/users", "", 1)
+	pageNumber = strings.Replace(pageNumber, "/users", "", 1)
+	page, _ := strconv.Atoi(pageNumber)
+	if page == 0 {
+		page = 1
+	}
+	usersArray, ok := u.getUsersWithProfiles()
+	if !ok {
+		c.Talkers.BotError(update)
+		return "fail"
+	} else {
+		u.usersList(update, page, usersArray)
+		return "ok"
+	}
 }

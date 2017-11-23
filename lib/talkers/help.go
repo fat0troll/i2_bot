@@ -22,6 +22,7 @@ func (t *Talkers) HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Play
 		message += "+ /group\\_chats — получить список групп, в которых работает бот.\n"
 		message += "+ /squads — получить список отрядов.\n"
 		message += "+ /pin _текст_ — отправить сообщение во все группы, где находится бот. Сообщение будет автоматически запинено.\n"
+		message += "+ /users —  просмотреть зарегистрированных пользователей бота\n"
 	}
 	message += "+ /help – выводит данное сообщение\n"
 

@@ -20,4 +20,5 @@ type UsersInterface interface {
 	PlayerBetterThan(playerRaw *dbmapping.Player, powerLevel string) bool
 
 	ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
+	UsersList(update *tgbotapi.Update) string
 }
