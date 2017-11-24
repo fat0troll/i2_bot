@@ -10,6 +10,11 @@ import (
 	"strings"
 )
 
+// FormatUsername formats Telegram username for posting
+func (u *Users) FormatUsername(userName string) string {
+	return strings.Replace(userName, "_", "\\_", -1)
+}
+
 // ProfileMessage shows current player's profile
 func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
 	profileRaw, ok := u.GetProfile(playerRaw.ID)
@@ -55,7 +60,10 @@ func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 	}
 
 	message := "*Профиль игрока "
-	message += profileRaw.Nickname + "* (@" + profileRaw.TelegramNickname + ")\n"
+	message += profileRaw.Nickname + "*"
+	if profileRaw.TelegramNickname != "" {
+		message += " (@" + u.FormatUsername(profileRaw.TelegramNickname) + ")"
+	}
 	message += "\nЛига: " + league.Symbol + league.Name
 	message += "\n👤 " + strconv.Itoa(profileRaw.LevelID)
 	message += " | 🎓 " + strconv.Itoa(profileRaw.Exp) + "/" + strconv.Itoa(level.MaxExp)
@@ -104,6 +112,8 @@ func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 	message += "\n\n⏰Последнее обновление профиля: " + profileRaw.CreatedAt.Format("02.01.2006 15:04:05")
 	message += "\nНе забывай обновляться, это важно для получения актуальной информации.\n\n"
 	message += "/best – посмотреть лучших покемемов для поимки"
+
+	c.Log.Debug(message)
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ParseMode = "Markdown"

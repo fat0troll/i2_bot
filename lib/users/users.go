@@ -89,7 +89,7 @@ func (u *Users) usersList(update *tgbotapi.Update, page int, usersArray []dbmapp
 				message += " " + usersArray[i].League.Symbol
 				message += " " + usersArray[i].Profile.Nickname
 				if usersArray[i].Profile.TelegramNickname != "" {
-					message += " (@" + usersArray[i].Profile.TelegramNickname + ")"
+					message += " (@" + u.FormatUsername(usersArray[i].Profile.TelegramNickname) + ")"
 				}
 				message += "\n"
 				message += "Telegram ID: " + strconv.Itoa(usersArray[i].Player.TelegramID) + "\n"
