@@ -6,6 +6,7 @@ package appcontext
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/jmoiron/sqlx"
+	"github.com/robfig/cron"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/broadcaster/broadcasterinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/chatter/chatterinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/config"
@@ -29,6 +30,7 @@ import (
 type Context struct {
 	StartupFlags *flagger.Flagger
 	Cfg          *config.Config
+	Cron         *cron.Cron
 	Log          *mogrus.LoggerHandler
 	Bot          *tgbotapi.BotAPI
 	Forwarder    forwarderinterface.ForwarderInterface
@@ -87,11 +89,9 @@ func (c *Context) Init() {
 
 	c.Bot = connections.BotInit(c.Cfg, c.Log)
 	c.Db = connections.DBInit(c.Cfg, c.Log)
-}
 
-// InitializeStartupFlags gives information about available startup flags
-func (c *Context) InitializeStartupFlags() {
-
+	crontab := cron.New()
+	c.Cron = crontab
 }
 
 // RegisterRouterInterface registering router interface in application

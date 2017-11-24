@@ -47,6 +47,9 @@ func main() {
 	c.Log.Info("= i2_bot initialized. =")
 	c.Log.Info("=======================")
 
+	c.Cron.Start()
+	c.Log.Info("> Cron started.")
+
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 

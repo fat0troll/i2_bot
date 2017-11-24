@@ -10,5 +10,7 @@ import (
 // PinnerInterface implements Pinner for importing via appcontex
 type PinnerInterface interface {
 	Init()
+
+	PinBattleAlert()
 	PinMessageToAllChats(update *tgbotapi.Update) string
 }

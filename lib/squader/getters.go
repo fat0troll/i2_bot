@@ -38,6 +38,19 @@ func (s *Squader) GetSquadByID(squadID int) (dbmapping.SquadChat, bool) {
 	return squadFull, true
 }
 
+// GetAllSquadChats returns all main squad chats
+func (s *Squader) GetAllSquadChats() ([]dbmapping.Chat, bool) {
+	groupChats := []dbmapping.Chat{}
+
+	err := c.Db.Select(&groupChats, "SELECT ch.* FROM chats ch, squads s WHERE s.chat_id=ch.id")
+	if err != nil {
+		c.Log.Error(err)
+		return groupChats, false
+	}
+
+	return groupChats, true
+}
+
 // GetUserRolesInSquads lists all user roles
 func (s *Squader) GetUserRolesInSquads(playerRaw *dbmapping.Player) ([]dbmapping.SquadPlayerFull, bool) {
 	userRoles := []dbmapping.SquadPlayerFull{}

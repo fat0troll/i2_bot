@@ -69,3 +69,35 @@ func (p *Pinner) PinMessageToAllChats(update *tgbotapi.Update) string {
 
 	return "ok"
 }
+
+// PinBattleAlert pins to all squads 'battle alert' at :55 of every even hour
+// Even hours are in Moscow timezone
+func (p *Pinner) PinBattleAlert() {
+	c.Log.Debug("> Cron invoked PinBattleAlert()")
+
+	message := "*Турнир Лиги покемемов состоится через 5 минут!*\nБоевая готовность, отряд!"
+	groupChats, _ := c.Squader.GetAllSquadChats()
+
+	for i := range groupChats {
+		if groupChats[i].ChatType == "supergroup" {
+			msg := tgbotapi.NewMessage(groupChats[i].TelegramID, message)
+			msg.ParseMode = "Markdown"
+
+			pinnableMessage, err := c.Bot.Send(msg)
+			if err != nil {
+				c.Log.Error(err.Error())
+			}
+
+			pinChatMessageConfig := tgbotapi.PinChatMessageConfig{
+				ChatID:              pinnableMessage.Chat.ID,
+				MessageID:           pinnableMessage.MessageID,
+				DisableNotification: true,
+			}
+
+			_, err = c.Bot.PinChatMessage(pinChatMessageConfig)
+			if err != nil {
+				c.Log.Error(err.Error())
+			}
+		}
+	}
+}

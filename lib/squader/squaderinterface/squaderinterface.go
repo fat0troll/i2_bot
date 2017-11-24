@@ -12,6 +12,7 @@ import (
 type SquaderInterface interface {
 	Init()
 
+	GetAllSquadChats() ([]dbmapping.Chat, bool)
 	GetSquadByID(squadID int) (dbmapping.SquadChat, bool)
 	GetUserRolesInSquads(playerRaw *dbmapping.Player) ([]dbmapping.SquadPlayerFull, bool)
 

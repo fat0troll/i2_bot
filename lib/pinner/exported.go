@@ -25,4 +25,6 @@ func New(ac *appcontext.Context) {
 // Init is an initialization function for pinner
 func (p *Pinner) Init() {
 	c.Log.Info("Initializing Pinner...")
+
+	c.Cron.AddFunc("0 55 */2 * * *", p.PinBattleAlert)
 }
