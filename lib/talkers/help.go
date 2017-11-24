@@ -19,6 +19,7 @@ func (t *Talkers) HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Play
 	message += "+ /pokedeks – получить список известных боту покемемов\n"
 	if c.Users.PlayerBetterThan(playerRaw, "admin") {
 		message += "+ /send\\_all _текст_ — отправить сообщение всем пользователям бота\n"
+		message += "+ /send\\_league _текст_ — отправить сообщение всем пользователям бота, у которых профиль лиги Инстинкт\n"
 		message += "+ /group\\_chats — получить список групп, в которых работает бот.\n"
 		message += "+ /squads — получить список отрядов.\n"
 		message += "+ /pin _текст_ — отправить сообщение во все группы, где находится бот. Сообщение будет автоматически запинено.\n"

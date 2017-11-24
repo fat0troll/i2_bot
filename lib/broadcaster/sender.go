@@ -7,12 +7,11 @@ import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 	"strconv"
-	"strings"
 )
 
 // AdminBroadcastMessageSend sends saved message to all private chats
 func (b *Broadcaster) AdminBroadcastMessageSend(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
-	messageNum := strings.Replace(update.Message.Text, "/send_confirm ", "", 1)
+	messageNum := update.Message.CommandArguments()
 	messageNumInt, _ := strconv.Atoi(messageNum)
 	messageRaw, ok := b.getBroadcastMessageByID(messageNumInt)
 	if !ok {
@@ -27,9 +26,18 @@ func (b *Broadcaster) AdminBroadcastMessageSend(update *tgbotapi.Update, playerR
 
 	broadcastingMessageBody := messageRaw.Text
 
-	privateChats, ok := c.Chatter.GetAllPrivateChats()
-	if !ok {
-		return "fail"
+	privateChats := []dbmapping.Chat{}
+	switch messageRaw.BroadcastType {
+	case "all":
+		privateChats, ok = c.Chatter.GetAllPrivateChats()
+		if !ok {
+			return "fail"
+		}
+	case "league":
+		privateChats, ok = c.Chatter.GetLeaguePrivateChats()
+		if !ok {
+			return "fail"
+		}
 	}
 
 	for i := range privateChats {
@@ -48,7 +56,7 @@ func (b *Broadcaster) AdminBroadcastMessageSend(update *tgbotapi.Update, playerR
 		return "fail"
 	}
 
-	message := "Сообщение всем отправлено. Надеюсь, пользователи бота за него тебя не убьют.\n"
+	message := "Сообщение отправлено. Надеюсь, пользователи бота за него тебя не убьют.\n"
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ParseMode = "Markdown"

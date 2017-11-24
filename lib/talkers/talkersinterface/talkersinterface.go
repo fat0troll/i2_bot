@@ -13,8 +13,8 @@ type TalkersInterface interface {
 	Init()
 	HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player)
 
-	AnyMessageUnauthorized(update *tgbotapi.Update)
-	BotError(update *tgbotapi.Update)
+	AnyMessageUnauthorized(update *tgbotapi.Update) string
+	BotError(update *tgbotapi.Update) string
 
 	DurakMessage(update *tgbotapi.Update)
 	MatMessage(update *tgbotapi.Update)

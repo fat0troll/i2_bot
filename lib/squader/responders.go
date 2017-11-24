@@ -14,8 +14,7 @@ import (
 func (s *Squader) SquadsList(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
 	if !c.Users.PlayerBetterThan(playerRaw, "admin") {
 		if s.isUserAnyCommander(playerRaw.ID) {
-			c.Talkers.AnyMessageUnauthorized(update)
-			return "fail"
+			return c.Talkers.AnyMessageUnauthorized(update)
 		}
 	}
 	squads, ok := s.getAllSquadsWithChats()
@@ -53,15 +52,13 @@ func (s *Squader) SquadInfo(update *tgbotapi.Update, playerRaw *dbmapping.Player
 
 	if !c.Users.PlayerBetterThan(playerRaw, "admin") {
 		if s.getUserRoleForSquad(squadID, playerRaw.ID) != "commander" {
-			c.Talkers.AnyMessageUnauthorized(update)
-			return "fail"
+			return c.Talkers.AnyMessageUnauthorized(update)
 		}
 	}
 
 	squad, ok := s.GetSquadByID(squadID)
 	if !ok {
-		c.Talkers.BotError(update)
-		return "fail"
+		return c.Talkers.BotError(update)
 	}
 
 	message := "*Информация об отряде* _" + squad.Chat.Name + "_*:*\n"

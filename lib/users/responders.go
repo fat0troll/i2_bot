@@ -14,8 +14,7 @@ import (
 func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
 	profileRaw, ok := u.GetProfile(playerRaw.ID)
 	if !ok {
-		c.Talkers.AnyMessageUnauthorized(update)
-		return "fail"
+		return c.Talkers.AnyMessageUnauthorized(update)
 	}
 	league := dbmapping.League{}
 	err := c.Db.Get(&league, c.Db.Rebind("SELECT * FROM leagues WHERE id=?"), playerRaw.LeagueID)
@@ -124,8 +123,7 @@ func (u *Users) UsersList(update *tgbotapi.Update) string {
 	}
 	usersArray, ok := u.getUsersWithProfiles()
 	if !ok {
-		c.Talkers.BotError(update)
-		return "fail"
+		return c.Talkers.BotError(update)
 	} else {
 		u.usersList(update, page, usersArray)
 		return "ok"

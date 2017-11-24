@@ -15,6 +15,7 @@ type ChatterInterface interface {
 	GetOrCreateChat(update *tgbotapi.Update) (dbmapping.Chat, bool)
 	GetChatByID(chatID int64) (dbmapping.Chat, bool)
 	GetAllPrivateChats() ([]dbmapping.Chat, bool)
+	GetLeaguePrivateChats() ([]dbmapping.Chat, bool)
 	GetAllGroupChats() ([]dbmapping.Chat, bool)
 
 	UpdateChatTitle(chatRaw *dbmapping.Chat, newTitle string) (*dbmapping.Chat, bool)

@@ -22,8 +22,7 @@ func (f *Forwarder) ProcessForward(update *tgbotapi.Update, playerRaw *dbmapping
 		if playerRaw.LeagueID == 1 {
 			return c.Pokedexer.ParsePokememe(update, playerRaw)
 		} else {
-			c.Talkers.AnyMessageUnauthorized(update)
-			return "fail"
+			return c.Talkers.AnyMessageUnauthorized(update)
 		}
 	case profileMsg.MatchString(text):
 		c.Log.Debug("Profile posted!")

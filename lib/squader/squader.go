@@ -292,13 +292,11 @@ func (s *Squader) AddUserToSquad(update *tgbotapi.Update, adderRaw *dbmapping.Pl
 
 	if !c.Users.PlayerBetterThan(adderRaw, "admin") {
 		if userType == "commander" {
-			c.Talkers.AnyMessageUnauthorized(update)
-			return "fail"
+			return c.Talkers.AnyMessageUnauthorized(update)
 		}
 
 		if s.getUserRoleForSquad(squadRaw.ID, adderRaw.ID) != "commander" {
-			c.Talkers.AnyMessageUnauthorized(update)
-			return "fail"
+			return c.Talkers.AnyMessageUnauthorized(update)
 		}
 	}
 
