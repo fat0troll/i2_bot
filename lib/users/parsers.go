@@ -150,7 +150,7 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 		if strings.HasPrefix(currentString, "🔫") {
 			// We need NEXT string!
 			weaponType := strings.Replace(currentString, "🔫 ", "", 1)
-			wnRx := regexp.MustCompile("(.+)(ита)")
+			wnRx := regexp.MustCompile("(.+)(ита|ёры)")
 			weapon = wnRx.FindString(weaponType)
 		}
 
