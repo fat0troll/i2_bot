@@ -46,7 +46,7 @@ func (w *Welcomer) groupWelcomeUser(update *tgbotapi.Update, newUser *tgbotapi.U
 
 func (w *Welcomer) groupStartMessage(update *tgbotapi.Update) string {
 	message := "*Бот Инстинкта приветствует этот чатик!*\n\n"
-	message += "На слубже здравого смысла с " + time.Now().Format("02.01.2006 15:04:05") + "."
+	message += "На службе здравого смысла с " + time.Now().Format("02.01.2006 15:04:05") + "."
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ParseMode = "Markdown"
