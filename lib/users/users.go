@@ -95,7 +95,11 @@ func (u *Users) usersList(update *tgbotapi.Update, page int, usersArray []dbmapp
 				message += "Telegram ID: " + strconv.Itoa(usersArray[i].Player.TelegramID) + "\n"
 				message += "Последнее обновление: " + usersArray[i].Profile.CreatedAt.Format("02.01.2006 15:04:05") + "\n"
 			} else {
-				message += " _без профиля_\n"
+				if usersArray[i].Player.Status == "special" {
+					message += " _суперюзер_\n"
+				} else {
+					message += " _без профиля_\n"
+				}
 				message += "Telegram ID: " + strconv.Itoa(usersArray[i].Player.TelegramID) + "\n"
 			}
 		}
