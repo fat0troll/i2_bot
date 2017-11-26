@@ -19,7 +19,7 @@ func (ct *Chatter) GroupsList(update *tgbotapi.Update) string {
 
 	for i := range groupChats {
 		message += "---\n"
-		message += "[#" + strconv.Itoa(groupChats[i].Chat.ID) + "] _" + groupChats[i].Chat.Name + "_\n"
+		message += "\\[#" + strconv.Itoa(groupChats[i].Chat.ID) + "] _" + c.Users.FormatUsername(groupChats[i].Chat.Name) + "_\n"
 		message += "Telegram ID: " + strconv.FormatInt(groupChats[i].Chat.TelegramID, 10) + "\n"
 		if groupChats[i].ChatRole == "squad" {
 			message += "Статистика отряда:\n"
