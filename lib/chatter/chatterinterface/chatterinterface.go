@@ -17,6 +17,7 @@ type ChatterInterface interface {
 	GetAllPrivateChats() ([]dbmapping.Chat, bool)
 	GetLeaguePrivateChats() ([]dbmapping.Chat, bool)
 	GetAllGroupChats() ([]dbmapping.Chat, bool)
+	GetGroupChatsByIDs(chatsIDs string) ([]dbmapping.Chat, bool)
 
 	UpdateChatTitle(chatRaw *dbmapping.Chat, newTitle string) (*dbmapping.Chat, bool)
 	UpdateChatTelegramID(update *tgbotapi.Update) (*dbmapping.Chat, bool)

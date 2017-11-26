@@ -12,5 +12,7 @@ type PinnerInterface interface {
 	Init()
 
 	PinBattleAlert()
+
+	PinMessageToSomeChats(update *tgbotapi.Update) string
 	PinMessageToAllChats(update *tgbotapi.Update) string
 }

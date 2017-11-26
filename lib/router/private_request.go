@@ -80,7 +80,7 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 				}
 
 				return c.Talkers.AnyMessageUnauthorized(update)
-			case update.Message.Command() == "group_chats":
+			case update.Message.Command() == "chats":
 				if c.Users.PlayerBetterThan(playerRaw, "admin") {
 					c.Chatter.GroupsList(update)
 					return "ok"
@@ -96,6 +96,12 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 
 				return c.Talkers.AnyMessageUnauthorized(update)
 			case update.Message.Command() == "pin":
+				if c.Users.PlayerBetterThan(playerRaw, "admin") {
+					return c.Pinner.PinMessageToSomeChats(update)
+				}
+
+				return c.Talkers.AnyMessageUnauthorized(update)
+			case update.Message.Command() == "pin_all":
 				if c.Users.PlayerBetterThan(playerRaw, "admin") {
 					return c.Pinner.PinMessageToAllChats(update)
 				}

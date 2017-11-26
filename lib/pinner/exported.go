@@ -26,5 +26,5 @@ func New(ac *appcontext.Context) {
 func (p *Pinner) Init() {
 	c.Log.Info("Initializing Pinner...")
 
-	c.Cron.AddFunc("0 55 */2 * * *", p.PinBattleAlert)
+	c.Cron.AddFunc("0 55 4-23/2 * * *", p.PinBattleAlert)
 }

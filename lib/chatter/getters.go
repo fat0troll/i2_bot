@@ -6,6 +6,8 @@ package chatter
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -133,6 +135,37 @@ func (ct *Chatter) GetAllGroupChats() ([]dbmapping.Chat, bool) {
 	groupChats := []dbmapping.Chat{}
 
 	err := c.Db.Select(&groupChats, "SELECT * FROM chats WHERE chat_type IN ('group', 'supergroup')")
+	if err != nil {
+		c.Log.Error(err)
+		return groupChats, false
+	}
+
+	return groupChats, true
+}
+
+// GetGroupChatsByIDs returns group chats with selected IDs
+func (ct *Chatter) GetGroupChatsByIDs(chatsIDs string) ([]dbmapping.Chat, bool) {
+	groupChats := []dbmapping.Chat{}
+
+	queryIDs := make([]int, 0)
+	queryIDsStr := strings.Split(chatsIDs, ",")
+	for i := range queryIDsStr {
+		id, _ := strconv.Atoi(queryIDsStr[i])
+		if id != 0 {
+			queryIDs = append(queryIDs, id)
+		}
+	}
+
+	finalQueryIDs := ""
+	for i := range queryIDs {
+		finalQueryIDs += strconv.Itoa(queryIDs[i])
+		if i < len(queryIDs)-1 {
+			finalQueryIDs += ","
+		}
+	}
+	c.Log.Debug("Chat query IDs: " + finalQueryIDs)
+
+	err := c.Db.Select(&groupChats, "SELECT * FROM chats WHERE chat_type IN ('group', 'supergroup') AND id IN ("+finalQueryIDs+")")
 	if err != nil {
 		c.Log.Error(err)
 		return groupChats, false
