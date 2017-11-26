@@ -76,9 +76,13 @@ func (s *Squader) SquadInfo(update *tgbotapi.Update, playerRaw *dbmapping.Player
 			if squadMembers[i].UserRole == "commander" {
 				message += " \\[К]"
 			}
-			message += " " + squadMembers[i].Profile.Nickname + " "
-			if squadMembers[i].Profile.TelegramNickname != "" {
-				message += "(@" + c.Users.FormatUsername(squadMembers[i].Profile.TelegramNickname) + ")"
+			if squadMembers[i].Player.Status == "special" {
+				message += " _суперюзер_"
+			} else {
+				message += " " + squadMembers[i].Profile.Nickname + " "
+				if squadMembers[i].Profile.TelegramNickname != "" {
+					message += "(@" + c.Users.FormatUsername(squadMembers[i].Profile.TelegramNickname) + ")"
+				}
 			}
 			message += " ⚔" + strconv.Itoa(squadMembers[i].Profile.Power)
 			message += "\n"

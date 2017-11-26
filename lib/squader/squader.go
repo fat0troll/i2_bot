@@ -347,7 +347,7 @@ func (s *Squader) AddUserToSquad(update *tgbotapi.Update, adderRaw *dbmapping.Pl
 		return s.squadUserAdditionFailure(update)
 	}
 
-	if playerRaw.Status != "special" {
+	if c.Users.PlayerBetterThan(&playerRaw, "admin") {
 		_, ok = c.Users.GetProfile(playerRaw.ID)
 		if !ok {
 			return s.squadUserAdditionFailure(update)
