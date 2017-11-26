@@ -56,13 +56,18 @@ func main() {
 	updates, _ := c.Bot.GetUpdatesChan(u)
 
 	for update := range updates {
-		if update.Message == nil || update.Message.From == nil {
-			continue
-		} else if update.Message.Date < (int(time.Now().Unix()) - 1) {
-			// Ignore old messages
+		if update.Message != nil {
+			if update.Message.From != nil {
+				if update.Message.Date > (int(time.Now().Unix()) - 5) {
+					c.Router.RouteRequest(&update)
+				}
+			}
+		} else if update.InlineQuery != nil {
+			c.Router.RouteInline(&update)
+		} else if update.ChosenInlineResult != nil {
+			c.Log.Debug(update.ChosenInlineResult.ResultID)
+		} else {
 			continue
 		}
-
-		c.Router.RouteRequest(&update)
 	}
 }

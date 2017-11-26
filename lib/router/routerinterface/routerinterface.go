@@ -10,5 +10,7 @@ import (
 // RouterInterface implements Router for importing via appcontext.
 type RouterInterface interface {
 	Init()
+
+	RouteInline(update *tgbotapi.Update) string
 	RouteRequest(update *tgbotapi.Update) string
 }

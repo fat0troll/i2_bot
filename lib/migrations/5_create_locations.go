@@ -36,7 +36,7 @@ func CreateLocationsUp(tx *sql.Tx) error {
 	if err4 != nil {
 		return err2
 	}
-	_, err5 := tx.Exec("INSERT INTO `locations` VALUES(NULL, '🏙:', 'Город', NOW());")
+	_, err5 := tx.Exec("INSERT INTO `locations` VALUES(NULL, '🏙', 'Город', NOW());")
 	if err5 != nil {
 		return err2
 	}
