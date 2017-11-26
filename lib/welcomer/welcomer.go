@@ -17,7 +17,7 @@ func (w *Welcomer) groupWelcomeUser(update *tgbotapi.Update, newUser *tgbotapi.U
 	profileRaw, profileExist := c.Users.GetProfile(playerRaw.ID)
 
 	message := "*Бот Инстинкта приветствует тебя, *@"
-	message += newUser.UserName
+	message += c.Users.FormatUsername(newUser.UserName)
 	message += "*!*\n\n"
 
 	if profileExist {

@@ -47,12 +47,12 @@ func (w *Welcomer) PrivateWelcomeMessageSpecial(update *tgbotapi.Update, playerR
 func (w *Welcomer) GroupWelcomeMessage(update *tgbotapi.Update) string {
 	newUsers := *update.Message.NewChatMembers
 	for i := range newUsers {
-		if (newUsers[i].UserName == "i2_bot") || (newUsers[i].UserName == "i2_dev_bot") {
-			w.groupStartMessage(update)
-		}
-
 		newUser := newUsers[i]
-		w.groupWelcomeUser(update, &newUser)
+		if (newUser.UserName == "i2_bot") || (newUser.UserName == "i2_dev_bot") {
+			w.groupStartMessage(update)
+		} else {
+			w.groupWelcomeUser(update, &newUser)
+		}
 	}
 
 	return "ok"
