@@ -33,10 +33,34 @@ func (o *Orders) sendOrder(order *dbmapping.Order) string {
 		if !ok {
 			return "fail"
 		}
+
+		// Adding Bastion chat as it's the zero chat
+		bastionGroupID, _ := strconv.ParseInt(c.Cfg.SpecialChats.BastionID, 10, 64)
+		bastionChat := dbmapping.Chat{}
+		err := c.Db.Get(&bastionChat, c.Db.Rebind("SELECT * FROM chats WHERE telegram_id=?"), bastionGroupID)
+		if err != nil {
+			return "fail"
+		}
+
+		targetChats = append(targetChats, bastionChat)
 	} else {
 		targetChats, ok = c.Squader.GetSquadChatsBySquadsIDs(order.TargetSquads)
 		if !ok {
 			return "fail"
+		}
+
+		targetChatsIDs := strings.Split(order.TargetSquads, ",")
+		for i := range targetChatsIDs {
+			if targetChatsIDs[i] == "0" {
+				bastionGroupID, _ := strconv.ParseInt(c.Cfg.SpecialChats.BastionID, 10, 64)
+				bastionChat := dbmapping.Chat{}
+				err := c.Db.Get(&bastionChat, c.Db.Rebind("SELECT * FROM chats WHERE telegram_id=?"), bastionGroupID)
+				if err != nil {
+					return "fail"
+				}
+
+				targetChats = append(targetChats, bastionChat)
+			}
 		}
 	}
 
