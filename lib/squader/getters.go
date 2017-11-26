@@ -38,11 +38,37 @@ func (s *Squader) GetSquadByID(squadID int) (dbmapping.SquadChat, bool) {
 	return squadFull, true
 }
 
+// GetAvailableSquadChatsForUser returns squad chats which user can join
+func (s *Squader) GetAvailableSquadChatsForUser(playerRaw *dbmapping.Player) ([]dbmapping.Chat, bool) {
+	groupChats := []dbmapping.Chat{}
+
+	err := c.Db.Select(&groupChats, c.Db.Rebind("SELECT ch.* FROM chats ch, squads s, squads_players sp WHERE (s.chat_id=ch.id OR s.flood_chat_id=ch.id) AND sp.player_id = ? AND s.id = sp.squad_id"), playerRaw.ID)
+	if err != nil {
+		c.Log.Error(err)
+		return groupChats, false
+	}
+
+	return groupChats, true
+}
+
 // GetAllSquadChats returns all main squad chats
 func (s *Squader) GetAllSquadChats() ([]dbmapping.Chat, bool) {
 	groupChats := []dbmapping.Chat{}
 
 	err := c.Db.Select(&groupChats, "SELECT ch.* FROM chats ch, squads s WHERE s.chat_id=ch.id")
+	if err != nil {
+		c.Log.Error(err)
+		return groupChats, false
+	}
+
+	return groupChats, true
+}
+
+// GetAllSquadFloodChats returns all flood squad chats
+func (s *Squader) GetAllSquadFloodChats() ([]dbmapping.Chat, bool) {
+	groupChats := []dbmapping.Chat{}
+
+	err := c.Db.Select(&groupChats, "SELECT ch.* FROM chats ch, squads s WHERE s.flood_chat_id=ch.id")
 	if err != nil {
 		c.Log.Error(err)
 		return groupChats, false
@@ -77,4 +103,30 @@ func (s *Squader) GetUserRolesInSquads(playerRaw *dbmapping.Player) ([]dbmapping
 	}
 
 	return userRoles, true
+}
+
+// IsChatASquadEnabled checks group chat for restricting actions for squad
+func (s *Squader) IsChatASquadEnabled(chatRaw *dbmapping.Chat) string {
+	mainChats, ok := s.GetAllSquadChats()
+	if !ok {
+		return "no"
+	}
+	floodChats, ok := s.GetAllSquadFloodChats()
+	if !ok {
+		return "no"
+	}
+
+	for i := range mainChats {
+		if *chatRaw == mainChats[i] {
+			return "main"
+		}
+	}
+
+	for i := range floodChats {
+		if *chatRaw == floodChats[i] {
+			return "flood"
+		}
+	}
+
+	return "no"
 }

@@ -91,7 +91,7 @@ func (p *Pinner) PinBattleAlert() {
 			pinChatMessageConfig := tgbotapi.PinChatMessageConfig{
 				ChatID:              pinnableMessage.Chat.ID,
 				MessageID:           pinnableMessage.MessageID,
-				DisableNotification: true,
+				DisableNotification: false,
 			}
 
 			_, err = c.Bot.PinChatMessage(pinChatMessageConfig)

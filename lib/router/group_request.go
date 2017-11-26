@@ -18,6 +18,11 @@ func (r *Router) routeGroupRequest(update *tgbotapi.Update, playerRaw *dbmapping
 	var ebMsg = regexp.MustCompile("(\\s|^|ЗА|За|зА|за)(Е|е|Ё|ё)(Б|б)(\\s|Л|л|А|а|Т|т|У|у|Е|е|Ё|ё|И|и)")
 	var piMsg = regexp.MustCompile("(П|п)(И|и)(З|з)(Д|д)")
 
+	squadHandled := c.Squader.ProcessMessage(update, chatRaw)
+	if squadHandled != "ok" {
+		return squadHandled
+	}
+
 	// Welcomes
 	if update.Message.NewChatMembers != nil {
 		newUsers := *update.Message.NewChatMembers

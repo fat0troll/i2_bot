@@ -173,9 +173,21 @@ func (s *Squader) getUserRoleForSquad(squadID int, playerID int) string {
 	return squadPlayer.UserType
 }
 
+func (s *Squader) deleteFloodMessage(update *tgbotapi.Update) {
+	deleteMessageConfig := tgbotapi.DeleteMessageConfig{
+		ChatID:    update.Message.Chat.ID,
+		MessageID: update.Message.MessageID,
+	}
+
+	_, err := c.Bot.DeleteMessage(deleteMessageConfig)
+	if err != nil {
+		c.Log.Error(err.Error())
+	}
+}
+
 func (s *Squader) isUserAnyCommander(playerID int) bool {
 	squadPlayers := []dbmapping.SquadPlayer{}
-	err := c.Db.Select(&squadPlayers, c.Db.Rebind("SELECT * FROM squads_players WHERE player_id=?"), playerID)
+	err := c.Db.Select(&squadPlayers, c.Db.Rebind("SELECT * FROM squads_players WHERE player_id=? AND user_type='commander'"), playerID)
 	if err != nil {
 		c.Log.Debug(err.Error())
 	}
@@ -185,6 +197,55 @@ func (s *Squader) isUserAnyCommander(playerID int) bool {
 	}
 
 	return false
+}
+
+func (s *Squader) getCommandersForSquadViaChat(chatRaw *dbmapping.Chat) ([]dbmapping.Player, bool) {
+	commanders := []dbmapping.Player{}
+	err := c.Db.Select(&commanders, c.Db.Rebind("SELECT p.* FROM players p, squads_players sp, squads s WHERE (s.chat_id=? OR s.flood_chat_id=?) AND sp.squad_id = s.id AND sp.user_type = 'commander' AND sp.player_id = p.id"), chatRaw.ID, chatRaw.ID)
+	if err != nil {
+		c.Log.Debug(err.Error())
+		return commanders, false
+	}
+
+	return commanders, true
+}
+
+func (s *Squader) kickUserFromSquadChat(user *tgbotapi.User, chatRaw *dbmapping.Chat) {
+	chatUserConfig := tgbotapi.ChatMemberConfig{
+		ChatID: chatRaw.TelegramID,
+		UserID: user.ID,
+	}
+
+	kickConfig := tgbotapi.KickChatMemberConfig{
+		ChatMemberConfig: chatUserConfig,
+		UntilDate:        1893456000,
+	}
+
+	_, err := c.Bot.KickChatMember(kickConfig)
+	if err != nil {
+		c.Log.Error(err.Error())
+	}
+
+	suerName := ""
+	if user.UserName != "" {
+		suerName = "@" + user.UserName
+	} else {
+		suerName = user.FirstName
+		if user.LastName != "" {
+			suerName += " " + user.LastName
+		}
+	}
+
+	commanders, ok := s.getCommandersForSquadViaChat(chatRaw)
+	if ok {
+		for i := range commanders {
+			message := "Некто " + c.Users.FormatUsername(suerName) + " попытался зайти в чат _" + chatRaw.Name + "_ и был изгнан ботом, так как не имеет на это прав."
+
+			msg := tgbotapi.NewMessage(int64(commanders[i].TelegramID), message)
+			msg.ParseMode = "Markdown"
+			c.Bot.Send(msg)
+		}
+	}
 }
 
 func (s *Squader) squadCreationDuplicate(update *tgbotapi.Update) string {
@@ -353,4 +414,75 @@ func (s *Squader) CreateSquad(update *tgbotapi.Update) string {
 	}
 
 	return s.squadCreationSuccess(update)
+}
+
+// ProcessMessage handles all squad-specified administration actions
+func (s *Squader) ProcessMessage(update *tgbotapi.Update, chatRaw *dbmapping.Chat) string {
+	// It will pass message or do some extra actions
+	// If it returns "ok", we can pass message to router, otherwise we will stop here
+	processMain := false
+	processFlood := false
+	messageProcessed := false
+	switch s.IsChatASquadEnabled(chatRaw) {
+	case "main":
+		processMain = true
+	case "flood":
+		processFlood = true
+	default:
+		return "ok"
+	}
+
+	// Kicking non-squad members from any chat
+	if processMain || processFlood {
+		if update.Message.NewChatMembers != nil {
+			newUsers := *update.Message.NewChatMembers
+			if len(newUsers) > 0 {
+				for i := range newUsers {
+					playerRaw, ok := c.Users.GetOrCreatePlayer(newUsers[i].ID)
+					if !ok {
+						s.kickUserFromSquadChat(&newUsers[i], chatRaw)
+						messageProcessed = true
+					}
+
+					availableChats, ok := s.GetAvailableSquadChatsForUser(&playerRaw)
+					if !ok {
+						s.kickUserFromSquadChat(&newUsers[i], chatRaw)
+						messageProcessed = true
+					}
+
+					isChatValid := false
+					for i := range availableChats {
+						if availableChats[i] == *chatRaw {
+							isChatValid = true
+						}
+					}
+
+					if !isChatValid {
+						s.kickUserFromSquadChat(&newUsers[i], chatRaw)
+						messageProcessed = true
+					}
+				}
+			}
+		}
+	}
+
+	if processMain {
+		c.Log.Debug("Message found in one of squad's main chats.")
+		talker, ok := c.Users.GetOrCreatePlayer(update.Message.From.ID)
+		if !ok {
+			s.deleteFloodMessage(update)
+			messageProcessed = true
+		}
+
+		if (update.Message.From.UserName != "i2_bot") && (update.Message.From.UserName != "i2_bot_dev") && !s.isUserAnyCommander(talker.ID) {
+			s.deleteFloodMessage(update)
+			messageProcessed = true
+		}
+	}
+
+	if messageProcessed {
+		return "fail"
+	}
+
+	return "ok"
 }

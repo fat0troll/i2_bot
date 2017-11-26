@@ -13,12 +13,17 @@ type SquaderInterface interface {
 	Init()
 
 	GetAllSquadChats() ([]dbmapping.Chat, bool)
+	GetAllSquadFloodChats() ([]dbmapping.Chat, bool)
+	GetAvailableSquadChatsForUser(playerRaw *dbmapping.Player) ([]dbmapping.Chat, bool)
 	GetSquadByID(squadID int) (dbmapping.SquadChat, bool)
 	GetUserRolesInSquads(playerRaw *dbmapping.Player) ([]dbmapping.SquadPlayerFull, bool)
+	IsChatASquadEnabled(chatRaw *dbmapping.Chat) string
 
 	AddUserToSquad(update *tgbotapi.Update, adderRaw *dbmapping.Player) string
 	CreateSquad(update *tgbotapi.Update) string
 
 	SquadInfo(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
 	SquadsList(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
+
+	ProcessMessage(update *tgbotapi.Update, chatRaw *dbmapping.Chat) string
 }
