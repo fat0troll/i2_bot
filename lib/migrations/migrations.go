@@ -34,6 +34,8 @@ func (m *Migrations) Init() {
 	goose.AddNamedMigration("21_change_telegram_id_column.go", ChangeTelegramIDColumnUp, ChangeTelegramIDColumnDown)
 	goose.AddNamedMigration("22_add_flood_chat_id.go", AddFloodChatIDUp, AddFloodChatIDDown)
 	goose.AddNamedMigration("23_add_user_type.go", AddUserTypeUp, AddUserTypeDown)
+	goose.AddNamedMigration("24_create_orders.go", CreateOrdersUp, CreateOrdersDown)
+	goose.AddNamedMigration("25_remove_reusable.go", RemoveReusableUp, RemoveReusableDown)
 }
 
 // Migrate migrates database to current version

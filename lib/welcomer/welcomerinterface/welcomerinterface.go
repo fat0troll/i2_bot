@@ -14,5 +14,6 @@ type WelcomerInterface interface {
 
 	PrivateWelcomeMessageUnauthorized(update *tgbotapi.Update)
 	PrivateWelcomeMessageAuthorized(update *tgbotapi.Update, playerRaw *dbmapping.Player)
+	PrivateWelcomeMessageSpecial(update *tgbotapi.Update, playerRaw *dbmapping.Player)
 	GroupWelcomeMessage(update *tgbotapi.Update) string
 }

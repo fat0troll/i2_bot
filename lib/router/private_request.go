@@ -17,6 +17,7 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 	var pokememeInfoMsg = regexp.MustCompile("/pk(\\d+)")
 	var usersMsg = regexp.MustCompile("/users\\d?\\z")
 	var squadInfoMsg = regexp.MustCompile("/show_squad(\\d+)\\z")
+	var orderSendMsg = regexp.MustCompile("/send_order(\\d+)\\z")
 
 	if update.Message.ForwardFrom != nil {
 		if update.Message.ForwardFrom.ID != 360402625 {
@@ -34,6 +35,11 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 			switch {
 			case update.Message.Command() == "start":
 				if playerRaw.LeagueID != 0 {
+					if playerRaw.Status == "special" {
+						c.Welcomer.PrivateWelcomeMessageSpecial(update, playerRaw)
+						return "ok"
+					}
+
 					c.Welcomer.PrivateWelcomeMessageAuthorized(update, playerRaw)
 					return "ok"
 				}
@@ -104,6 +110,19 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 			case update.Message.Command() == "pin_all":
 				if c.Users.PlayerBetterThan(playerRaw, "admin") {
 					return c.Pinner.PinMessageToAllChats(update)
+				}
+
+				return c.Talkers.AnyMessageUnauthorized(update)
+
+			case update.Message.Command() == "orders":
+				if c.Users.PlayerBetterThan(playerRaw, "admin") {
+					return c.Orders.ListAllOrders(update)
+				}
+
+				return c.Talkers.AnyMessageUnauthorized(update)
+			case orderSendMsg.MatchString(text):
+				if c.Users.PlayerBetterThan(playerRaw, "admin") {
+					return c.Orders.SendOrder(update)
 				}
 
 				return c.Talkers.AnyMessageUnauthorized(update)

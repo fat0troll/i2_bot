@@ -32,6 +32,17 @@ func (w *Welcomer) PrivateWelcomeMessageAuthorized(update *tgbotapi.Update, play
 	c.Bot.Send(msg)
 }
 
+// PrivateWelcomeMessageSpecial greets existing user with `special` access
+func (w *Welcomer) PrivateWelcomeMessageSpecial(update *tgbotapi.Update, playerRaw *dbmapping.Player) {
+	message := "*Бот Инстинкта приветствует тебя. Снова.*\n\n"
+	message += "Привет, " + update.Message.From.FirstName + " " + update.Message.From.LastName + "!\n"
+	message += "\nБудь аккуратен, суперюзер!"
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
+	msg.ParseMode = "Markdown"
+
+	c.Bot.Send(msg)
+}
+
 // GroupWelcomeMessage welcomes new user on group or bot itself
 func (w *Welcomer) GroupWelcomeMessage(update *tgbotapi.Update) string {
 	newUsers := *update.Message.NewChatMembers

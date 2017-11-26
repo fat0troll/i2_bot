@@ -64,6 +64,8 @@ func (u *Users) GetOrCreatePlayer(telegramID int) (dbmapping.Player, bool) {
 func (u *Users) PlayerBetterThan(playerRaw *dbmapping.Player, powerLevel string) bool {
 	var isBetter = false
 	switch playerRaw.Status {
+	case "special":
+		isBetter = true
 	case "owner":
 		isBetter = true
 	case "admin":

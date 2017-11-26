@@ -87,6 +87,14 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 				}
 			}
 		}
+		if strings.HasPrefix(currentString, "id: ") {
+			realUserID := strings.TrimPrefix(currentString, "id: ")
+			c.Log.Debug("Profile user ID: " + realUserID)
+			realUID, _ := strconv.Atoi(realUserID)
+			if realUID != playerRaw.TelegramID {
+				return "fail"
+			}
+		}
 		if strings.HasPrefix(currentString, "👤Уровень:") {
 			levelRx := regexp.MustCompile("\\d+")
 			levelArray := levelRx.FindAllString(currentString, -1)

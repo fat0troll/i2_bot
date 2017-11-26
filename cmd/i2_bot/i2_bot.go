@@ -10,6 +10,7 @@ import (
 	"lab.pztrn.name/fat0troll/i2_bot/lib/chatter"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/forwarder"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/migrations"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/orders"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/pinner"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/pokedexer"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/router"
@@ -42,6 +43,7 @@ func main() {
 	squader.New(c)
 	users.New(c)
 	statistics.New(c)
+	orders.New(c)
 
 	c.Log.Info("=======================")
 	c.Log.Info("= i2_bot initialized. =")

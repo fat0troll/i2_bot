@@ -5,6 +5,8 @@ package squader
 
 import (
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
+	"strconv"
+	"strings"
 )
 
 // GetSquadByID returns squad will all support information
@@ -69,6 +71,43 @@ func (s *Squader) GetAllSquadFloodChats() ([]dbmapping.Chat, bool) {
 	groupChats := []dbmapping.Chat{}
 
 	err := c.Db.Select(&groupChats, "SELECT ch.* FROM chats ch, squads s WHERE s.flood_chat_id=ch.id")
+	if err != nil {
+		c.Log.Error(err)
+		return groupChats, false
+	}
+
+	return groupChats, true
+}
+
+// GetSquadChatsBySquadsIDs returns main squad chats for given squads IDs
+func (s *Squader) GetSquadChatsBySquadsIDs(squadsIDs string) ([]dbmapping.Chat, bool) {
+	groupChats := []dbmapping.Chat{}
+
+	squadsIDsArray := strings.Split(squadsIDs, ",")
+	if len(squadsIDsArray) < 1 {
+		return groupChats, false
+	}
+
+	sIDs := make([]int, 0)
+	for i := range squadsIDsArray {
+		sID, _ := strconv.Atoi(squadsIDsArray[i])
+		if sID != 0 {
+			sIDs = append(sIDs, sID)
+		}
+	}
+	if len(sIDs) < 1 {
+		return groupChats, false
+	}
+
+	queryLine := ""
+	for i := range sIDs {
+		queryLine += strconv.Itoa(sIDs[i])
+		if i < len(sIDs)-1 {
+			queryLine += ","
+		}
+	}
+
+	err := c.Db.Select(&groupChats, "SELECT ch.* FROM chats ch, squads s WHERE s.chat_id=ch.id AND s.id IN ("+queryLine+")")
 	if err != nil {
 		c.Log.Error(err)
 		return groupChats, false

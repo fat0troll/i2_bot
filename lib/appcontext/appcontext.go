@@ -13,6 +13,7 @@ import (
 	"lab.pztrn.name/fat0troll/i2_bot/lib/connections"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/forwarder/forwarderinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/migrations/migrationsinterface"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/orders/ordersinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/pinner/pinnerinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/pokedexer/pokedexerinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/router/routerinterface"
@@ -46,6 +47,7 @@ type Context struct {
 	Squader      squaderinterface.SquaderInterface
 	Users        usersinterface.UsersInterface
 	Statistics   statisticsinterface.StatisticsInterface
+	Orders       ordersinterface.OrdersInterface
 }
 
 // Init is a initialization function for context
@@ -151,6 +153,12 @@ func (c *Context) RegisterChatterInterface(ci chatterinterface.ChatterInterface)
 func (c *Context) RegisterSquaderInterface(si squaderinterface.SquaderInterface) {
 	c.Squader = si
 	c.Squader.Init()
+}
+
+// RegisterOrdersInterface registers orders interface in application
+func (c *Context) RegisterOrdersInterface(oi ordersinterface.OrdersInterface) {
+	c.Orders = oi
+	c.Orders.Init()
 }
 
 // RegisterUsersInterface registers users interface in application

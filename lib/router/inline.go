@@ -5,31 +5,65 @@ package router
 
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"strconv"
 	"strings"
 )
 
 // RouteInline routes inline requests to bot
 func (r *Router) RouteInline(update *tgbotapi.Update) string {
-	availableCommands := make(map[string]string)
-	availableCommands["0"] = "🌲Лес"
-	availableCommands["1"] = "⛰Горы"
-	availableCommands["2"] = "🚣Озеро"
-	availableCommands["3"] = "🏙Город"
-	availableCommands["4"] = "🏛Катакомбы"
-	availableCommands["5"] = "⛪️Кладбище"
-	outputCommands := make(map[string]string)
-	for i, value := range availableCommands {
-		if strings.Contains(value, update.InlineQuery.Query) {
-			outputCommands[i] = value
-		}
+	playerRaw, ok := c.Users.GetOrCreatePlayer(update.InlineQuery.From.ID)
+	if !ok {
+		return "fail"
 	}
 
 	results := make([]interface{}, 0)
-	for i, value := range outputCommands {
-		article := tgbotapi.NewInlineQueryResultArticle(i, "Команда боту @PokememBroBot:", value)
-		article.Description = value
+
+	if playerRaw.LeagueID != 1 {
+		article := tgbotapi.NewInlineQueryResultArticle("0", "Команда боту @PokememBroBot:", "👤Герой")
+		article.Description = "👤Герой"
 
 		results = append(results, article)
+	} else {
+		orderNumber, _ := strconv.Atoi(update.InlineQuery.Query)
+		if orderNumber != 0 {
+			order, ok := c.Orders.GetOrderByID(orderNumber)
+			if !ok {
+				return "fail"
+			}
+
+			attackTarget := ""
+			if order.Target == "M" {
+				attackTarget = "⚔ 🈳 МИСТИКА"
+			} else {
+				attackTarget = "⚔ 🈵 ОТВАГА"
+			}
+
+			article := tgbotapi.NewInlineQueryResultArticle(strconv.Itoa(orderNumber), "Выполнить приказ отряда:", attackTarget)
+			article.Description = attackTarget
+
+			results = append(results, article)
+		} else {
+			availableCommands := make(map[string]string)
+			availableCommands["10"] = "🌲Лес"
+			availableCommands["11"] = "⛰Горы"
+			availableCommands["12"] = "🚣Озеро"
+			availableCommands["13"] = "🏙Город"
+			availableCommands["14"] = "🏛Катакомбы"
+			availableCommands["15"] = "⛪️Кладбище"
+			outputCommands := make(map[string]string)
+			for i, value := range availableCommands {
+				if strings.Contains(value, update.InlineQuery.Query) {
+					outputCommands[i] = value
+				}
+			}
+
+			for i, value := range outputCommands {
+				article := tgbotapi.NewInlineQueryResultArticle(i, "Команда боту @PokememBroBot:", value)
+				article.Description = value
+
+				results = append(results, article)
+			}
+		}
 	}
 
 	inlineConf := tgbotapi.InlineConfig{
@@ -44,5 +78,5 @@ func (r *Router) RouteInline(update *tgbotapi.Update) string {
 		c.Log.Error(err.Error())
 	}
 
-	return "fail"
+	return "ok"
 }

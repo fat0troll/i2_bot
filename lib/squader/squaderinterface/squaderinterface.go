@@ -16,6 +16,7 @@ type SquaderInterface interface {
 	GetAllSquadFloodChats() ([]dbmapping.Chat, bool)
 	GetAvailableSquadChatsForUser(playerRaw *dbmapping.Player) ([]dbmapping.Chat, bool)
 	GetSquadByID(squadID int) (dbmapping.SquadChat, bool)
+	GetSquadChatsBySquadsIDs(squadsID string) ([]dbmapping.Chat, bool)
 	GetUserRolesInSquads(playerRaw *dbmapping.Player) ([]dbmapping.SquadPlayerFull, bool)
 	IsChatASquadEnabled(chatRaw *dbmapping.Chat) string
 
