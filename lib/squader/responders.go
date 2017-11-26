@@ -23,6 +23,10 @@ func (s *Squader) SquadsList(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 	}
 
 	message := "*Наши отряды:*\n"
+	message += "---\n"
+	message += "[#0] _Бастион Инстинкта_\n"
+	message += "Telegram ID: " + c.Cfg.SpecialChats.BastionID + "\n"
+	message += "Игроки по умолчанию оказываются здесь.\n"
 
 	for i := range squads {
 		message += "---\n"

@@ -53,8 +53,14 @@ func (w *Welcomer) GroupWelcomeMessage(update *tgbotapi.Update) string {
 			w.groupStartMessage(update)
 		} else {
 			defaultGroupID, _ := strconv.ParseInt(c.Cfg.SpecialChats.HeadquartersID, 10, 64)
+			bastionGroupID, _ := strconv.ParseInt(c.Cfg.SpecialChats.BastionID, 10, 64)
+
 			if update.Message.Chat.ID == defaultGroupID {
 				w.groupWelcomeUser(update, &newUser)
+			}
+
+			if update.Message.Chat.ID == bastionGroupID {
+				c.Squader.ProtectBastion(update, &newUser)
 			}
 		}
 	}

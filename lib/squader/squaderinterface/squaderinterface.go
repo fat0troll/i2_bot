@@ -27,4 +27,5 @@ type SquaderInterface interface {
 	SquadsList(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
 
 	ProcessMessage(update *tgbotapi.Update, chatRaw *dbmapping.Chat) string
+	ProtectBastion(update *tgbotapi.Update, newUser *tgbotapi.User) string
 }

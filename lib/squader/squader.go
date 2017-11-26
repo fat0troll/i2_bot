@@ -236,14 +236,18 @@ func (s *Squader) kickUserFromSquadChat(user *tgbotapi.User, chatRaw *dbmapping.
 		}
 	}
 
-	commanders, ok := s.getCommandersForSquadViaChat(chatRaw)
-	if ok {
-		for i := range commanders {
-			message := "Некто " + c.Users.FormatUsername(suerName) + " попытался зайти в чат _" + chatRaw.Name + "_ и был изгнан ботом, так как не имеет на это прав."
+	bastionChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.BastionID, 10, 64)
+	if chatRaw.TelegramID != bastionChatID {
+		// In Bastion notifications are public in default chat
+		commanders, ok := s.getCommandersForSquadViaChat(chatRaw)
+		if ok {
+			for i := range commanders {
+				message := "Некто " + c.Users.FormatUsername(suerName) + " попытался зайти в чат _" + chatRaw.Name + "_ и был изгнан ботом, так как не имеет на это прав."
 
-			msg := tgbotapi.NewMessage(int64(commanders[i].TelegramID), message)
-			msg.ParseMode = "Markdown"
-			c.Bot.Send(msg)
+				msg := tgbotapi.NewMessage(int64(commanders[i].TelegramID), message)
+				msg.ParseMode = "Markdown"
+				c.Bot.Send(msg)
+			}
 		}
 	}
 }
@@ -484,6 +488,55 @@ func (s *Squader) ProcessMessage(update *tgbotapi.Update, chatRaw *dbmapping.Cha
 	}
 
 	if messageProcessed {
+		return "fail"
+	}
+
+	return "ok"
+}
+
+// ProtectBastion avoids spies and no-profile players to join Bastion
+func (s *Squader) ProtectBastion(update *tgbotapi.Update, newUser *tgbotapi.User) string {
+	defaultChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.DefaultID, 10, 64)
+	userName := ""
+	if newUser.UserName != "" {
+		userName += "@" + newUser.UserName
+	} else {
+		userName += newUser.FirstName
+		if newUser.LastName != "" {
+			userName += " " + newUser.LastName
+		}
+	}
+
+	chatRaw, ok := c.Chatter.GetOrCreateChat(update)
+	if !ok {
+		return "fail"
+	}
+
+	playerRaw, ok := c.Users.GetOrCreatePlayer(newUser.ID)
+	if !ok {
+		s.kickUserFromSquadChat(newUser, &chatRaw)
+		return "fail"
+	}
+
+	if playerRaw.LeagueID != 1 {
+		// Check for profile
+		_, profileOK := c.Users.GetProfile(playerRaw.ID)
+		if !profileOK {
+			message := "Привет, " + c.Users.FormatUsername(userName) + "! Напиши мне и скинь профиль для доступа в чаты Лиги!"
+
+			msg := tgbotapi.NewMessage(defaultChatID, message)
+			msg.ParseMode = "Markdown"
+
+			c.Bot.Send(msg)
+		} else {
+			message := "Привет, " + c.Users.FormatUsername(userName) + "! Там переход между лигами не завезли случайно? Переходи в нашу Лигу, будем рады тебя видеть... а пока — вход в наши чаты закрыт!"
+
+			msg := tgbotapi.NewMessage(defaultChatID, message)
+			msg.ParseMode = "Markdown"
+
+			c.Bot.Send(msg)
+		}
+		s.kickUserFromSquadChat(newUser, &chatRaw)
 		return "fail"
 	}
 
