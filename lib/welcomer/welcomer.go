@@ -25,13 +25,13 @@ func (w *Welcomer) groupWelcomeUser(update *tgbotapi.Update, newUser *tgbotapi.U
 			message += "Рад тебя видеть! Не забывай обновлять профиль почаще, и да пребудет с тобой Рандом!\n"
 			message += "Последнее обновление твоего профиля: " + profileRaw.CreatedAt.Format("02.01.2006 15:04:05") + "."
 		} else {
-			message += "Обнови профиль, отправив его боту в личку. Так надо."
+			message += "Обнови профиль, отправив его мне в личку."
 
 			w.alertSpyUser(update, newUser)
 		}
 	} else {
 		// newbie
-		message += "Добавь себе бота @i2\\_bot в список контактов и скинь в него игровой профиль. Это важно для успешной игры!\n"
+		message += "Перешли мне свой профиль для дальнейших инструкций.\n"
 
 		w.alertUserWithoutProfile(update, newUser)
 	}

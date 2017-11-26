@@ -27,9 +27,11 @@ type TelegramConnection struct {
 	APIToken string `yaml:"api_token"`
 }
 
-// NotificationsConnection handles settings for notifications
-type NotificationsConnection struct {
-	GroupID string `yaml:"group_id"`
+// SpecialChats handles settings for special chats
+type SpecialChats struct {
+	BastionID      string `yaml:"bastion_id"`
+	DefaultID      string `yaml:"default_id"`
+	HeadquartersID string `yaml:"headquarters_id"`
 }
 
 // LoggingConfig handles log file configuration
@@ -39,10 +41,10 @@ type LoggingConfig struct {
 
 // Config is a struct which represents config.yaml structure
 type Config struct {
-	Telegram      TelegramConnection      `yaml:"telegram_connection"`
-	Database      DatabaseConnection      `yaml:"database_connection"`
-	Notifications NotificationsConnection `yaml:"notifications"`
-	Logs          LoggingConfig           `yaml:"logs"`
+	Telegram     TelegramConnection `yaml:"telegram_connection"`
+	Database     DatabaseConnection `yaml:"database_connection"`
+	SpecialChats SpecialChats       `yaml:"special_chats"`
+	Logs         LoggingConfig      `yaml:"logs"`
 }
 
 // Init is a configuration initializer

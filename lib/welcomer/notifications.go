@@ -9,7 +9,7 @@ import (
 )
 
 func (w *Welcomer) alertUserWithoutProfile(update *tgbotapi.Update, newUser *tgbotapi.User) string {
-	alertGroupID, _ := strconv.ParseInt(c.Cfg.Notifications.GroupID, 10, 64)
+	alertGroupID, _ := strconv.ParseInt(c.Cfg.SpecialChats.HeadquartersID, 10, 64)
 	chat, ok := c.Chatter.GetOrCreateChat(update)
 	if !ok {
 		return "fail"
@@ -28,7 +28,7 @@ func (w *Welcomer) alertUserWithoutProfile(update *tgbotapi.Update, newUser *tgb
 }
 
 func (w *Welcomer) alertSpyUser(update *tgbotapi.Update, newUser *tgbotapi.User) string {
-	alertGroupID, _ := strconv.ParseInt(c.Cfg.Notifications.GroupID, 10, 64)
+	alertGroupID, _ := strconv.ParseInt(c.Cfg.SpecialChats.HeadquartersID, 10, 64)
 	chat, ok := c.Chatter.GetOrCreateChat(update)
 	if !ok {
 		return "fail"

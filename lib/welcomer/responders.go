@@ -6,6 +6,7 @@ package welcomer
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
+	"strconv"
 )
 
 // PrivateWelcomeMessageUnauthorized tell new user what to do.
@@ -51,7 +52,10 @@ func (w *Welcomer) GroupWelcomeMessage(update *tgbotapi.Update) string {
 		if (newUser.UserName == "i2_bot") || (newUser.UserName == "i2_dev_bot") {
 			w.groupStartMessage(update)
 		} else {
-			w.groupWelcomeUser(update, &newUser)
+			defaultGroupID, _ := strconv.ParseInt(c.Cfg.SpecialChats.HeadquartersID, 10, 64)
+			if update.Message.Chat.ID == defaultGroupID {
+				w.groupWelcomeUser(update, &newUser)
+			}
 		}
 	}
 
