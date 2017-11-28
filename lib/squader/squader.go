@@ -465,8 +465,17 @@ func (s *Squader) ProcessMessage(update *tgbotapi.Update, chatRaw *dbmapping.Cha
 					}
 
 					if !isChatValid {
-						s.kickUserFromSquadChat(&newUsers[i], chatRaw)
-						messageProcessed = true
+						switch newUsers[i].UserName {
+						case "gantz_yaka":
+							messageProcessed = true
+						case "@agentpb":
+							messageProcessed = true
+						case "@pbhelp":
+							messageProcessed = true
+						default:
+							s.kickUserFromSquadChat(&newUsers[i], chatRaw)
+							messageProcessed = true
+						}
 					}
 				}
 			}
@@ -514,30 +523,66 @@ func (s *Squader) ProtectBastion(update *tgbotapi.Update, newUser *tgbotapi.User
 
 	playerRaw, ok := c.Users.GetOrCreatePlayer(newUser.ID)
 	if !ok {
-		s.kickUserFromSquadChat(newUser, &chatRaw)
-		return "fail"
+		switch newUser.UserName {
+		case "gantz_yaka":
+			// do nothing
+		case "@agentpb":
+			// do nothing
+		case "@pbhelp":
+			// do nothing
+		default:
+			s.kickUserFromSquadChat(newUser, &chatRaw)
+			return "fail"
+		}
 	}
 
 	if playerRaw.LeagueID != 1 {
-		// Check for profile
-		_, profileOK := c.Users.GetProfile(playerRaw.ID)
-		if !profileOK {
-			message := "Привет, " + c.Users.FormatUsername(userName) + "! Напиши мне и скинь профиль для доступа в чаты Лиги!"
+		switch newUser.UserName {
+		case "gantz_yaka":
+			message := "Здравствуй, " + newUser.UserName + "!\n"
+			message += "Инстинкт рад приветствовать Бога мира ПокемемБро! Проходите, располагайтесь, чувствуйте себя, как дома.\n"
 
-			msg := tgbotapi.NewMessage(defaultChatID, message)
+			msg := tgbotapi.NewMessage(chatRaw.TelegramID, message)
 			msg.ParseMode = "Markdown"
 
 			c.Bot.Send(msg)
-		} else {
-			message := "Привет, " + c.Users.FormatUsername(userName) + "! Там переход между лигами не завезли случайно? Переходи в нашу Лигу, будем рады тебя видеть... а пока — вход в наши чаты закрыт!"
+		case "@agentpb":
+			message := "Здравствуй, " + newUser.UserName + "!\n"
+			message += "Инстинкт рад приветствовать одного из богов мира ПокемемБро! Проходите, располагайтесь, чувствуйте себя, как дома.\n"
 
-			msg := tgbotapi.NewMessage(defaultChatID, message)
+			msg := tgbotapi.NewMessage(chatRaw.TelegramID, message)
 			msg.ParseMode = "Markdown"
 
 			c.Bot.Send(msg)
+		case "@pbhelp":
+			message := "Здравствуй, " + newUser.UserName + "!\n"
+			message += "Инстинкт рад приветствовать одного из богов мира ПокемемБро! Проходите, располагайтесь, чувствуйте себя, как дома.\n"
+
+			msg := tgbotapi.NewMessage(chatRaw.TelegramID, message)
+			msg.ParseMode = "Markdown"
+
+			c.Bot.Send(msg)
+		default:
+			// Check for profile
+			_, profileOK := c.Users.GetProfile(playerRaw.ID)
+			if !profileOK {
+				message := "Привет, " + c.Users.FormatUsername(userName) + "! Напиши мне и скинь профиль для доступа в чаты Лиги!"
+
+				msg := tgbotapi.NewMessage(defaultChatID, message)
+				msg.ParseMode = "Markdown"
+
+				c.Bot.Send(msg)
+			} else {
+				message := "Привет, " + c.Users.FormatUsername(userName) + "! Там переход между лигами не завезли случайно? Переходи в нашу Лигу, будем рады тебя видеть... а пока — вход в наши чаты закрыт!"
+
+				msg := tgbotapi.NewMessage(defaultChatID, message)
+				msg.ParseMode = "Markdown"
+
+				c.Bot.Send(msg)
+			}
+			s.kickUserFromSquadChat(newUser, &chatRaw)
+			return "fail"
 		}
-		s.kickUserFromSquadChat(newUser, &chatRaw)
-		return "fail"
 	}
 
 	return "ok"
