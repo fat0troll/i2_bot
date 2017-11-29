@@ -594,3 +594,29 @@ func (s *Squader) ProtectBastion(update *tgbotapi.Update, newUser *tgbotapi.User
 
 	return "ok"
 }
+
+// FilterBastion kicks already joined user if he changed league
+func (s *Squader) FilterBastion(update *tgbotapi.Update) string {
+	user := update.Message.From
+	chatRaw, ok := c.Chatter.GetOrCreateChat(update)
+	if !ok {
+		return "fail"
+	}
+
+	playerRaw, playerOK := c.Users.GetOrCreatePlayer(update.Message.From.ID)
+	if !playerOK {
+		s.kickUserFromSquadChat(user, &chatRaw)
+		return "fail"
+	}
+	_, profileOK := c.Users.GetProfile(playerRaw.ID)
+	if !profileOK {
+		s.kickUserFromSquadChat(user, &chatRaw)
+		return "fail"
+	}
+	if playerRaw.LeagueID != 1 {
+		s.kickUserFromSquadChat(user, &chatRaw)
+		return "fail"
+	}
+
+	return "ok"
+}

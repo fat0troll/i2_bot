@@ -28,4 +28,5 @@ type SquaderInterface interface {
 
 	ProcessMessage(update *tgbotapi.Update, chatRaw *dbmapping.Chat) string
 	ProtectBastion(update *tgbotapi.Update, newUser *tgbotapi.User) string
+	FilterBastion(update *tgbotapi.Update) string
 }
