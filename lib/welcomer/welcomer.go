@@ -14,27 +14,21 @@ func (w *Welcomer) groupWelcomeUser(update *tgbotapi.Update, newUser *tgbotapi.U
 		return "fail"
 	}
 
-	profileRaw, profileExist := c.Users.GetProfile(playerRaw.ID)
+	_, profileExist := c.Users.GetProfile(playerRaw.ID)
 
 	message := "*Бот Инстинкта приветствует тебя, *@"
 	message += c.Users.FormatUsername(newUser.UserName)
 	message += "*!*\n\n"
 
 	if profileExist {
-		if playerRaw.LeagueID == 1 {
-			message += "Рад тебя видеть! Не забывай обновлять профиль почаще, и да пребудет с тобой Рандом!\n"
-			message += "Последнее обновление твоего профиля: " + profileRaw.CreatedAt.Format("02.01.2006 15:04:05") + "."
-		} else {
-			message += "Обнови профиль, отправив его мне в личку."
-
+		if playerRaw.LeagueID != 1 {
 			w.alertSpyUser(update, newUser)
 		}
 	} else {
-		// newbie
-		message += "Перешли мне свой профиль для дальнейших инструкций.\n"
-
 		w.alertUserWithoutProfile(update, newUser)
 	}
+
+	message += "Приветствую тебя, гость лиги Инстинкт! Для регистрации в Лиге и получения доступа к ее ресурсам и чатам напиши скорее мне в личку и скинь свой профиль Герой. \n\nГайд для игроков Инстинкта: http://telegra.ph/Dobro-pozhalovat-v-Instinkt-11-22"
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ParseMode = "Markdown"
