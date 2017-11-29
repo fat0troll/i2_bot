@@ -15,7 +15,7 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 	// Commands with regexps
 	var pokedexMsg = regexp.MustCompile("/pokede(x|ks)\\d?\\z")
 	var pokememeInfoMsg = regexp.MustCompile("/pk(\\d+)")
-	var usersMsg = regexp.MustCompile("/users\\d?\\z")
+	var usersMsg = regexp.MustCompile("/users(\\d+|)\\z")
 	var squadInfoMsg = regexp.MustCompile("/show_squad(\\d+)\\z")
 	var orderSendMsg = regexp.MustCompile("/send_order(\\d+)\\z")
 
