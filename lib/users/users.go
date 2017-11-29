@@ -47,11 +47,15 @@ func (u *Users) getUsersWithProfiles() ([]dbmapping.PlayerProfile, bool) {
 	return usersArray, true
 }
 
-func (u *Users) profileAddSuccessMessage(update *tgbotapi.Update) {
+func (u *Users) profileAddSuccessMessage(update *tgbotapi.Update, leagueID int) {
 	message := "*Профиль успешно обновлен.*\n\n"
 	message += "Функциональность бота держится на актуальности профилей. Обновляйся почаще, и да пребудет с тобой Рандом!\n"
 	message += "Сохраненный профиль ты можешь просмотреть командой /me.\n\n"
 	message += "/best – посмотреть лучших покемемов для поимки"
+
+	if leagueID == 1 {
+		message += "\nЗаходи в Бастион Инстинкта: https://t.me/joinchat/G2vME0mIX-QHjjxE\\_JBzoQ\n"
+	}
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ParseMode = "Markdown"
