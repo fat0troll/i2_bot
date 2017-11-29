@@ -216,17 +216,17 @@ func (s *Squader) kickUserFromSquadChat(user *tgbotapi.User, chatRaw *dbmapping.
 		UserID: user.ID,
 	}
 
-	allNo := false
-	kickConfig := tgbotapi.RestrictChatMemberConfig{
-		ChatMemberConfig:      chatUserConfig,
-		UntilDate:             1893456000,
-		CanSendMessages:       &allNo,
-		CanSendMediaMessages:  &allNo,
-		CanAddWebPagePreviews: &allNo,
-		CanSendOtherMessages:  &allNo,
+	kickConfig := tgbotapi.KickChatMemberConfig{
+		ChatMemberConfig: chatUserConfig,
+		UntilDate:        1893456000,
 	}
 
-	_, err := c.Bot.RestrictChatMember(kickConfig)
+	_, err := c.Bot.KickChatMember(kickConfig)
+	if err != nil {
+		c.Log.Error(err.Error())
+	}
+
+	_, err = c.Bot.UnbanChatMember(chatUserConfig)
 	if err != nil {
 		c.Log.Error(err.Error())
 	}
