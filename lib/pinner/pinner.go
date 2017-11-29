@@ -80,8 +80,16 @@ func (p *Pinner) PinMessageToSomeChats(update *tgbotapi.Update) string {
 		return "fail"
 	}
 
-	chatsToPin := commandArgsList[0]
-	messageToPin := commandArgsList[1]
+	chatsToPin := ""
+	messageToPin := ""
+
+	for i := range commandArgsList {
+		if i == 0 {
+			chatsToPin = commandArgsList[i]
+		} else {
+			messageToPin += commandArgsList[i]
+		}
+	}
 
 	if messageToPin == "" {
 		return "fail"
