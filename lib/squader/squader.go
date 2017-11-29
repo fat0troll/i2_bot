@@ -211,24 +211,28 @@ func (s *Squader) getCommandersForSquadViaChat(chatRaw *dbmapping.Chat) ([]dbmap
 }
 
 func (s *Squader) kickUserFromSquadChat(user *tgbotapi.User, chatRaw *dbmapping.Chat) {
-	chatUserConfig := tgbotapi.ChatMemberConfig{
-		ChatID: chatRaw.TelegramID,
-		UserID: user.ID,
-	}
+	bastionChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.BastionID, 10, 64)
+	hqChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.HeadquartersID, 10, 64)
+	if chatRaw.TelegramID == bastionChatID {
+		chatUserConfig := tgbotapi.ChatMemberConfig{
+			ChatID: chatRaw.TelegramID,
+			UserID: user.ID,
+		}
 
-	kickConfig := tgbotapi.KickChatMemberConfig{
-		ChatMemberConfig: chatUserConfig,
-		UntilDate:        1893456000,
-	}
+		kickConfig := tgbotapi.KickChatMemberConfig{
+			ChatMemberConfig: chatUserConfig,
+			UntilDate:        1893456000,
+		}
 
-	_, err := c.Bot.KickChatMember(kickConfig)
-	if err != nil {
-		c.Log.Error(err.Error())
-	}
+		_, err := c.Bot.KickChatMember(kickConfig)
+		if err != nil {
+			c.Log.Error(err.Error())
+		}
 
-	_, err = c.Bot.UnbanChatMember(chatUserConfig)
-	if err != nil {
-		c.Log.Error(err.Error())
+		_, err = c.Bot.UnbanChatMember(chatUserConfig)
+		if err != nil {
+			c.Log.Error(err.Error())
+		}
 	}
 
 	suerName := ""
@@ -240,9 +244,6 @@ func (s *Squader) kickUserFromSquadChat(user *tgbotapi.User, chatRaw *dbmapping.
 			suerName += " " + user.LastName
 		}
 	}
-
-	bastionChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.BastionID, 10, 64)
-	hqChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.HeadquartersID, 10, 64)
 	if chatRaw.TelegramID != bastionChatID {
 		// In Bastion notifications are public in default chat
 		commanders, ok := s.getCommandersForSquadViaChat(chatRaw)
