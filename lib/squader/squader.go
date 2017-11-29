@@ -211,61 +211,6 @@ func (s *Squader) getCommandersForSquadViaChat(chatRaw *dbmapping.Chat) ([]dbmap
 }
 
 func (s *Squader) kickUserFromSquadChat(user *tgbotapi.User, chatRaw *dbmapping.Chat) {
-	bastionChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.BastionID, 10, 64)
-	hqChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.HeadquartersID, 10, 64)
-	if chatRaw.TelegramID == bastionChatID {
-		chatUserConfig := tgbotapi.ChatMemberConfig{
-			ChatID: chatRaw.TelegramID,
-			UserID: user.ID,
-		}
-
-		kickConfig := tgbotapi.KickChatMemberConfig{
-			ChatMemberConfig: chatUserConfig,
-			UntilDate:        1893456000,
-		}
-
-		_, err := c.Bot.KickChatMember(kickConfig)
-		if err != nil {
-			c.Log.Error(err.Error())
-		}
-
-		_, err = c.Bot.UnbanChatMember(chatUserConfig)
-		if err != nil {
-			c.Log.Error(err.Error())
-		}
-	}
-
-	suerName := ""
-	if user.UserName != "" {
-		suerName = "@" + user.UserName
-	} else {
-		suerName = user.FirstName
-		if user.LastName != "" {
-			suerName += " " + user.LastName
-		}
-	}
-	if chatRaw.TelegramID != bastionChatID {
-		// In Bastion notifications are public in default chat
-		commanders, ok := s.getCommandersForSquadViaChat(chatRaw)
-		if ok {
-			for i := range commanders {
-				message := "Некто " + c.Users.FormatUsername(suerName) + " без профиля попытался зайти в чат _" + chatRaw.Name + "_ и был изгнан ботом, так как не имеет на это прав."
-
-				msg := tgbotapi.NewMessage(int64(commanders[i].TelegramID), message)
-				msg.ParseMode = "Markdown"
-				c.Bot.Send(msg)
-			}
-		}
-	} else {
-		message := "Некто " + c.Users.FormatUsername(suerName) + " без профиля попытался зайти в чат _Бастион Инстинкта_ и был изгнан ботом, так как не имеет на это прав."
-
-		msg := tgbotapi.NewMessage(hqChatID, message)
-		msg.ParseMode = "Markdown"
-		c.Bot.Send(msg)
-	}
-}
-
-func (s *Squader) banUserFromSquadChat(user *tgbotapi.User, chatRaw *dbmapping.Chat) {
 	chatUserConfig := tgbotapi.ChatMemberConfig{
 		ChatID: chatRaw.TelegramID,
 		UserID: user.ID,
@@ -634,7 +579,6 @@ func (s *Squader) ProtectBastion(update *tgbotapi.Update, newUser *tgbotapi.User
 				msg.ParseMode = "Markdown"
 
 				c.Bot.Send(msg)
-				s.kickUserFromSquadChat(newUser, &chatRaw)
 			} else {
 				message := "Привет, " + c.Users.FormatUsername(userName) + "! Там переход между лигами не завезли случайно? Переходи в нашу Лигу, будем рады тебя видеть... а пока — вход в наши чаты закрыт!"
 
@@ -642,8 +586,8 @@ func (s *Squader) ProtectBastion(update *tgbotapi.Update, newUser *tgbotapi.User
 				msg.ParseMode = "Markdown"
 
 				c.Bot.Send(msg)
-				s.banUserFromSquadChat(newUser, &chatRaw)
 			}
+			s.kickUserFromSquadChat(newUser, &chatRaw)
 			return "fail"
 		}
 	}
