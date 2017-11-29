@@ -105,10 +105,18 @@ func (p *Pokedexer) getBestPokememes(playerID int) ([]dbmapping.PokememeFull, bo
 
 	// TODO: make it more complicated
 	pokememes := []dbmapping.Pokememe{}
-	err := c.Db.Select(&pokememes, c.Db.Rebind("SELECT p.* FROM pokememes p, pokememes_elements pe, elements e WHERE e.league_id = ? AND p.grade = ? AND pe.element_id = e.id AND pe.pokememe_id = p.id ORDER BY p.attack DESC"), playerRaw.LeagueID, profileRaw.LevelID+1)
-	if err != nil {
-		c.Log.Error(err)
-		return pokememesArray, false
+	if profileRaw.LevelID < 4 {
+		err := c.Db.Select(&pokememes, c.Db.Rebind("SELECT * FROM pokememes WHERE grade = ? ORDER BY attack DESC"), profileRaw.LevelID+1)
+		if err != nil {
+			c.Log.Error(err)
+			return pokememesArray, false
+		}
+	} else {
+		err := c.Db.Select(&pokememes, c.Db.Rebind("SELECT p.* FROM pokememes p, pokememes_elements pe, elements e WHERE e.league_id = ? AND p.grade = ? AND pe.element_id = e.id AND pe.pokememe_id = p.id ORDER BY p.attack DESC"), playerRaw.LeagueID, profileRaw.LevelID+1)
+		if err != nil {
+			c.Log.Error(err)
+			return pokememesArray, false
+		}
 	}
 
 	pokememesArray, ok = p.formFullPokememes(pokememes)

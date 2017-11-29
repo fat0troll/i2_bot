@@ -477,12 +477,12 @@ func (s *Squader) ProcessMessage(update *tgbotapi.Update, chatRaw *dbmapping.Cha
 					}
 
 					if !isChatValid {
-						switch newUsers[i].UserName {
+						switch strings.ToLower(newUsers[i].UserName) {
 						case "gantz_yaka":
 							messageProcessed = true
-						case "@agentpb":
+						case "agentpb":
 							messageProcessed = true
-						case "@pbhelp":
+						case "pbhelp":
 							messageProcessed = true
 						default:
 							s.kickUserFromSquadChat(&newUsers[i], chatRaw)
