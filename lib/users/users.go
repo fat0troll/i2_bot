@@ -112,7 +112,7 @@ func (u *Users) usersList(update *tgbotapi.Update, page int, usersArray []dbmapp
 		}
 	}
 
-	if len(usersArray) > page*50 {
+	if len(usersArray) > page*25 {
 		message += "\n"
 		message += "Переход на следующую страницу: /users" + strconv.Itoa(page+1)
 	}
