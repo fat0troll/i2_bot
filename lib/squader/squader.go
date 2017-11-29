@@ -471,6 +471,11 @@ func (s *Squader) ProcessMessage(update *tgbotapi.Update, chatRaw *dbmapping.Cha
 						}
 					}
 
+					// Dirty hack
+					if update.Message.Chat.ID == -1001396321727 || update.Message.Chat.ID == -1001310954317 {
+						isChatValid = true
+					}
+
 					if !isChatValid {
 						switch newUsers[i].UserName {
 						case "gantz_yaka":
