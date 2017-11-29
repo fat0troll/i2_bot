@@ -52,7 +52,7 @@ func (w *Welcomer) GroupWelcomeMessage(update *tgbotapi.Update) string {
 		if (newUser.UserName == "i2_bot") || (newUser.UserName == "i2_dev_bot") {
 			w.groupStartMessage(update)
 		} else {
-			defaultGroupID, _ := strconv.ParseInt(c.Cfg.SpecialChats.HeadquartersID, 10, 64)
+			defaultGroupID, _ := strconv.ParseInt(c.Cfg.SpecialChats.DefaultID, 10, 64)
 			bastionGroupID, _ := strconv.ParseInt(c.Cfg.SpecialChats.BastionID, 10, 64)
 
 			if update.Message.Chat.ID == defaultGroupID {
