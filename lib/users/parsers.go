@@ -305,6 +305,6 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 		u.fillProfilePokememe(profileRaw.ID, meme, attack, rarity)
 	}
 
-	u.profileAddSuccessMessage(update, league.ID)
+	u.profileAddSuccessMessage(update, league.ID, profileRaw.LevelID)
 	return "ok"
 }

@@ -134,8 +134,8 @@ func (u *Users) UsersList(update *tgbotapi.Update) string {
 	usersArray, ok := u.getUsersWithProfiles()
 	if !ok {
 		return c.Talkers.BotError(update)
-	} else {
-		u.usersList(update, page, usersArray)
-		return "ok"
 	}
+
+	u.usersList(update, page, usersArray)
+	return "ok"
 }

@@ -47,7 +47,7 @@ func (u *Users) getUsersWithProfiles() ([]dbmapping.PlayerProfile, bool) {
 	return usersArray, true
 }
 
-func (u *Users) profileAddSuccessMessage(update *tgbotapi.Update, leagueID int) {
+func (u *Users) profileAddSuccessMessage(update *tgbotapi.Update, leagueID int, level int) {
 	message := "*Профиль успешно обновлен.*\n\n"
 	message += "Функциональность бота держится на актуальности профилей. Обновляйся почаще, и да пребудет с тобой Рандом!\n"
 	message += "Сохраненный профиль ты можешь просмотреть командой /me.\n\n"
@@ -55,6 +55,9 @@ func (u *Users) profileAddSuccessMessage(update *tgbotapi.Update, leagueID int) 
 
 	if leagueID == 1 {
 		message += "\nЗаходи в Бастион Инстинкта: https://t.me/joinchat/G2vME0mIX-QHjjxE\\_JBzoQ\n"
+		if level < 5 {
+			message += "\nАкадемия Инстинкта: все вопросы по игре, обучение и помощь новичку: https://t.me/joinchat/G2vME04jk02v2etRmumylg\n"
+		}
 	}
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
