@@ -15,8 +15,18 @@ func (w *Welcomer) alertUserWithoutProfile(update *tgbotapi.Update, newUser *tgb
 		return "fail"
 	}
 
+	userName := ""
+	if newUser.UserName != "" {
+		userName += "@" + newUser.UserName
+	} else {
+		userName += newUser.FirstName
+		if newUser.LastName != "" {
+			userName += " " + newUser.LastName
+		}
+	}
+
 	message := "*Новый вход пользователя без профиля в чат с ботом!*\n"
-	message += "В чат _" + chat.Name + "_ вошёл некто @" + newUser.UserName
+	message += "В чат _" + chat.Name + "_ вошёл некто " + c.Users.FormatUsername(userName)
 	message += ". Он получил уведомление о том, что ему нужно создать профиль в боте."
 
 	msg := tgbotapi.NewMessage(alertGroupID, message)
@@ -34,8 +44,18 @@ func (w *Welcomer) alertSpyUser(update *tgbotapi.Update, newUser *tgbotapi.User)
 		return "fail"
 	}
 
+	userName := ""
+	if newUser.UserName != "" {
+		userName += "@" + newUser.UserName
+	} else {
+		userName += newUser.FirstName
+		if newUser.LastName != "" {
+			userName += " " + newUser.LastName
+		}
+	}
+
 	message := "*Шпион в деле!*\n"
-	message += "В чат _" + chat.Name + "_ вошёл некто @" + newUser.UserName
+	message += "В чат _" + chat.Name + "_ вошёл некто " + c.Users.FormatUsername(userName)
 	message += ". У него профиль другой лиги. Ждём обновлений."
 
 	msg := tgbotapi.NewMessage(alertGroupID, message)

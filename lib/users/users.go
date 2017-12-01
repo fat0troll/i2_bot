@@ -98,7 +98,7 @@ func (u *Users) usersList(update *tgbotapi.Update, page int, usersArray []dbmapp
 				if usersArray[i].Profile.TelegramNickname != "" {
 					message += " (@" + u.FormatUsername(usersArray[i].Profile.TelegramNickname) + ")"
 				}
-				message += "\n"
+				message += " /profile" + strconv.Itoa(usersArray[i].Player.ID) + "\n"
 				message += "Telegram ID: " + strconv.Itoa(usersArray[i].Player.TelegramID) + "\n"
 				message += "Последнее обновление: " + usersArray[i].Profile.CreatedAt.Format("02.01.2006 15:04:05") + "\n"
 			} else {

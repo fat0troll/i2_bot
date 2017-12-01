@@ -16,6 +16,7 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 	var pokedexMsg = regexp.MustCompile("/pokede(x|ks)\\d?\\z")
 	var pokememeInfoMsg = regexp.MustCompile("/pk(\\d+)")
 	var usersMsg = regexp.MustCompile("/users(\\d+|)\\z")
+	var profileMsg = regexp.MustCompile("/profile(\\d+)\\z")
 	var squadInfoMsg = regexp.MustCompile("/show_squad(\\d+)\\z")
 	var orderSendMsg = regexp.MustCompile("/send_order(\\d+)\\z")
 
@@ -128,8 +129,15 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 				return c.Talkers.AnyMessageUnauthorized(update)
 
 			case usersMsg.MatchString(text):
-				if c.Users.PlayerBetterThan(playerRaw, "admin") {
+				if c.Users.PlayerBetterThan(playerRaw, "academic") {
 					return c.Users.UsersList(update)
+				}
+
+				return c.Talkers.AnyMessageUnauthorized(update)
+			
+			case profileMsg.MatchString(text):
+				if c.Users.PlayerBetterThan(playerRaw, "academic") {
+					return c.Users.ForeignProfileMessage(update)
 				}
 
 				return c.Talkers.AnyMessageUnauthorized(update)

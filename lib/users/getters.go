@@ -72,6 +72,10 @@ func (u *Users) PlayerBetterThan(playerRaw *dbmapping.Player, powerLevel string)
 		if powerLevel != "owner" {
 			isBetter = true
 		}
+	case "academic":
+		if powerLevel != "ownder" && powerLevel != "admin" {
+			isBetter = true
+		}
 	default:
 		isBetter = false
 	}

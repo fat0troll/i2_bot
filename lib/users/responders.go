@@ -15,6 +15,28 @@ func (u *Users) FormatUsername(userName string) string {
 	return strings.Replace(userName, "_", "\\_", -1)
 }
 
+// ForeignProfileMessage shows profile of another user
+func (u *Users) ForeignProfileMessage(update *tgbotapi.Update) string {
+	userNum := strings.TrimPrefix(update.Message.Command(), "profile")
+	userID, err := strconv.Atoi(userNum)
+	if err != nil {
+		c.Log.Error(err.Error())
+		return "fail"
+	}
+
+	playerRaw, ok := u.GetPlayerByID(userID)
+	if !ok {
+		return "fail"
+	}
+
+	_, ok = u.GetProfile(playerRaw.ID)
+	if !ok {
+		return c.Talkers.BotError(update)
+	}
+
+	return u.ProfileMessage(update, &playerRaw)
+}
+
 // ProfileMessage shows current player's profile
 func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
 	profileRaw, ok := u.GetProfile(playerRaw.ID)
@@ -94,6 +116,8 @@ func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 		message += "\n\nСтатус в боте: _владелец_"
 	} else if playerRaw.Status == "admin" {
 		message += "\n\nСтатус в боте: _администратор_"
+	} else if playerRaw.Status == "academic" {
+		message += "\n\nСтатус в боте: _академик_"
 	} else {
 		message += "\n\nСтатус в боте: _игрок_"
 	}
