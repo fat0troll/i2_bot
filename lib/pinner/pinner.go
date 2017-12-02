@@ -87,7 +87,7 @@ func (p *Pinner) PinMessageToSomeChats(update *tgbotapi.Update) string {
 		if i == 0 {
 			chatsToPin = commandArgsList[i]
 		} else {
-			messageToPin += commandArgsList[i]
+			messageToPin += commandArgsList[i] + " "
 		}
 	}
 

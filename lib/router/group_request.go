@@ -62,22 +62,24 @@ func (r *Router) routeGroupRequest(update *tgbotapi.Update, playerRaw *dbmapping
 	if trigger == 4 {
 		switch {
 		case huMsg.MatchString(text):
-			c.Talkers.MatMessage(update)
+			return c.Talkers.MatMessage(update)
 		case blMsg.MatchString(text):
-			c.Talkers.MatMessage(update)
+			return c.Talkers.MatMessage(update)
 		case ebMsg.MatchString(text):
-			c.Talkers.MatMessage(update)
+			return c.Talkers.MatMessage(update)
 		case piMsg.MatchString(text):
-			c.Talkers.MatMessage(update)
+			return c.Talkers.MatMessage(update)
 		case durakMsg.MatchString(text):
-			c.Talkers.DurakMessage(update)
+			return c.Talkers.DurakMessage(update)
 		}
 	}
 
 	switch {
 	case update.Message.Command() == "long":
-		c.Talkers.LongMessage(update)
+		return c.Talkers.LongMessage(update)
 	}
+
+	// Ah, we're still here
 
 	return "ok"
 }

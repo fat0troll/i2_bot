@@ -10,7 +10,7 @@ import (
 )
 
 // LongMessage is an easter egg
-func (t *Talkers) LongMessage(update *tgbotapi.Update) {
+func (t *Talkers) LongMessage(update *tgbotapi.Update) string {
 	message := "Я ТЕБЕ НЕ ЗЕЛЁНЫЙ АКСОЛОТЛЬ! А ТЫ - НЕ ЦИФЕРКА!"
 	trigger := rand.Intn(5)
 	if trigger > 3 {
@@ -23,10 +23,12 @@ func (t *Talkers) LongMessage(update *tgbotapi.Update) {
 	msg.ReplyToMessageID = update.Message.MessageID
 
 	c.Bot.Send(msg)
+
+	return "ok"
 }
 
 // DurakMessage is an easter egg
-func (t *Talkers) DurakMessage(update *tgbotapi.Update) {
+func (t *Talkers) DurakMessage(update *tgbotapi.Update) string {
 	reactions := make([]string, 0)
 	reactions = append(reactions, "Сам такой!",
 		"А ты типа нет?",
@@ -43,10 +45,12 @@ func (t *Talkers) DurakMessage(update *tgbotapi.Update) {
 	msg.ReplyToMessageID = update.Message.MessageID
 
 	c.Bot.Send(msg)
+
+	return "ok"
 }
 
 // MatMessage is an easter rgg
-func (t *Talkers) MatMessage(update *tgbotapi.Update) {
+func (t *Talkers) MatMessage(update *tgbotapi.Update) string {
 	reactions := make([]string, 0)
 	reactions = append(reactions, "Фу, как некультурно!",
 		"Иди рот с мылом помой",
@@ -60,4 +64,6 @@ func (t *Talkers) MatMessage(update *tgbotapi.Update) {
 	msg.ReplyToMessageID = update.Message.MessageID
 
 	c.Bot.Send(msg)
+
+	return "ok"
 }

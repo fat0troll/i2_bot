@@ -19,7 +19,7 @@ type TalkersInterface interface {
 	AnyMessageUnauthorized(update *tgbotapi.Update) string
 	BotError(update *tgbotapi.Update) string
 
-	LongMessage(update *tgbotapi.Update)
-	DurakMessage(update *tgbotapi.Update)
-	MatMessage(update *tgbotapi.Update)
+	LongMessage(update *tgbotapi.Update) string
+	DurakMessage(update *tgbotapi.Update) string
+	MatMessage(update *tgbotapi.Update) string
 }
