@@ -12,8 +12,8 @@ import (
 type TalkersInterface interface {
 	Init()
 
-	AcademyMessage(update *tgbotapi.Update)
-	BastionMessage(update *tgbotapi.Update)
+	AcademyMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player)
+	BastionMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player)
 	HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player)
 
 	AnyMessageUnauthorized(update *tgbotapi.Update) string

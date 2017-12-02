@@ -10,9 +10,17 @@ import (
 )
 
 // AcademyMessage gives user link to Bastion
-func (t *Talkers) AcademyMessage(update *tgbotapi.Update) {
-	message := "*Академия Инстинкта*\n"
-	message += "Чат для обучения новичков предумростям игры расположен по ссылке: https://t.me/joinchat/G2vME04jk02v2etRmumylg"
+func (t *Talkers) AcademyMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) {
+	message := ""
+
+	if playerRaw.LeagueID > 1 {
+		message = "Иди нахуй, шпионское отродье"
+	} else if playerRaw.LeagueID == 0 {
+		message = "Заполни профиль и попробуй ещё раз"
+	} else {
+		message += "*Академия Инстинкта*\n"
+		message += "Чат для обучения новичков предумростям игры расположен по ссылке: https://t.me/joinchat/G2vME04jk02v2etRmumylg"
+	}
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ParseMode = "Markdown"
@@ -21,9 +29,17 @@ func (t *Talkers) AcademyMessage(update *tgbotapi.Update) {
 }
 
 // BastionMessage gives user link to Bastion
-func (t *Talkers) BastionMessage(update *tgbotapi.Update) {
-	message := "*Бастион Инстинкта*\n"
-	message += "Общий чат лиги расположен по ссылке: https://t.me/joinchat/G2vME0mIX-QHjjxE\\_JBzoQ"
+func (t *Talkers) BastionMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) {
+	message := ""
+
+	if playerRaw.LeagueID > 1 {
+		message = "Иди нахуй, шпионское отродье"
+	} else if playerRaw.LeagueID == 0 {
+		message = "Заполни профиль и попробуй ещё раз"
+	} else {
+		message += "*Бастион Инстинкта*\n"
+		message += "Общий чат лиги расположен по ссылке: https://t.me/joinchat/G2vME0mIX-QHjjxE\\_JBzoQ"
+	}
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ParseMode = "Markdown"

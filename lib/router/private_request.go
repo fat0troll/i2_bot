@@ -52,10 +52,10 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 				c.Talkers.HelpMessage(update, playerRaw)
 				return "ok"
 			case update.Message.Command() == "academy":
-				c.Talkers.AcademyMessage(update)
+				c.Talkers.AcademyMessage(update, playerRaw)
 				return "ok"
 			case update.Message.Command() == "bastion":
-				c.Talkers.BastionMessage(update)
+				c.Talkers.BastionMessage(update, playerRaw)
 				return "ok"
 
 			case pokedexMsg.MatchString(text):
