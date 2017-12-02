@@ -175,7 +175,7 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 					pkName = strings.Replace(pkName, " ⭐", "", 1)
 					pkName = strings.TrimSuffix(pkName, " ")
 					pkName = strings.Split(pkName, "⃣ ")[1]
-					pokememes[pkName] = pkAttack
+					pokememes[strconv.Itoa(pi)+"_"+pkName] = pkAttack
 					powerInt += c.Statistics.GetPoints(pkAttack)
 				}
 			}
@@ -284,7 +284,9 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 		return "fail"
 	}
 
-	for meme, attack := range pokememes {
+	for n_meme, attack := range pokememes {
+		memeAry := strings.Split(n_meme, "_")
+		meme := memeAry[1]
 		rarity := "common"
 		if strings.HasPrefix(meme, "🔸") {
 			rarity = "rare"
