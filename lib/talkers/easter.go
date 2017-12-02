@@ -9,6 +9,16 @@ import (
 	"time"
 )
 
+// LongMessage is an easter egg
+func (t *Talkers) LongMessage(update *tgbotapi.Update) {
+	message := "Я ТЕБЕ НЕ ЗЕЛЁНЫЙ АКСОЛОТЛЬ! А ТЫ - НЕ ЦИФЕРКА!"
+
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
+	msg.ReplyToMessageID = update.Message.MessageID
+
+	c.Bot.Send(msg)
+}
+
 // DurakMessage is an easter egg
 func (t *Talkers) DurakMessage(update *tgbotapi.Update) {
 	reactions := make([]string, 0)

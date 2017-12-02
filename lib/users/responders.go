@@ -15,6 +15,43 @@ func (u *Users) FormatUsername(userName string) string {
 	return strings.Replace(userName, "_", "\\_", -1)
 }
 
+// FindByName finds user with such username or nickname
+func (u *Users) FindByName(update *tgbotapi.Update) string {
+	commandArgs := update.Message.CommandArguments()
+	if commandArgs == "" {
+		c.Talkers.BotError(update)
+		return "fail"
+	}
+
+	usersArray, ok := u.findUserByName(commandArgs)
+	if !ok {
+		return "fail"
+	}
+
+	message := "*Найденные игроки:*\n"
+
+	for i := range usersArray {
+		message += "#" + strconv.Itoa(usersArray[i].Player.ID)
+		message += " " + usersArray[i].League.Symbol
+		message += " " + usersArray[i].Profile.Nickname
+		if usersArray[i].Profile.TelegramNickname != "" {
+			message += " (@" + u.FormatUsername(usersArray[i].Profile.TelegramNickname) + ")"
+		}
+		message += " /profile" + strconv.Itoa(usersArray[i].Player.ID) + "\n"
+		message += "Telegram ID: " + strconv.Itoa(usersArray[i].Player.TelegramID) + "\n"
+		message += "Последнее обновление: " + usersArray[i].Profile.CreatedAt.Format("02.01.2006 15:04:05") + "\n"
+	}
+
+	c.Log.Debug(message)
+
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
+	msg.ParseMode = "Markdown"
+
+	c.Bot.Send(msg)
+
+	return "ok"
+}
+
 // ForeignProfileMessage shows profile of another user
 func (u *Users) ForeignProfileMessage(update *tgbotapi.Update) string {
 	userNum := strings.TrimPrefix(update.Message.Command(), "profile")

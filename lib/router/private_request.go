@@ -134,10 +134,17 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 				}
 
 				return c.Talkers.AnyMessageUnauthorized(update)
-			
+
 			case profileMsg.MatchString(text):
 				if c.Users.PlayerBetterThan(playerRaw, "academic") {
 					return c.Users.ForeignProfileMessage(update)
+				}
+
+				return c.Talkers.AnyMessageUnauthorized(update)
+
+			case update.Message.Command() == "find_user":
+				if c.Users.PlayerBetterThan(playerRaw, "academic") {
+					return c.Users.FindByName(update)
 				}
 
 				return c.Talkers.AnyMessageUnauthorized(update)

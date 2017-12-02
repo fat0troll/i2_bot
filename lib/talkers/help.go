@@ -28,6 +28,7 @@ func (t *Talkers) HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Play
 	}
 	if c.Users.PlayerBetterThan(playerRaw, "academic") {
 		message += "+ /users —  просмотреть зарегистрированных пользователей бота\n"
+		message += "+ /find\\_user _строка_ — найти игрока в боте по его нику или имени. Ник ищется без собачки в начале\n"
 	}
 	message += "+ /help – выводит данное сообщение\n"
 

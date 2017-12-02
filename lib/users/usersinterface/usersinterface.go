@@ -19,6 +19,7 @@ type UsersInterface interface {
 	GetPlayerByID(playerID int) (dbmapping.Player, bool)
 	PlayerBetterThan(playerRaw *dbmapping.Player, powerLevel string) bool
 
+	FindByName(update *tgbotapi.Update) string
 	ForeignProfileMessage(update *tgbotapi.Update) string
 	FormatUsername(userName string) string
 	ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string

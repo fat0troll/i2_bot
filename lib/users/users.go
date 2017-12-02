@@ -7,6 +7,7 @@ import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 	"strconv"
+	"strings"
 )
 
 // Internal functions for Users package
@@ -47,6 +48,26 @@ func (u *Users) getUsersWithProfiles() ([]dbmapping.PlayerProfile, bool) {
 	return usersArray, true
 }
 
+func (u *Users) findUserByName(pattern string) ([]dbmapping.PlayerProfile, bool) {
+	allUsers, ok := u.getUsersWithProfiles()
+	if !ok {
+		return allUsers, ok
+	}
+
+	selectedUsers := []dbmapping.PlayerProfile{}
+
+	for i := range allUsers {
+		user := allUsers[i]
+		if user.HaveProfile {
+			if strings.Contains(user.Profile.TelegramNickname, pattern) || strings.Contains(user.Profile.Nickname, pattern) {
+				selectedUsers = append(selectedUsers, user)
+			}
+		}
+	}
+
+	return selectedUsers, true
+}
+
 func (u *Users) profileAddSuccessMessage(update *tgbotapi.Update, leagueID int, level int) {
 	message := "*Профиль успешно обновлен.*\n\n"
 	message += "Функциональность бота держится на актуальности профилей. Обновляйся почаще, и да пребудет с тобой Рандом!\n"
@@ -54,9 +75,10 @@ func (u *Users) profileAddSuccessMessage(update *tgbotapi.Update, leagueID int, 
 	message += "/best – посмотреть лучших покемемов для поимки"
 
 	if leagueID == 1 {
-		message += "\nЗаходи в Бастион Инстинкта: https://t.me/joinchat/G2vME0mIX-QHjjxE\\_JBzoQ\n"
-		if level < 5 {
-			message += "\nАкадемия Инстинкта: все вопросы по игре, обучение и помощь новичку: https://t.me/joinchat/G2vME04jk02v2etRmumylg\n"
+		if level < 4 {
+			message += "\nЗаходи в Академию Инстинкта: все вопросы по игре, обучение и помощь новичку: https://t.me/joinchat/G2vME04jk02v2etRmumylg\n"
+		} else {
+			message += "\nЗаходи в Бастион Инстинкта: https://t.me/joinchat/G2vME0mIX-QHjjxE\\_JBzoQ\n"
 		}
 	}
 
