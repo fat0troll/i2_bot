@@ -12,6 +12,12 @@ import (
 // LongMessage is an easter egg
 func (t *Talkers) LongMessage(update *tgbotapi.Update) {
 	message := "Я ТЕБЕ НЕ ЗЕЛЁНЫЙ АКСОЛОТЛЬ! А ТЫ - НЕ ЦИФЕРКА!"
+	trigger := rand.Intn(5)
+	if trigger > 3 {
+		if update.Message.From.ID == 203319120 || update.Message.From.ID == 372137239 {
+			message = "НЕ РАКОНЬ!"
+		}
+	}
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ReplyToMessageID = update.Message.MessageID
@@ -29,7 +35,11 @@ func (t *Talkers) DurakMessage(update *tgbotapi.Update) {
 
 	// Praise the Random Gods!
 	rand.Seed(time.Now().Unix())
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, reactions[rand.Intn(len(reactions))])
+	message := reactions[rand.Intn(len(reactions))]
+	if update.Message.From.ID == 324205150 {
+		message = "Молодец, Яру. Возьми с полки пирожок."
+	}
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ReplyToMessageID = update.Message.MessageID
 
 	c.Bot.Send(msg)
