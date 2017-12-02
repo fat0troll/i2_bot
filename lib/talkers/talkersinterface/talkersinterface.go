@@ -11,6 +11,9 @@ import (
 // TalkersInterface implements Talkers for importing via appcontex
 type TalkersInterface interface {
 	Init()
+
+	AcademyMessage(update *tgbotapi.Update)
+	BastionMessage(update *tgbotapi.Update)
 	HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player)
 
 	AnyMessageUnauthorized(update *tgbotapi.Update) string

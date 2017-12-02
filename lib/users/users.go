@@ -75,10 +75,9 @@ func (u *Users) profileAddSuccessMessage(update *tgbotapi.Update, leagueID int, 
 	message += "/best – посмотреть лучших покемемов для поимки"
 
 	if leagueID == 1 {
-		if level < 4 {
-			message += "\nЗаходи в Академию Инстинкта: все вопросы по игре, обучение и помощь новичку: https://t.me/joinchat/G2vME04jk02v2etRmumylg\n"
-		} else {
-			message += "\nЗаходи в Бастион Инстинкта: https://t.me/joinchat/G2vME0mIX-QHjjxE\\_JBzoQ\n"
+		message += "\n/bastion — получить ссылку на БАСТИОН лиги\n"
+		if level < 5 {
+			message += "\n/academy — получить ссылку на АКАДЕМИЮ лиги\n"
 		}
 	}
 

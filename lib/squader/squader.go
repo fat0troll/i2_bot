@@ -243,7 +243,7 @@ func (s *Squader) kickUserFromSquadChat(user *tgbotapi.User, chatRaw *dbmapping.
 		commanders, ok := s.getCommandersForSquadViaChat(chatRaw)
 		if ok {
 			for i := range commanders {
-				message := "Некто " + c.Users.FormatUsername(suerName) + " попытался зайти в чат _" + chatRaw.Name + "_ и был изгнан ботом, так как является шпионом."
+				message := "Некто " + c.Users.FormatUsername(suerName) + " попытался зайти в чат _" + chatRaw.Name + "_ и был изгнан ботом, так как не имеет права посещать этот чат."
 
 				msg := tgbotapi.NewMessage(int64(commanders[i].TelegramID), message)
 				msg.ParseMode = "Markdown"
@@ -251,7 +251,7 @@ func (s *Squader) kickUserFromSquadChat(user *tgbotapi.User, chatRaw *dbmapping.
 			}
 		}
 	} else {
-		message := "Некто " + c.Users.FormatUsername(suerName) + " попытался зайти в чат _Бастион Инстинкта_ и был изгнан ботом, так как является шпионом."
+		message := "Некто " + c.Users.FormatUsername(suerName) + " попытался зайти в чат _Бастион Инстинкта_ и был изгнан ботом, так как не имеет права посещать этот чат."
 
 		msg := tgbotapi.NewMessage(hqChatID, message)
 		msg.ParseMode = "Markdown"

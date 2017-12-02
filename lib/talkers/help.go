@@ -9,6 +9,28 @@ import (
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 )
 
+// AcademyMessage gives user link to Bastion
+func (t *Talkers) AcademyMessage(update *tgbotapi.Update) {
+	message := "*Академия Инстинкта*\n"
+	message += "Чат для обучения новичков предумростям игры расположен по ссылке: https://t.me/joinchat/G2vME04jk02v2etRmumylg"
+
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
+	msg.ParseMode = "Markdown"
+
+	c.Bot.Send(msg)
+}
+
+// BastionMessage gives user link to Bastion
+func (t *Talkers) BastionMessage(update *tgbotapi.Update) {
+	message := "*Бастион Инстинкта*\n"
+	message += "Общий чат лиги расположен по ссылке: https://t.me/joinchat/G2vME0mIX-QHjjxE\\_JBzoQ"
+
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
+	msg.ParseMode = "Markdown"
+
+	c.Bot.Send(msg)
+}
+
 // HelpMessage gives user all available commands
 func (t *Talkers) HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) {
 	message := "*Бот Инстинкта Enchanched.*\n\n"
@@ -17,6 +39,8 @@ func (t *Talkers) HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Play
 	message += "+ /me – посмотреть свой сохраненный профиль в боте\n"
 	message += "+ /best – посмотреть лучших покемонов для поимки\n"
 	message += "+ /pokedeks – получить список известных боту покемемов\n"
+	message += "+ /academy — Академия Инстинкта\n"
+	message += "+ /bastion — Бастион Инстинкта\n"
 	if c.Users.PlayerBetterThan(playerRaw, "admin") {
 		message += "+ /send\\_all _текст_ — отправить сообщение всем пользователям бота\n"
 		message += "+ /send\\_league _текст_ — отправить сообщение всем пользователям бота, у которых профиль лиги Инстинкт\n"

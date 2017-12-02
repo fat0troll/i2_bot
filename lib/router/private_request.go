@@ -47,9 +47,17 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 
 				c.Welcomer.PrivateWelcomeMessageUnauthorized(update)
 				return "ok"
+
 			case update.Message.Command() == "help":
 				c.Talkers.HelpMessage(update, playerRaw)
 				return "ok"
+			case update.Message.Command() == "academy":
+				c.Talkers.AcademyMessage(update)
+				return "ok"
+			case update.Message.Command() == "bastion":
+				c.Talkers.BastionMessage(update)
+				return "ok"
+
 			case pokedexMsg.MatchString(text):
 				c.Pokedexer.PokememesList(update)
 				return "ok"
