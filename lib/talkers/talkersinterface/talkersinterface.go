@@ -15,6 +15,7 @@ type TalkersInterface interface {
 	AcademyMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player)
 	BastionMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player)
 	HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player)
+	FiveOffer(update *tgbotapi.Update) string
 
 	AnyMessageUnauthorized(update *tgbotapi.Update) string
 	BotError(update *tgbotapi.Update) string

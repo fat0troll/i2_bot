@@ -164,6 +164,13 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 
 			case squadInfoMsg.MatchString(text):
 				return c.Squader.SquadInfo(update, playerRaw)
+
+			case update.Message.Command() == "five_offer":
+				if c.Users.PlayerBetterThan(playerRaw, "admin") {
+					return c.Talkers.FiveOffer(update)
+				}
+
+				return c.Talkers.AnyMessageUnauthorized(update)
 			}
 		}
 	}

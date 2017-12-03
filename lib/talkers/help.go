@@ -80,3 +80,32 @@ func (t *Talkers) HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Play
 
 	c.Bot.Send(msg)
 }
+
+// FiveOffer sends all users with 5 pokeballs limit offer for increasing pokeballs limit
+func (t *Talkers) FiveOffer(update *tgbotapi.Update) string {
+	players := []dbmapping.Player{}
+
+	err := c.Db.Select(&players, "SELECT p.* FROM players p, profiles pp WHERE p.id = pp.player_id AND pp.pokeballs = 5")
+	if err != nil {
+		c.Log.Error(err.Error())
+		return "fail"
+	}
+
+	for i := range players {
+		message := "Псст, я тут заметил, что у тебя всего 5 покеболов? Хочешь увеличить их лимит на 2 или даже больше? У всех игроков есть возможность получить бонус!\n\n1. Перейти по ссылке: https://telegram.me/storebot?start=pokemembrobot\n2. Нажать Start\n3. Выбрать ⭐️⭐️⭐️⭐️⭐️\n4. ОБЯЗАТЕЛЬНО написать, что вам нравится в игре (на русском языке). Оставьте большой и красочный отзыв!\n5. Переслать переписку с @storebot в тех поддержку игры @PBhelp<— только ему! и больше никому! (с текстом вашего отзыва)\n6. После проверки получить бонус 🎁 +2 к лимиту ⭕️ А если отзыв понравится админам (и это бывает очень часто), то бонус будет больше!\n7. Проверка - может занять некоторое время. Админы обязательно ответят вам о результатах проверки."
+
+		msg := tgbotapi.NewMessage(int64(players[i].TelegramID), message)
+		msg.ParseMode = "Markdown"
+
+		c.Bot.Send(msg)
+	}
+
+	message := "Enlarge your pokeballs! Сообщение отправлено."
+
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
+	msg.ParseMode = "Markdown"
+
+	c.Bot.Send(msg)
+
+	return "ok"
+}
