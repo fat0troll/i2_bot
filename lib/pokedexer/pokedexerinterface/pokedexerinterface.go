@@ -18,4 +18,6 @@ type PokedexerInterface interface {
 
 	GetPokememes() ([]dbmapping.PokememeFull, bool)
 	GetPokememeByID(pokememeID string) (dbmapping.PokememeFull, bool)
+
+	DeletePokememe(update *tgbotapi.Update) string
 }

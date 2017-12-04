@@ -64,6 +64,12 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 			case pokememeInfoMsg.MatchString(text):
 				c.Pokedexer.PokememeInfo(update, playerRaw)
 				return "ok"
+			case update.Message.Command() == "delete_pokememe":
+				if c.Users.PlayerBetterThan(playerRaw, "owner") {
+					return c.Pokedexer.DeletePokememe(update)
+				}
+
+				return c.Talkers.AnyMessageUnauthorized(update)
 			case update.Message.Command() == "me":
 				if playerRaw.ID != 0 {
 					c.Users.ProfileMessage(update, playerRaw)
