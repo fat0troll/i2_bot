@@ -38,7 +38,7 @@ func (w *Welcomer) groupWelcomeUser(update *tgbotapi.Update, newUser *tgbotapi.U
 		w.alertUserWithoutProfile(update, newUser)
 	}
 
-	message += "Приветствую тебя, гость лиги Инстинкт! Для регистрации в Лиге и получения доступа к ее ресурсам и чатам напиши скорее мне в личку и скинь свой профиль Герой. \n\nГайд для игроков Инстинкта: http://telegra.ph/Dobro-pozhalovat-v-Instinkt-11-22"
+	message += "Приветствую тебя, гость лиги Инстинкт! Для регистрации в Лиге и получения доступа к ее ресурсам и чатам напиши скорее мне, @i2_bot, в личку и скинь свой профиль Герой.\n\nГайд для игроков Инстинкта: http://telegra.ph/Dobro-pozhalovat-v-Instinkt-11-22"
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ParseMode = "Markdown"
