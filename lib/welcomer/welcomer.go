@@ -26,7 +26,7 @@ func (w *Welcomer) groupWelcomeUser(update *tgbotapi.Update, newUser *tgbotapi.U
 		}
 	}
 
-	message := "*Бот Инстинкта приветствует тебя, *@"
+	message := "*Бот Инстинкта приветствует тебя, *"
 	message += c.Users.FormatUsername(userName)
 	message += "*!*\n\n"
 
