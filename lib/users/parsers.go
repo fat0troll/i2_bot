@@ -155,7 +155,7 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 		}
 
 		if strings.HasPrefix(currentString, "🐱Покемемы: ") {
-			pkmnumRx := regexp.MustCompile(`(\d+)(\d|K|M|)`)
+			pkmnumRx := regexp.MustCompile(`(\d|\.|K|M)+`)
 			pkNumArray := pkmnumRx.FindAllString(currentString, -1)
 			if len(pkNumArray) < 3 {
 				c.Log.Error("Pokememes count broken")
