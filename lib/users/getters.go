@@ -4,6 +4,7 @@
 package users
 
 import (
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 	"time"
 )
@@ -57,6 +58,19 @@ func (u *Users) GetOrCreatePlayer(telegramID int) (dbmapping.Player, bool) {
 	}
 
 	return playerRaw, true
+}
+
+// GetPrettyName returns "pretty" name of user (first_name + last name or username)
+func (u *Users) GetPrettyName(user *tgbotapi.User) string {
+	userName := user.FirstName
+	if user.LastName != "" {
+		userName += " " + user.LastName
+	}
+
+	if user.UserName != "" {
+		userName += " (@" + user.UserName + ")"
+	}
+	return c.Users.FormatUsername(userName)
 }
 
 // PlayerBetterThan return true, if profile is more or equal powerful than

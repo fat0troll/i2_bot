@@ -43,7 +43,7 @@ func (b *Broadcaster) AdminBroadcastMessageSend(update *tgbotapi.Update, playerR
 	for i := range privateChats {
 		chat := privateChats[i]
 		broadcastingMessage := "*Привет, " + chat.Name + "!*\n\n"
-		broadcastingMessage += "*Важное сообщение от администратора " + update.Message.From.FirstName + " " + update.Message.From.LastName + "* (@" + update.Message.From.UserName + ")\n\n"
+		broadcastingMessage += "*Важное сообщение от администратора " + c.Users.GetPrettyName(update.Message.From) + "\n\n"
 		broadcastingMessage += broadcastingMessageBody
 
 		msg := tgbotapi.NewMessage(int64(chat.TelegramID), broadcastingMessage)

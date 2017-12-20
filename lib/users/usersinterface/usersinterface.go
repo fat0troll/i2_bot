@@ -14,6 +14,7 @@ type UsersInterface interface {
 
 	ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
 
+	GetPrettyName(user *tgbotapi.User) string
 	GetProfile(playerID int) (dbmapping.Profile, bool)
 	GetOrCreatePlayer(telegramID int) (dbmapping.Player, bool)
 	GetPlayerByID(playerID int) (dbmapping.Player, bool)

@@ -210,55 +210,6 @@ func (s *Squader) getCommandersForSquadViaChat(chatRaw *dbmapping.Chat) ([]dbmap
 	return commanders, true
 }
 
-func (s *Squader) kickUserFromSquadChat(user *tgbotapi.User, chatRaw *dbmapping.Chat) {
-	chatUserConfig := tgbotapi.ChatMemberConfig{
-		ChatID: chatRaw.TelegramID,
-		UserID: user.ID,
-	}
-
-	kickConfig := tgbotapi.KickChatMemberConfig{
-		ChatMemberConfig: chatUserConfig,
-		UntilDate:        1893456000,
-	}
-
-	_, err := c.Bot.KickChatMember(kickConfig)
-	if err != nil {
-		c.Log.Error(err.Error())
-	}
-
-	suerName := ""
-	if user.UserName != "" {
-		suerName = "@" + user.UserName
-	} else {
-		suerName = user.FirstName
-		if user.LastName != "" {
-			suerName += " " + user.LastName
-		}
-	}
-
-	bastionChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.BastionID, 10, 64)
-	hqChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.HeadquartersID, 10, 64)
-	if chatRaw.TelegramID != bastionChatID {
-		// In Bastion notifications are public in default chat
-		commanders, ok := s.getCommandersForSquadViaChat(chatRaw)
-		if ok {
-			for i := range commanders {
-				message := "Некто " + c.Users.FormatUsername(suerName) + " попытался зайти в чат _" + chatRaw.Name + "_ и был изгнан ботом, так как не имеет права посещать этот чат."
-
-				msg := tgbotapi.NewMessage(int64(commanders[i].TelegramID), message)
-				msg.ParseMode = "Markdown"
-				c.Bot.Send(msg)
-			}
-		}
-	} else {
-		message := "Некто " + c.Users.FormatUsername(suerName) + " попытался зайти в чат _Бастион Инстинкта_ и был изгнан ботом, так как не имеет права посещать этот чат."
-
-		msg := tgbotapi.NewMessage(hqChatID, message)
-		msg.ParseMode = "Markdown"
-		c.Bot.Send(msg)
-	}
-}
-
 func (s *Squader) squadCreationDuplicate(update *tgbotapi.Update) string {
 	message := "*Отряд уже существует*\n"
 	message += "Проверьте, правильно ли вы ввели команду, и повторите попытку."
@@ -452,39 +403,32 @@ func (s *Squader) ProcessMessage(update *tgbotapi.Update, chatRaw *dbmapping.Cha
 			newUsers := *update.Message.NewChatMembers
 			if len(newUsers) > 0 {
 				for i := range newUsers {
-					playerRaw, ok := c.Users.GetOrCreatePlayer(newUsers[i].ID)
-					if !ok {
-						s.kickUserFromSquadChat(&newUsers[i], chatRaw)
+					switch strings.ToLower(newUsers[i].UserName) {
+					case "gantz_yaka":
 						messageProcessed = true
-					}
-
-					availableChats, ok := s.GetAvailableSquadChatsForUser(&playerRaw)
-					if !ok {
-						s.kickUserFromSquadChat(&newUsers[i], chatRaw)
+					case "agentpb":
 						messageProcessed = true
-					}
-
-					isChatValid := false
-					for i := range availableChats {
-						if availableChats[i] == *chatRaw {
-							isChatValid = true
+					case "pbhelp":
+						messageProcessed = true
+					default:
+						playerRaw, ok := c.Users.GetOrCreatePlayer(newUsers[i].ID)
+						if !ok {
+							s.kickUserFromSquadChat(&newUsers[i], chatRaw)
+							messageProcessed = true
 						}
-					}
 
-					// Dirty hack
-					if update.Message.Chat.ID == -1001396321727 || update.Message.Chat.ID == -1001310954317 {
-						isChatValid = true
-					}
-
-					if !isChatValid {
-						switch strings.ToLower(newUsers[i].UserName) {
-						case "gantz_yaka":
+						availableChats, ok := s.GetAvailableSquadChatsForUser(&playerRaw)
+						if !ok {
+							s.kickUserFromSquadChat(&newUsers[i], chatRaw)
 							messageProcessed = true
-						case "agentpb":
-							messageProcessed = true
-						case "pbhelp":
-							messageProcessed = true
-						default:
+						}
+						isChatValid := false
+						for i := range availableChats {
+							if *chatRaw == availableChats[i] {
+								isChatValid = true
+							}
+						}
+						if !isChatValid {
 							s.kickUserFromSquadChat(&newUsers[i], chatRaw)
 							messageProcessed = true
 						}
@@ -518,15 +462,6 @@ func (s *Squader) ProcessMessage(update *tgbotapi.Update, chatRaw *dbmapping.Cha
 // ProtectBastion avoids spies and no-profile players to join Bastion
 func (s *Squader) ProtectBastion(update *tgbotapi.Update, newUser *tgbotapi.User) string {
 	defaultChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.DefaultID, 10, 64)
-	userName := ""
-	if newUser.UserName != "" {
-		userName += "@" + newUser.UserName
-	} else {
-		userName += newUser.FirstName
-		if newUser.LastName != "" {
-			userName += " " + newUser.LastName
-		}
-	}
 
 	chatRaw, ok := c.Chatter.GetOrCreateChat(update)
 	if !ok {
@@ -535,12 +470,12 @@ func (s *Squader) ProtectBastion(update *tgbotapi.Update, newUser *tgbotapi.User
 
 	playerRaw, ok := c.Users.GetOrCreatePlayer(newUser.ID)
 	if !ok {
-		switch newUser.UserName {
+		switch strings.ToLower(newUser.UserName) {
 		case "gantz_yaka":
 			// do nothing
-		case "@agentpb":
+		case "agentpb":
 			// do nothing
-		case "@pbhelp":
+		case "pbhelp":
 			// do nothing
 		default:
 			s.kickUserFromSquadChat(newUser, &chatRaw)
@@ -558,7 +493,7 @@ func (s *Squader) ProtectBastion(update *tgbotapi.Update, newUser *tgbotapi.User
 			msg.ParseMode = "Markdown"
 
 			c.Bot.Send(msg)
-		case "@agentpb":
+		case "agentpb":
 			message := "Здравствуй, " + newUser.UserName + "!\n"
 			message += "Инстинкт рад приветствовать одного из богов мира ПокемемБро! Проходите, располагайтесь, чувствуйте себя, как дома.\n"
 
@@ -566,7 +501,7 @@ func (s *Squader) ProtectBastion(update *tgbotapi.Update, newUser *tgbotapi.User
 			msg.ParseMode = "Markdown"
 
 			c.Bot.Send(msg)
-		case "@pbhelp":
+		case "pbhelp":
 			message := "Здравствуй, " + newUser.UserName + "!\n"
 			message += "Инстинкт рад приветствовать одного из богов мира ПокемемБро! Проходите, располагайтесь, чувствуйте себя, как дома.\n"
 
@@ -578,14 +513,14 @@ func (s *Squader) ProtectBastion(update *tgbotapi.Update, newUser *tgbotapi.User
 			// Check for profile
 			_, profileOK := c.Users.GetProfile(playerRaw.ID)
 			if !profileOK {
-				message := "Привет, " + c.Users.FormatUsername(userName) + "! Напиши мне и скинь профиль для доступа в чаты Лиги!"
+				message := "Привет, " + c.Users.GetPrettyName(newUser) + "! Напиши мне и скинь профиль для доступа в чаты Лиги!"
 
 				msg := tgbotapi.NewMessage(defaultChatID, message)
 				msg.ParseMode = "Markdown"
 
 				c.Bot.Send(msg)
 			} else {
-				message := "Привет, " + c.Users.FormatUsername(userName) + "! Там переход между лигами не завезли случайно? Переходи в нашу Лигу, будем рады тебя видеть... а пока — вход в наши чаты закрыт!"
+				message := "Привет, " + c.Users.GetPrettyName(newUser) + "! Там переход между лигами не завезли случайно? Переходи в нашу Лигу, будем рады тебя видеть... а пока — вход в наши чаты закрыт!"
 
 				msg := tgbotapi.NewMessage(defaultChatID, message)
 				msg.ParseMode = "Markdown"
@@ -619,8 +554,17 @@ func (s *Squader) FilterBastion(update *tgbotapi.Update) string {
 		return "fail"
 	}
 	if playerRaw.LeagueID != 1 {
-		s.kickUserFromSquadChat(user, &chatRaw)
-		return "fail"
+		switch strings.ToLower(user.UserName) {
+		case "gantz_yaka":
+			// do nothing
+		case "agentpb":
+			// do nothing
+		case "pbhelp":
+			// do nothing
+		default:
+			s.kickUserFromSquadChat(user, &chatRaw)
+			return "fail"
+		}
 	}
 
 	return "ok"
