@@ -16,6 +16,7 @@ import (
 	"lab.pztrn.name/fat0troll/i2_bot/lib/orders/ordersinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/pinner/pinnerinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/pokedexer/pokedexerinterface"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/reminder/reminderinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/router/routerinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/squader/squaderinterface"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/statistics/statisticsinterface"
@@ -43,6 +44,7 @@ type Context struct {
 	Broadcaster  broadcasterinterface.BroadcasterInterface
 	Welcomer     welcomerinterface.WelcomerInterface
 	Pinner       pinnerinterface.PinnerInterface
+	Reminder     reminderinterface.ReminderInterface
 	Chatter      chatterinterface.ChatterInterface
 	Squader      squaderinterface.SquaderInterface
 	Users        usersinterface.UsersInterface
@@ -135,6 +137,12 @@ func (c *Context) RegisterWelcomerInterface(wi welcomerinterface.WelcomerInterfa
 func (c *Context) RegisterPinnerInterface(pi pinnerinterface.PinnerInterface) {
 	c.Pinner = pi
 	c.Pinner.Init()
+}
+
+// RegisterReminderInterface registering reminder interface in application
+func (c *Context) RegisterReminderInterface(ri reminderinterface.ReminderInterface) {
+	c.Reminder = ri
+	c.Reminder.Init()
 }
 
 // RegisterForwarderInterface registers forwarder interface in application

@@ -13,6 +13,7 @@ import (
 	"lab.pztrn.name/fat0troll/i2_bot/lib/orders"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/pinner"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/pokedexer"
+	"lab.pztrn.name/fat0troll/i2_bot/lib/reminder"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/router"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/squader"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/statistics"
@@ -44,6 +45,7 @@ func main() {
 	users.New(c)
 	statistics.New(c)
 	orders.New(c)
+	reminder.New(c)
 
 	c.Log.Info("=======================")
 	c.Log.Info("= i2_bot initialized. =")
@@ -66,6 +68,8 @@ func main() {
 			}
 		} else if update.InlineQuery != nil {
 			c.Router.RouteInline(&update)
+		} else if update.CallbackQuery != nil {
+			c.Router.RouteCallback(&update)
 		} else if update.ChosenInlineResult != nil {
 			c.Log.Debug(update.ChosenInlineResult.ResultID)
 		} else {

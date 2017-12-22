@@ -7,11 +7,9 @@ import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
-// PinnerInterface implements Pinner for importing via appcontex
+// PinnerInterface implements Pinner for importing via appcontext
 type PinnerInterface interface {
 	Init()
-
-	PinBattleAlert()
 
 	PinMessageToSomeChats(update *tgbotapi.Update) string
 	PinMessageToAllChats(update *tgbotapi.Update) string

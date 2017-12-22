@@ -11,6 +11,7 @@ import (
 type RouterInterface interface {
 	Init()
 
+	RouteCallback(update *tgbotapi.Update) string
 	RouteInline(update *tgbotapi.Update) string
 	RouteRequest(update *tgbotapi.Update) string
 }

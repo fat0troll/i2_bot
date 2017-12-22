@@ -80,6 +80,9 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 			case update.Message.Command() == "best":
 				c.Pokedexer.BestPokememesList(update, playerRaw)
 				return "ok"
+			case update.Message.Command() == "reminders":
+				return c.Reminder.AlarmsList(update, playerRaw)
+
 			case update.Message.Command() == "send_all":
 				if c.Users.PlayerBetterThan(playerRaw, "admin") {
 					c.Broadcaster.AdminBroadcastMessageCompose(update, playerRaw)
