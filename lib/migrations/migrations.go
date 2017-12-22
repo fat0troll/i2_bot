@@ -38,6 +38,8 @@ func (m *Migrations) Init() {
 	goose.AddNamedMigration("25_remove_reusable.go", RemoveReusableUp, RemoveReusableDown)
 	goose.AddNamedMigration("26_create_orders_completions.go", CreateOrdersCompletionsUp, CreateOrdersCompletionsDown)
 	goose.AddNamedMigration("27_add_new_weapon.go", AddNewWeaponUp, AddNewWeaponDown)
+	goose.AddNamedMigration("28_fix_locations.go", FixLocationsUp, FixLocationsDown)
+	goose.AddNamedMigration("29_fix_leagues_names.go", FixLeaguesNamesUp, FixLeaguesNamesDown)
 }
 
 // Migrate migrates database to current version
