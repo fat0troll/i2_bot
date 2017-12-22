@@ -31,9 +31,12 @@ func (r *Reminder) CreateAlarmSetting(update *tgbotapi.Update, playerRaw *dbmapp
 		return "fail"
 	}
 
+	message := r.formatRemindersMessageText(playerRaw)
 	keyboard := r.formatRemindersButtons(playerRaw)
-	buttonsUpdate := tgbotapi.NewEditMessageReplyMarkup(update.CallbackQuery.Message.Chat.ID, update.CallbackQuery.Message.MessageID, keyboard)
-	c.Bot.Send(buttonsUpdate)
+	messageUpdate := tgbotapi.NewEditMessageText(update.CallbackQuery.Message.Chat.ID, update.CallbackQuery.Message.MessageID, message)
+	messageUpdate.ParseMode = "Markdown"
+	messageUpdate.ReplyMarkup = &keyboard
+	c.Bot.Send(messageUpdate)
 
 	return "ok"
 }
@@ -52,9 +55,12 @@ func (r *Reminder) DestroyAlarmSetting(update *tgbotapi.Update, playerRaw *dbmap
 		c.Log.Error(err.Error())
 	}
 
+	message := r.formatRemindersMessageText(playerRaw)
 	keyboard := r.formatRemindersButtons(playerRaw)
-	buttonsUpdate := tgbotapi.NewEditMessageReplyMarkup(update.CallbackQuery.Message.Chat.ID, update.CallbackQuery.Message.MessageID, keyboard)
-	c.Bot.Send(buttonsUpdate)
+	messageUpdate := tgbotapi.NewEditMessageText(update.CallbackQuery.Message.Chat.ID, update.CallbackQuery.Message.MessageID, message)
+	messageUpdate.ParseMode = "Markdown"
+	messageUpdate.ReplyMarkup = &keyboard
+	c.Bot.Send(messageUpdate)
 
 	return "ok"
 }
