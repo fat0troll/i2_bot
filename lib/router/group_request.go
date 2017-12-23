@@ -8,7 +8,6 @@ import (
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 	"math/rand"
 	"regexp"
-	"strconv"
 )
 
 func (r *Router) routeGroupRequest(update *tgbotapi.Update, playerRaw *dbmapping.Player, chatRaw *dbmapping.Chat) string {
@@ -20,14 +19,9 @@ func (r *Router) routeGroupRequest(update *tgbotapi.Update, playerRaw *dbmapping
 	var ebMsg = regexp.MustCompile("(\\s|^|ЗА|За|зА|за)(Е|е|Ё|ё)(Б|б)(\\s|Л|л|А|а|Т|т|У|у|Е|е|Ё|ё|И|и)")
 	var piMsg = regexp.MustCompile("(П|п)(И|и)(З|з)(Д|д)")
 
-	squadHandled := c.Squader.ProcessMessage(update, chatRaw)
-	if squadHandled != "ok" {
-		return squadHandled
-	}
-
-	bastionChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.BastionID, 10, 64)
-	if update.Message.Chat.ID == bastionChatID {
-		c.Squader.FilterBastion(update)
+	restrictionStatus := c.Chatter.ProtectChat(update, playerRaw, chatRaw)
+	if restrictionStatus != "protection_passed" {
+		return restrictionStatus
 	}
 
 	// Welcomes

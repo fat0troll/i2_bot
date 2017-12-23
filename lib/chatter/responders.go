@@ -15,6 +15,7 @@ func (ct *Chatter) GroupsList(update *tgbotapi.Update) string {
 		return "fail"
 	}
 
+	academyChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.AcademyID, 10, 64)
 	bastionChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.BastionID, 10, 64)
 	defaultChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.DefaultID, 10, 64)
 	hqChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.HeadquartersID, 10, 64)
@@ -31,6 +32,9 @@ func (ct *Chatter) GroupsList(update *tgbotapi.Update) string {
 		} else if groupChats[i].ChatRole == "flood" {
 			message += "Является флудочатом отряда №" + strconv.Itoa(groupChats[i].Squad.ID) + "\n"
 		} else {
+			if groupChats[i].Chat.TelegramID == academyChatID {
+				message += "Является академией лиги\n"
+			}
 			if groupChats[i].Chat.TelegramID == bastionChatID {
 				message += "Является бастионом лиги\n"
 			}

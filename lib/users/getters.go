@@ -37,7 +37,7 @@ func (u *Users) GetPlayerByID(playerID int) (dbmapping.Player, bool) {
 // In case, when there is no player with such ID, new player will be created.
 func (u *Users) GetOrCreatePlayer(telegramID int) (dbmapping.Player, bool) {
 	playerRaw := dbmapping.Player{}
-	err := c.Db.Get(&playerRaw, c.Db.Rebind("SELECT * FROM players WHERE telegram_id=?"), telegramID)
+	err := c.Db.Get(&playerRaw, c.Db.Rebind("SELECT * FROM players WHERE telegram_id=? ORDER BY created_at desc LIMIT 1"), telegramID)
 	if err != nil {
 		c.Log.Error("Message user not found in database.")
 		c.Log.Error(err.Error())

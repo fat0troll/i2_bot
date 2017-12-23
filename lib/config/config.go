@@ -29,6 +29,7 @@ type TelegramConnection struct {
 
 // SpecialChats handles settings for special chats
 type SpecialChats struct {
+	AcademyID      string `yaml:"academy_id"`
 	BastionID      string `yaml:"bastion_id"`
 	DefaultID      string `yaml:"default_id"`
 	HeadquartersID string `yaml:"headquarters_id"`

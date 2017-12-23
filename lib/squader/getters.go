@@ -9,6 +9,18 @@ import (
 	"strings"
 )
 
+// GetCommandersForSquadViaChat gets commanders for selected chat
+func (s *Squader) GetCommandersForSquadViaChat(chatRaw *dbmapping.Chat) ([]dbmapping.Player, bool) {
+	commanders := []dbmapping.Player{}
+	err := c.Db.Select(&commanders, c.Db.Rebind("SELECT p.* FROM players p, squads_players sp, squads s WHERE (s.chat_id=? OR s.flood_chat_id=?) AND sp.squad_id = s.id AND sp.user_type = 'commander' AND sp.player_id = p.id"), chatRaw.ID, chatRaw.ID)
+	if err != nil {
+		c.Log.Debug(err.Error())
+		return commanders, false
+	}
+
+	return commanders, true
+}
+
 // GetSquadByID returns squad will all support information
 func (s *Squader) GetSquadByID(squadID int) (dbmapping.SquadChat, bool) {
 	squadFull := dbmapping.SquadChat{}
@@ -44,10 +56,12 @@ func (s *Squader) GetSquadByID(squadID int) (dbmapping.SquadChat, bool) {
 func (s *Squader) GetAvailableSquadChatsForUser(playerRaw *dbmapping.Player) ([]dbmapping.Chat, bool) {
 	groupChats := []dbmapping.Chat{}
 
-	err := c.Db.Select(&groupChats, c.Db.Rebind("SELECT ch.* FROM chats ch, squads s, squads_players sp WHERE (s.chat_id=ch.id OR s.flood_chat_id=ch.id) AND sp.player_id = ? AND s.id = sp.squad_id"), playerRaw.ID)
-	if err != nil {
-		c.Log.Error(err)
-		return groupChats, false
+	if playerRaw.LeagueID == 1 && playerRaw.Status != "spy" && playerRaw.Status != "league_changed" {
+		err := c.Db.Select(&groupChats, c.Db.Rebind("SELECT ch.* FROM chats ch, squads s, squads_players sp WHERE (s.chat_id=ch.id OR s.flood_chat_id=ch.id) AND sp.player_id = ? AND s.id = sp.squad_id"), playerRaw.ID)
+		if err != nil {
+			c.Log.Error(err)
+			return groupChats, false
+		}
 	}
 
 	return groupChats, true

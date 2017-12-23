@@ -12,7 +12,7 @@ import (
 
 // FormatUsername formats Telegram username for posting
 func (u *Users) FormatUsername(userName string) string {
-	return strings.Replace(userName, "_", "\\_", -1)
+	return strings.Replace(userName, "_", `\_`, -1)
 }
 
 // FindByName finds user with such username or nickname

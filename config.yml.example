@@ -7,6 +7,7 @@ database_connection:
     password: "i2_bot"
     database: "i2_bot"
 special_chats:
+    academy_id: "group_id"
     bastion_id: "group_id"
     default_id: "group_id"
     headquarters_id: "group_id"

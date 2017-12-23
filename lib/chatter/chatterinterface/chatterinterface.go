@@ -12,6 +12,9 @@ import (
 type ChatterInterface interface {
 	Init()
 
+	BanUserFromChat(user *tgbotapi.User, chatRaw *dbmapping.Chat)
+	ProtectChat(update *tgbotapi.Update, playerRaw *dbmapping.Player, chatRaw *dbmapping.Chat) string
+
 	GetOrCreateChat(update *tgbotapi.Update) (dbmapping.Chat, bool)
 	GetChatByID(chatID int64) (dbmapping.Chat, bool)
 	GetAllPrivateChats() ([]dbmapping.Chat, bool)
