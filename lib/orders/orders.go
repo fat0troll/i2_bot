@@ -34,14 +34,21 @@ func (o *Orders) sendOrder(order *dbmapping.Order) string {
 			return "fail"
 		}
 
-		// Adding Bastion chat as it's the zero chat
+		// Adding Academy and Bastion chat as they are both the zero chat
+		academyGroupID, _ := strconv.ParseInt(c.Cfg.SpecialChats.AcademyID, 10, 64)
 		bastionGroupID, _ := strconv.ParseInt(c.Cfg.SpecialChats.BastionID, 10, 64)
+		academyChat := dbmapping.Chat{}
 		bastionChat := dbmapping.Chat{}
-		err := c.Db.Get(&bastionChat, c.Db.Rebind("SELECT * FROM chats WHERE telegram_id=?"), bastionGroupID)
+		err := c.Db.Get(&academyChat, c.Db.Rebind("SELECT * FROM chats WHERE telegram_id=?"), academyGroupID)
+		if err != nil {
+			return "fail"
+		}
+		err = c.Db.Get(&bastionChat, c.Db.Rebind("SELECT * FROM chats WHERE telegram_id=?"), bastionGroupID)
 		if err != nil {
 			return "fail"
 		}
 
+		targetChats = append(targetChats, academyChat)
 		targetChats = append(targetChats, bastionChat)
 	} else {
 		targetChats, ok = c.Squader.GetSquadChatsBySquadsIDs(order.TargetSquads)
@@ -52,13 +59,21 @@ func (o *Orders) sendOrder(order *dbmapping.Order) string {
 		targetChatsIDs := strings.Split(order.TargetSquads, ",")
 		for i := range targetChatsIDs {
 			if targetChatsIDs[i] == "0" {
+				// Adding Academy and Bastion chat as they are both the zero chat
+				academyGroupID, _ := strconv.ParseInt(c.Cfg.SpecialChats.AcademyID, 10, 64)
 				bastionGroupID, _ := strconv.ParseInt(c.Cfg.SpecialChats.BastionID, 10, 64)
+				academyChat := dbmapping.Chat{}
 				bastionChat := dbmapping.Chat{}
-				err := c.Db.Get(&bastionChat, c.Db.Rebind("SELECT * FROM chats WHERE telegram_id=?"), bastionGroupID)
+				err := c.Db.Get(&academyChat, c.Db.Rebind("SELECT * FROM chats WHERE telegram_id=?"), academyGroupID)
+				if err != nil {
+					return "fail"
+				}
+				err = c.Db.Get(&bastionChat, c.Db.Rebind("SELECT * FROM chats WHERE telegram_id=?"), bastionGroupID)
 				if err != nil {
 					return "fail"
 				}
 
+				targetChats = append(targetChats, academyChat)
 				targetChats = append(targetChats, bastionChat)
 			}
 		}
