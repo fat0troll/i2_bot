@@ -12,8 +12,14 @@ import (
 
 func (ct *Chatter) userPrivilegesCheck(update *tgbotapi.Update, user *tgbotapi.User) bool {
 	// There are two special chats, pointed by config, where any member of league may be
+	defaultChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.DefaultID, 10, 64)
 	bastionChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.BastionID, 10, 64)
 	academyChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.AcademyID, 10, 64)
+
+	if update.Message.Chat.ID == defaultChatID {
+		return true
+	}
+
 	// There are special users, which will bypass these checks
 	specialUsers := []string{"gantz_yaka", "agentpb", "pbhelp"}
 

@@ -50,7 +50,7 @@ func (u *Users) getUsersWithProfiles() ([]dbmapping.PlayerProfile, bool) {
 func (u *Users) findUserByName(pattern string) ([]dbmapping.ProfileWithAddons, bool) {
 	selectedUsers := []dbmapping.ProfileWithAddons{}
 
-	err := c.Db.Select(&selectedUsers, c.Db.Rebind("SELECT * FROM (SELECT p.*, l.symbol AS league_symbol, l.id AS league_id, pl.telegram_id FROM players pl, profiles p, leagues l WHERE p.player_id = pl.id AND l.id = pl.league_id AND (p.nickname LIKE ? OR p.telegram_nickname LIKE ?) ORDER BY p.id desc LIMIT 100000) AS find_users_table GROUP BY player_id"), "%"+pattern+"%", "%"+pattern+"%")
+	err := c.Db.Select(&selectedUsers, c.Db.Rebind("SELECT * FROM (SELECT p.*, l.symbol AS league_symbol, l.id AS league_id, pl.telegram_id FROM players pl, profiles p, leagues l WHERE p.player_id = pl.id AND l.id = pl.league_id AND (p.nickname LIKE ? OR p.telegram_nickname LIKE ?) ORDER BY p.id DESC LIMIT 100000) AS find_users_table GROUP BY player_id"), "%"+pattern+"%", "%"+pattern+"%")
 	if err != nil {
 		c.Log.Error(err.Error())
 		return selectedUsers, false
