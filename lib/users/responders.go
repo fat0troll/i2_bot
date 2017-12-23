@@ -31,18 +31,16 @@ func (u *Users) FindByName(update *tgbotapi.Update) string {
 	message := "*Найденные игроки:*\n"
 
 	for i := range usersArray {
-		message += "#" + strconv.Itoa(usersArray[i].Player.ID)
-		message += " " + usersArray[i].League.Symbol
-		message += " " + usersArray[i].Profile.Nickname
-		if usersArray[i].Profile.TelegramNickname != "" {
-			message += " (@" + u.FormatUsername(usersArray[i].Profile.TelegramNickname) + ")"
+		message += "#" + strconv.Itoa(usersArray[i].PlayerID)
+		message += " " + usersArray[i].LeagueSymbol
+		message += " " + usersArray[i].Nickname
+		if usersArray[i].TelegramNickname != "" {
+			message += " (@" + u.FormatUsername(usersArray[i].TelegramNickname) + ")"
 		}
-		message += " /profile" + strconv.Itoa(usersArray[i].Player.ID) + "\n"
-		message += "Telegram ID: " + strconv.Itoa(usersArray[i].Player.TelegramID) + "\n"
-		message += "Последнее обновление: " + usersArray[i].Profile.CreatedAt.Format("02.01.2006 15:04:05") + "\n"
+		message += " /profile" + strconv.Itoa(usersArray[i].PlayerID) + "\n"
+		message += "Telegram ID: " + strconv.Itoa(usersArray[i].TelegramID) + "\n"
+		message += "Последнее обновление: " + usersArray[i].CreatedAt.Format("02.01.2006 15:04:05") + "\n"
 	}
-
-	c.Log.Debug(message)
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ParseMode = "Markdown"

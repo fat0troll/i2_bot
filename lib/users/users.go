@@ -7,7 +7,6 @@ import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
 	"strconv"
-	"strings"
 )
 
 // Internal functions for Users package
@@ -48,21 +47,13 @@ func (u *Users) getUsersWithProfiles() ([]dbmapping.PlayerProfile, bool) {
 	return usersArray, true
 }
 
-func (u *Users) findUserByName(pattern string) ([]dbmapping.PlayerProfile, bool) {
-	allUsers, ok := u.getUsersWithProfiles()
-	if !ok {
-		return allUsers, ok
-	}
+func (u *Users) findUserByName(pattern string) ([]dbmapping.ProfileWithAddons, bool) {
+	selectedUsers := []dbmapping.ProfileWithAddons{}
 
-	selectedUsers := []dbmapping.PlayerProfile{}
-
-	for i := range allUsers {
-		user := allUsers[i]
-		if user.HaveProfile {
-			if strings.Contains(user.Profile.TelegramNickname, pattern) || strings.Contains(user.Profile.Nickname, pattern) {
-				selectedUsers = append(selectedUsers, user)
-			}
-		}
+	err := c.Db.Select(&selectedUsers, c.Db.Rebind("SELECT * FROM (SELECT p.*, l.symbol AS league_symbol, l.id AS league_id, pl.telegram_id FROM players pl, profiles p, leagues l WHERE p.player_id = pl.id AND l.id = pl.league_id AND (p.nickname LIKE ? OR p.telegram_nickname LIKE ?) ORDER BY p.id desc LIMIT 100000) AS find_users_table GROUP BY player_id"), "%"+pattern+"%", "%"+pattern+"%")
+	if err != nil {
+		c.Log.Error(err.Error())
+		return selectedUsers, false
 	}
 
 	return selectedUsers, true
