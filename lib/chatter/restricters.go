@@ -15,8 +15,9 @@ func (ct *Chatter) userPrivilegesCheck(update *tgbotapi.Update, user *tgbotapi.U
 	defaultChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.DefaultID, 10, 64)
 	bastionChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.BastionID, 10, 64)
 	academyChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.AcademyID, 10, 64)
+	hqChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.HeadquartersID, 10, 64)
 
-	if update.Message.Chat.ID == defaultChatID {
+	if update.Message.Chat.ID == defaultChatID || update.Message.Chat.ID == hqChatID {
 		return true
 	}
 
@@ -33,6 +34,10 @@ func (ct *Chatter) userPrivilegesCheck(update *tgbotapi.Update, user *tgbotapi.U
 	playerRaw, ok := c.Users.GetOrCreatePlayer(user.ID)
 	if !ok {
 		return false
+	}
+
+	if c.Users.PlayerBetterThan(&playerRaw, "admin") {
+		return true
 	}
 
 	// So, user is not a PokememBro admin. For Bastion and Academy she needs to be league player
