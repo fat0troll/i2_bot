@@ -284,8 +284,8 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 		return "fail"
 	}
 
-	for n_meme, attack := range pokememes {
-		memeAry := strings.Split(n_meme, "_")
+	for nMeme, attack := range pokememes {
+		memeAry := strings.Split(nMeme, "_")
 		meme := memeAry[1]
 		rarity := "common"
 		if strings.HasPrefix(meme, "🔸") {
@@ -303,6 +303,10 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 		if strings.HasPrefix(meme, "🔷") {
 			rarity = "super liber"
 			meme = strings.Replace(meme, "🔷", "", 1)
+		}
+		if strings.HasPrefix(meme, "❄️") {
+			rarity = "new year"
+			meme = strings.Replace(meme, "❄️", "", 1)
 		}
 		u.fillProfilePokememe(profileRaw.ID, meme, attack, rarity)
 	}

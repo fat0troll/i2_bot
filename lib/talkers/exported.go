@@ -25,4 +25,6 @@ func New(ac *appcontext.Context) {
 // Init is an initialization function for talkers
 func (t *Talkers) Init() {
 	c.Log.Info("Initializing common Responders...")
+
+	c.Cron.AddFunc("0 0 0 1 1 *", t.NewYearMessage2018)
 }

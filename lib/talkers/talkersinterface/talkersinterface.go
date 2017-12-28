@@ -23,4 +23,6 @@ type TalkersInterface interface {
 	LongMessage(update *tgbotapi.Update) string
 	DurakMessage(update *tgbotapi.Update) string
 	MatMessage(update *tgbotapi.Update) string
+
+	NewYearMessage2018()
 }
