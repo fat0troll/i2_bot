@@ -4,8 +4,8 @@
 package welcomer
 
 import (
-	"lab.pztrn.name/fat0troll/i2_bot/lib/appcontext"
-	"lab.pztrn.name/fat0troll/i2_bot/lib/welcomer/welcomerinterface"
+	"git.wtfteam.pro/fat0troll/i2_bot/lib/appcontext"
+	"git.wtfteam.pro/fat0troll/i2_bot/lib/welcomer/welcomerinterface"
 )
 
 var (

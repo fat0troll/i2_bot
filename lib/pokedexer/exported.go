@@ -5,8 +5,8 @@ package pokedexer
 
 import (
 	// local
-	"lab.pztrn.name/fat0troll/i2_bot/lib/appcontext"
-	"lab.pztrn.name/fat0troll/i2_bot/lib/pokedexer/pokedexerinterface"
+	"git.wtfteam.pro/fat0troll/i2_bot/lib/appcontext"
+	"git.wtfteam.pro/fat0troll/i2_bot/lib/pokedexer/pokedexerinterface"
 )
 
 var (

@@ -7,7 +7,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/jmoiron/sqlx"
-	"lab.pztrn.name/fat0troll/i2_bot/lib/config"
+	"git.wtfteam.pro/fat0troll/i2_bot/lib/config"
 	"lab.pztrn.name/golibs/mogrus"
 )
 

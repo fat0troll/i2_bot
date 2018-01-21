@@ -5,7 +5,7 @@ package pokedexerinterface
 
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
-	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
+	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
 )
 
 // PokedexerInterface implements Pokedexer for importing via appcontext.

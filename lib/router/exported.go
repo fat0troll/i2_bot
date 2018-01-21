@@ -4,7 +4,7 @@
 package router
 
 import (
-	"lab.pztrn.name/fat0troll/i2_bot/lib/appcontext"
+	"git.wtfteam.pro/fat0troll/i2_bot/lib/appcontext"
 )
 
 var (

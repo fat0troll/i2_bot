@@ -5,7 +5,7 @@ package ordersinterface
 
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
-	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
+	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
 )
 
 // OrdersInterface implements Orders for importing via appcontext.

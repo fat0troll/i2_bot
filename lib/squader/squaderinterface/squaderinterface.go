@@ -5,7 +5,7 @@ package squaderinterface
 
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
-	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
+	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
 )
 
 // SquaderInterface implements Squader for importing via appcontext.

@@ -4,8 +4,8 @@
 package chatter
 
 import (
-	"lab.pztrn.name/fat0troll/i2_bot/lib/appcontext"
-	"lab.pztrn.name/fat0troll/i2_bot/lib/chatter/chatterinterface"
+	"git.wtfteam.pro/fat0troll/i2_bot/lib/appcontext"
+	"git.wtfteam.pro/fat0troll/i2_bot/lib/chatter/chatterinterface"
 )
 
 var (

@@ -4,8 +4,8 @@
 package forwarder
 
 import (
-	"lab.pztrn.name/fat0troll/i2_bot/lib/appcontext"
-	"lab.pztrn.name/fat0troll/i2_bot/lib/forwarder/forwarderinterface"
+	"git.wtfteam.pro/fat0troll/i2_bot/lib/appcontext"
+	"git.wtfteam.pro/fat0troll/i2_bot/lib/forwarder/forwarderinterface"
 )
 
 var (

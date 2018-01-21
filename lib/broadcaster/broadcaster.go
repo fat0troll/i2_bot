@@ -4,7 +4,7 @@
 package broadcaster
 
 import (
-	"lab.pztrn.name/fat0troll/i2_bot/lib/dbmapping"
+	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
 	"time"
 )
 
