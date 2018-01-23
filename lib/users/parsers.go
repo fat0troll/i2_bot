@@ -4,8 +4,8 @@
 package users
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"regexp"
 	"strconv"
 	"strings"
@@ -67,7 +67,7 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 	crystallsInt := 0
 	weapon := ""
 	pokememes := make(map[string]string)
-	powerInt := 1
+	powerInt := 0
 
 	// Filling information
 	// We don't know how many strings we got, so we iterating each other
