@@ -84,6 +84,15 @@ func (u *Users) foundUsersMessage(update *tgbotapi.Update, usersArray []dbmappin
 		message += " /profile" + strconv.Itoa(usersArray[i].PlayerID) + "\n"
 		message += "Telegram ID: " + strconv.Itoa(usersArray[i].TelegramID) + "\n"
 		message += "Последнее обновление: " + usersArray[i].CreatedAt.Format("02.01.2006 15:04:05") + "\n"
+
+		if len(message) > 2000 {
+			msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
+			msg.ParseMode = "Markdown"
+
+			c.Bot.Send(msg)
+
+			message = ""
+		}
 	}
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
