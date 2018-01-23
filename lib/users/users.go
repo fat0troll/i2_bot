@@ -4,8 +4,8 @@
 package users
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"strconv"
 )
 
@@ -47,6 +47,18 @@ func (u *Users) getUsersWithProfiles() ([]dbmapping.PlayerProfile, bool) {
 	return usersArray, true
 }
 
+func (u *Users) findUsersByLevel(levelID int) ([]dbmapping.ProfileWithAddons, bool) {
+	selectedUsers := []dbmapping.ProfileWithAddons{}
+
+	err := c.Db.Select(&selectedUsers, c.Db.Rebind("SELECT p.*, l.symbol AS league_symbol, l.id AS league_id, pl.telegram_id FROM players pl, profiles p, leagues l WHERE p.created_at > NOW() - INTERVAL 72 HOUR AND p.level_id = ? GROUP BY player_id"), levelID)
+	if err != nil {
+		c.Log.Error(err.Error())
+		return selectedUsers, false
+	}
+
+	return selectedUsers, true
+}
+
 func (u *Users) findUserByName(pattern string) ([]dbmapping.ProfileWithAddons, bool) {
 	selectedUsers := []dbmapping.ProfileWithAddons{}
 
@@ -57,6 +69,27 @@ func (u *Users) findUserByName(pattern string) ([]dbmapping.ProfileWithAddons, b
 	}
 
 	return selectedUsers, true
+}
+
+func (u *Users) foundUsersMessage(update *tgbotapi.Update, usersArray []dbmapping.ProfileWithAddons) {
+	message := "*Найденные игроки:*\n"
+
+	for i := range usersArray {
+		message += "#" + strconv.Itoa(usersArray[i].PlayerID)
+		message += " " + usersArray[i].LeagueSymbol
+		message += " " + usersArray[i].Nickname
+		if usersArray[i].TelegramNickname != "" {
+			message += " (@" + u.FormatUsername(usersArray[i].TelegramNickname) + ")"
+		}
+		message += " /profile" + strconv.Itoa(usersArray[i].PlayerID) + "\n"
+		message += "Telegram ID: " + strconv.Itoa(usersArray[i].TelegramID) + "\n"
+		message += "Последнее обновление: " + usersArray[i].CreatedAt.Format("02.01.2006 15:04:05") + "\n"
+	}
+
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
+	msg.ParseMode = "Markdown"
+
+	c.Bot.Send(msg)
 }
 
 func (u *Users) profileAddSuccessMessage(update *tgbotapi.Update, leagueID int, level int) {

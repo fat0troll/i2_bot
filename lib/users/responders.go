@@ -4,8 +4,8 @@
 package users
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"strconv"
 	"strings"
 )
@@ -13,6 +13,30 @@ import (
 // FormatUsername formats Telegram username for posting
 func (u *Users) FormatUsername(userName string) string {
 	return strings.Replace(userName, "_", `\_`, -1)
+}
+
+// FindByLevel finds user with level and recent profile update
+func (u *Users) FindByLevel(update *tgbotapi.Update) string {
+	commandArgs := update.Message.CommandArguments()
+	if commandArgs == "" {
+		c.Talkers.BotError(update)
+		return "fail"
+	}
+
+	levelID, err := strconv.Atoi(commandArgs)
+	if err != nil {
+		c.Log.Error(err.Error())
+		return "fail"
+	}
+
+	usersArray, ok := u.findUsersByLevel(levelID)
+	if !ok {
+		return "fail"
+	}
+
+	u.foundUsersMessage(update, usersArray)
+
+	return "ok"
 }
 
 // FindByName finds user with such username or nickname
@@ -28,24 +52,7 @@ func (u *Users) FindByName(update *tgbotapi.Update) string {
 		return "fail"
 	}
 
-	message := "*Найденные игроки:*\n"
-
-	for i := range usersArray {
-		message += "#" + strconv.Itoa(usersArray[i].PlayerID)
-		message += " " + usersArray[i].LeagueSymbol
-		message += " " + usersArray[i].Nickname
-		if usersArray[i].TelegramNickname != "" {
-			message += " (@" + u.FormatUsername(usersArray[i].TelegramNickname) + ")"
-		}
-		message += " /profile" + strconv.Itoa(usersArray[i].PlayerID) + "\n"
-		message += "Telegram ID: " + strconv.Itoa(usersArray[i].TelegramID) + "\n"
-		message += "Последнее обновление: " + usersArray[i].CreatedAt.Format("02.01.2006 15:04:05") + "\n"
-	}
-
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ParseMode = "Markdown"
-
-	c.Bot.Send(msg)
+	u.foundUsersMessage(update, usersArray)
 
 	return "ok"
 }
