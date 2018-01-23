@@ -4,8 +4,8 @@
 package forwarder
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"regexp"
 )
 
@@ -15,6 +15,7 @@ func (f *Forwarder) ProcessForward(update *tgbotapi.Update, playerRaw *dbmapping
 	// Forwards
 	var pokememeMsg = regexp.MustCompile("(Уровень)(.+)(Опыт)(.+)\n(Элементы:)(.+)\n(.+)(💙MP)")
 	var profileMsg = regexp.MustCompile(`(Онлайн: )(\d+)\n(Турнир через)(.+)\n\n((.*)\n|(.*)\n(.*)\n)(Элементы)(.+)\n(.*)\n\n(.+)(Уровень)(.+)\n`)
+	var profileWithEffectsMsg = regexp.MustCompile(`(Онлайн: )(\d+)\n(Турнир через)(.+)\n\n((.*)\n|(.*)\n(.*)\n)(Элементы)(.+)\n(.*)\n(Эффекты)(.*)\n\n(.+)(Уровень)(.+)\n`)
 
 	switch {
 	case pokememeMsg.MatchString(text):
@@ -27,6 +28,8 @@ func (f *Forwarder) ProcessForward(update *tgbotapi.Update, playerRaw *dbmapping
 	case profileMsg.MatchString(text):
 		c.Log.Debug("Profile posted!")
 		return c.Users.ParseProfile(update, playerRaw)
+	case profileWithEffectsMsg.MatchString(text):
+		return c.Users.ProfileAddEffectsMessage(update)
 	default:
 		c.Log.Debug(text)
 	}

@@ -24,6 +24,7 @@ type UsersInterface interface {
 	FindByName(update *tgbotapi.Update) string
 	ForeignProfileMessage(update *tgbotapi.Update) string
 	FormatUsername(userName string) string
+	ProfileAddEffectsMessage(update *tgbotapi.Update) string
 	ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
 	UsersList(update *tgbotapi.Update) string
 }

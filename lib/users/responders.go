@@ -79,6 +79,19 @@ func (u *Users) ForeignProfileMessage(update *tgbotapi.Update) string {
 	return u.ProfileMessage(update, &playerRaw)
 }
 
+// ProfileAddEffectsMesage shows when user tries to post profile with effects enabled
+func (u *Users) ProfileAddEffectsMessage(update *tgbotapi.Update) string {
+	message := "*Наркоман, штоле?*\n\n"
+	message += "Бот не принимает профили во время активированных эффектов. Закончи свои дела и принеси чистый профиль через полчаса."
+
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
+	msg.ParseMode = "Markdown"
+
+	c.Bot.Send(msg)
+
+	return "fail"
+}
+
 // ProfileMessage shows current player's profile
 func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
 	profileRaw, ok := u.GetProfile(playerRaw.ID)

@@ -4,9 +4,9 @@
 package talkers
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/config"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 // AcademyMessage gives user link to Bastion
@@ -49,7 +49,7 @@ func (t *Talkers) BastionMessage(update *tgbotapi.Update, playerRaw *dbmapping.P
 
 // HelpMessage gives user all available commands
 func (t *Talkers) HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) {
-	message := "*Бот Инстинкта Enchanched.*\n\n"
+	message := "*Бот Инстинкта Enhanced.*\n\n"
 	message += "Текущая версия: *" + config.VERSION + "*\n\n"
 	message += "Список команд\n\n"
 	message += "\\* /me – посмотреть свой сохраненный профиль в боте\n"
@@ -69,6 +69,7 @@ func (t *Talkers) HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Play
 	}
 	if c.Users.PlayerBetterThan(playerRaw, "academic") {
 		message += "\\* /users —  просмотреть зарегистрированных пользователей бота\n"
+		message += "\\* /find\\_level _цифра_ — показать всех игроков соответствующего уровня. Учитываются профили за 72 часа\n"
 		message += "\\* /find\\_user _строка_ — найти игрока в боте по его нику или имени. Ник ищется без собачки в начале\n"
 	}
 	message += "\\* /help – выводит данное сообщение\n"
