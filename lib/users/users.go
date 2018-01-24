@@ -50,7 +50,7 @@ func (u *Users) getUsersWithProfiles() ([]dbmapping.PlayerProfile, bool) {
 func (u *Users) findUsersByLevel(levelID int) ([]dbmapping.ProfileWithAddons, bool) {
 	selectedUsers := []dbmapping.ProfileWithAddons{}
 
-	err := c.Db.Select(&selectedUsers, c.Db.Rebind("SELECT p.*, l.symbol AS league_symbol, l.id AS league_id, pl.telegram_id FROM players pl, profiles p, leagues l WHERE pl.id = p.player_id AND p.created_at > NOW() - INTERVAL 72 HOUR AND p.level_id = ? GROUP BY player_id"), levelID)
+	err := c.Db.Select(&selectedUsers, c.Db.Rebind("SELECT p.*, l.symbol AS league_symbol, l.id AS league_id, pl.telegram_id FROM players pl, profiles p, leagues l WHERE pl.id = p.player_id AND l.id = pl.league_id AND p.created_at > NOW() - INTERVAL 72 HOUR AND p.level_id = ? GROUP BY player_id"), levelID)
 	if err != nil {
 		c.Log.Error(err.Error())
 		return selectedUsers, false
