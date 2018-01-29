@@ -15,30 +15,10 @@ func (p *Pokedexer) DeletePokememe(update *tgbotapi.Update) string {
 		return "fail"
 	}
 
-	pokememe, ok := p.GetPokememeByID(strconv.Itoa(pokememeNum))
-	if !ok {
-		return "fail"
-	}
-
-	_, err := c.Db.NamedExec("DELETE FROM pokememes WHERE id=:id", &pokememe.Pokememe)
+	err := c.DataCache.DeletePokememeByID(pokememeNum)
 	if err != nil {
 		c.Log.Error(err.Error())
 		return "fail"
-	}
-
-	_, err = c.Db.NamedExec("DELETE FROM pokememes_elements WHERE pokememe_id=:id", &pokememe.Pokememe)
-	if err != nil {
-		c.Log.Debug(err.Error())
-	}
-
-	_, err = c.Db.NamedExec("DELETE FROM pokememes_locations WHERE pokememe_id=:id", &pokememe.Pokememe)
-	if err != nil {
-		c.Log.Debug(err.Error())
-	}
-
-	_, err = c.Db.NamedExec("DELETE FROM profiles_pokememes WHERE pokememe_id=:id", &pokememe.Pokememe)
-	if err != nil {
-		c.Log.Debug(err.Error())
 	}
 
 	message := "Покемем удалён."

@@ -9,22 +9,25 @@ import (
 )
 
 func (w *Welcomer) groupWelcomeUser(update *tgbotapi.Update, newUser *tgbotapi.User) string {
-	playerRaw, ok := c.Users.GetOrCreatePlayer(newUser.ID)
-	if !ok {
+	playerRaw, err := c.DataCache.GetPlayerByTelegramID(newUser.ID)
+	if err != nil {
+		c.Log.Error(err.Error())
 		return "fail"
 	}
 
-	_, profileExist := c.Users.GetProfile(playerRaw.ID)
+	_, profileExist := c.DataCache.GetProfileByPlayerID(playerRaw.ID)
 
 	message := "*Бот Инстинкта приветствует тебя, *"
 	message += c.Users.GetPrettyName(newUser)
 	message += "*!*\n\n"
 
-	if profileExist {
+	if profileExist == nil {
 		if playerRaw.LeagueID != 1 {
 			w.alertSpyUser(update, newUser)
 		}
 	} else {
+		c.Log.Info("Following profile error is OK.")
+		c.Log.Info(err.Error())
 		w.alertUserWithoutProfile(update, newUser)
 	}
 

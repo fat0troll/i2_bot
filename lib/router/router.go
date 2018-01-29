@@ -9,8 +9,9 @@ import (
 
 // RouteRequest decides, what to do with user input
 func (r *Router) RouteRequest(update *tgbotapi.Update) string {
-	playerRaw, ok := c.Users.GetOrCreatePlayer(update.Message.From.ID)
-	if !ok {
+	playerRaw, err := c.DataCache.GetOrCreatePlayerByTelegramID(update.Message.From.ID)
+	if err != nil {
+		c.Log.Error(err.Error())
 		// Silently fail
 		return "fail"
 	}
@@ -20,13 +21,10 @@ func (r *Router) RouteRequest(update *tgbotapi.Update) string {
 		return "fail"
 	}
 
-	c.Log.Debug("Received message from chat ")
-	c.Log.Debugln(chatRaw.TelegramID)
-
 	if update.Message.Chat.IsGroup() || update.Message.Chat.IsSuperGroup() {
-		return r.routeGroupRequest(update, &playerRaw, &chatRaw)
+		return r.routeGroupRequest(update, playerRaw, &chatRaw)
 	} else if update.Message.Chat.IsPrivate() {
-		return r.routePrivateRequest(update, &playerRaw, &chatRaw)
+		return r.routePrivateRequest(update, playerRaw, &chatRaw)
 	}
 
 	return "ok"

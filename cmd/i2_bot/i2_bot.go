@@ -4,10 +4,10 @@
 package main
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/appcontext"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/broadcaster"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/chatter"
+	"git.wtfteam.pro/fat0troll/i2_bot/lib/datacache"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/forwarder"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/migrations"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/orders"
@@ -20,6 +20,7 @@ import (
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/talkers"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/users"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/welcomer"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"time"
 )
 
@@ -34,6 +35,7 @@ func main() {
 	router.New(c)
 	migrations.New(c)
 	c.RunDatabaseMigrations()
+	datacache.New(c)
 	forwarder.New(c)
 	pokedexer.New(c)
 	pinner.New(c)

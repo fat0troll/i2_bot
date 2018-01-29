@@ -4,61 +4,9 @@
 package users
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
-	"time"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
-
-// GetProfile returns last saved profile of player
-func (u *Users) GetProfile(playerID int) (dbmapping.Profile, bool) {
-	profileRaw := dbmapping.Profile{}
-	err := c.Db.Get(&profileRaw, c.Db.Rebind("SELECT * FROM profiles WHERE player_id=? ORDER BY created_at DESC LIMIT 1"), playerID)
-	if err != nil {
-		c.Log.Error(err)
-		return profileRaw, false
-	}
-
-	return profileRaw, true
-}
-
-// GetPlayerByID returns dbmapping.Player instance with given ID.
-func (u *Users) GetPlayerByID(playerID int) (dbmapping.Player, bool) {
-	playerRaw := dbmapping.Player{}
-	err := c.Db.Get(&playerRaw, c.Db.Rebind("SELECT * FROM players WHERE id=?"), playerID)
-	if err != nil {
-		c.Log.Error(err.Error())
-		return playerRaw, false
-	}
-
-	return playerRaw, true
-}
-
-// GetOrCreatePlayer seeks for player in database via Telegram ID.
-// In case, when there is no player with such ID, new player will be created.
-func (u *Users) GetOrCreatePlayer(telegramID int) (dbmapping.Player, bool) {
-	playerRaw := dbmapping.Player{}
-	err := c.Db.Get(&playerRaw, c.Db.Rebind("SELECT * FROM players WHERE telegram_id=? ORDER BY created_at desc LIMIT 1"), telegramID)
-	if err != nil {
-		c.Log.Error("Message user not found in database.")
-		c.Log.Error(err.Error())
-
-		// Create "nobody" user
-		playerRaw.TelegramID = telegramID
-		playerRaw.LeagueID = 0
-		playerRaw.Status = "nobody"
-		playerRaw.CreatedAt = time.Now().UTC()
-		playerRaw.UpdatedAt = time.Now().UTC()
-		_, err = c.Db.NamedExec("INSERT INTO players VALUES(NULL, :telegram_id, :league_id, :status, :created_at, :updated_at)", &playerRaw)
-		if err != nil {
-			c.Log.Error(err.Error())
-			return playerRaw, false
-		}
-	} else {
-		c.Log.Debug("Message user found in database.")
-	}
-
-	return playerRaw, true
-}
 
 // GetPrettyName returns "pretty" name of user (first_name + last name or username)
 func (u *Users) GetPrettyName(user *tgbotapi.User) string {

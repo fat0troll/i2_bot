@@ -4,8 +4,8 @@
 package squader
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"regexp"
 	"strconv"
 	"strings"
@@ -38,8 +38,8 @@ func (s *Squader) getPlayersForSquad(squadID int) ([]dbmapping.SquadPlayerFull, 
 		for ii := range squadPlayers {
 			if squadPlayers[ii].PlayerID == playersRaw[i].ID {
 				playerWithProfile := dbmapping.SquadPlayerFull{}
-				profile, _ := c.Users.GetProfile(playersRaw[i].ID)
-				playerWithProfile.Profile = profile
+				profile, _ := c.DataCache.GetProfileByPlayerID(playersRaw[i].ID)
+				playerWithProfile.Profile = *profile
 				playerWithProfile.Player = playersRaw[i]
 				playerWithProfile.Squad = squad
 				playerWithProfile.UserRole = squadPlayers[ii].UserType
@@ -114,8 +114,9 @@ func (s *Squader) createSquad(update *tgbotapi.Update, chatID int, floodChatID i
 	if err != nil {
 		c.Log.Debug(err)
 
-		playerRaw, ok := c.Users.GetOrCreatePlayer(update.Message.From.ID)
-		if !ok {
+		playerRaw, err := c.DataCache.GetPlayerByTelegramID(update.Message.From.ID)
+		if err != nil {
+			c.Log.Error(err.Error())
 			return squad, "fail"
 		}
 
@@ -287,20 +288,22 @@ func (s *Squader) AddUserToSquad(update *tgbotapi.Update, adderRaw *dbmapping.Pl
 		return s.squadUserAdditionFailure(update)
 	}
 
-	playerRaw, ok := c.Users.GetPlayerByID(playerID)
-	if !ok {
+	playerRaw, err := c.DataCache.GetPlayerByID(playerID)
+	if err != nil {
+		c.Log.Error(err.Error())
 		return s.squadUserAdditionFailure(update)
 	}
 	squadRaw := dbmapping.Squad{}
-	err := c.Db.Get(&squadRaw, c.Db.Rebind("SELECT * FROM squads WHERE id=?"), squadID)
+	err = c.Db.Get(&squadRaw, c.Db.Rebind("SELECT * FROM squads WHERE id=?"), squadID)
 	if err != nil {
 		c.Log.Error(err.Error())
 		return s.squadUserAdditionFailure(update)
 	}
 
-	if !c.Users.PlayerBetterThan(&playerRaw, "admin") {
-		_, ok = c.Users.GetProfile(playerRaw.ID)
-		if !ok {
+	if !c.Users.PlayerBetterThan(playerRaw, "admin") {
+		_, err = c.DataCache.GetProfileByPlayerID(playerRaw.ID)
+		if err != nil {
+			c.Log.Error(err.Error())
 			return s.squadUserAdditionFailure(update)
 		}
 	}
@@ -315,7 +318,7 @@ func (s *Squader) AddUserToSquad(update *tgbotapi.Update, adderRaw *dbmapping.Pl
 		}
 	}
 
-	if !c.Users.PlayerBetterThan(&playerRaw, "admin") {
+	if !c.Users.PlayerBetterThan(playerRaw, "admin") {
 		if playerRaw.LeagueID != 1 {
 			return s.squadUserAdditionFailure(update)
 		}

@@ -144,13 +144,13 @@ func (s *Squader) GetUserRolesInSquads(playerRaw *dbmapping.Player) ([]dbmapping
 	for i := range userRolesRaw {
 		userRoleFull := dbmapping.SquadPlayerFull{}
 		userRoleFull.Player = *playerRaw
-		userProfile, profileOk := c.Users.GetProfile(playerRaw.ID)
-		userRoleFull.Profile = userProfile
+		userProfile, profileError := c.DataCache.GetProfileByPlayerID(playerRaw.ID)
+		userRoleFull.Profile = *userProfile
 		userRoleFull.UserRole = userRolesRaw[i].UserType
 		squad, squadOk := s.GetSquadByID(userRolesRaw[i].SquadID)
 		userRoleFull.Squad = squad
 
-		if profileOk && squadOk {
+		if profileError == nil && squadOk {
 			userRoles = append(userRoles, userRoleFull)
 		}
 	}

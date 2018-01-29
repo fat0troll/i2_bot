@@ -4,16 +4,17 @@
 package squader
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 // CleanFlood will clean flood from squads
 func (s *Squader) CleanFlood(update *tgbotapi.Update, chatRaw *dbmapping.Chat) string {
 	switch s.IsChatASquadEnabled(chatRaw) {
 	case "main":
-		talker, ok := c.Users.GetOrCreatePlayer(update.Message.From.ID)
-		if !ok {
+		talker, err := c.DataCache.GetPlayerByTelegramID(update.Message.From.ID)
+		if err != nil {
+			c.Log.Error(err.Error())
 			s.deleteFloodMessage(update)
 			return "fail"
 		}

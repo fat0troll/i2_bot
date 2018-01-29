@@ -4,8 +4,8 @@
 package chatter
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"strconv"
 	"strings"
 )
@@ -31,12 +31,13 @@ func (ct *Chatter) userPrivilegesCheck(update *tgbotapi.Update, user *tgbotapi.U
 		}
 	}
 
-	playerRaw, ok := c.Users.GetOrCreatePlayer(user.ID)
-	if !ok {
+	playerRaw, err := c.DataCache.GetPlayerByTelegramID(user.ID)
+	if err != nil {
+		c.Log.Error(err.Error())
 		return false
 	}
 
-	if c.Users.PlayerBetterThan(&playerRaw, "admin") {
+	if c.Users.PlayerBetterThan(playerRaw, "admin") {
 		return true
 	}
 
@@ -51,7 +52,7 @@ func (ct *Chatter) userPrivilegesCheck(update *tgbotapi.Update, user *tgbotapi.U
 			return true
 		}
 	default:
-		availableChatsForUser, _ := c.Squader.GetAvailableSquadChatsForUser(&playerRaw)
+		availableChatsForUser, _ := c.Squader.GetAvailableSquadChatsForUser(playerRaw)
 		for i := range availableChatsForUser {
 			if update.Message.Chat.ID == availableChatsForUser[i].TelegramID {
 				return true

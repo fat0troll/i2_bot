@@ -29,12 +29,9 @@ func (u *Users) FindByLevel(update *tgbotapi.Update) string {
 		return "fail"
 	}
 
-	usersArray, ok := u.findUsersByLevel(levelID)
-	if !ok {
-		return "fail"
-	}
+	users := u.findUsersByLevel(levelID)
 
-	u.foundUsersMessage(update, usersArray)
+	u.foundUsersMessage(update, users)
 
 	return "ok"
 }
@@ -47,12 +44,9 @@ func (u *Users) FindByName(update *tgbotapi.Update) string {
 		return "fail"
 	}
 
-	usersArray, ok := u.findUserByName(commandArgs)
-	if !ok {
-		return "fail"
-	}
+	users := u.findUserByName(commandArgs)
 
-	u.foundUsersMessage(update, usersArray)
+	u.foundUsersMessage(update, users)
 
 	return "ok"
 }
@@ -66,20 +60,22 @@ func (u *Users) ForeignProfileMessage(update *tgbotapi.Update) string {
 		return "fail"
 	}
 
-	playerRaw, ok := u.GetPlayerByID(userID)
-	if !ok {
+	playerRaw, err := c.DataCache.GetPlayerByID(userID)
+	if err != nil {
+		c.Log.Error(err.Error())
 		return "fail"
 	}
 
-	_, ok = u.GetProfile(playerRaw.ID)
-	if !ok {
+	_, err = c.DataCache.GetProfileByPlayerID(playerRaw.ID)
+	if err != nil {
+		c.Log.Error(err.Error())
 		return c.Talkers.BotError(update)
 	}
 
-	return u.ProfileMessage(update, &playerRaw)
+	return u.ProfileMessage(update, playerRaw)
 }
 
-// ProfileAddEffectsMesage shows when user tries to post profile with effects enabled
+// ProfileAddEffectsMessage shows when user tries to post profile with effects enabled
 func (u *Users) ProfileAddEffectsMessage(update *tgbotapi.Update) string {
 	message := "*Наркоман, штоле?*\n\n"
 	message += "Бот не принимает профили во время активированных эффектов. Закончи свои дела и принеси чистый профиль через полчаса."
@@ -94,12 +90,13 @@ func (u *Users) ProfileAddEffectsMessage(update *tgbotapi.Update) string {
 
 // ProfileMessage shows current player's profile
 func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
-	profileRaw, ok := u.GetProfile(playerRaw.ID)
-	if !ok {
+	profileRaw, err := c.DataCache.GetProfileByPlayerID(playerRaw.ID)
+	if err != nil {
+		c.Log.Error(err.Error())
 		return c.Talkers.AnyMessageUnauthorized(update)
 	}
 	league := dbmapping.League{}
-	err := c.Db.Get(&league, c.Db.Rebind("SELECT * FROM leagues WHERE id=?"), playerRaw.LeagueID)
+	err = c.Db.Get(&league, c.Db.Rebind("SELECT * FROM leagues WHERE id=?"), playerRaw.LeagueID)
 	if err != nil {
 		c.Log.Error(err)
 	}
@@ -210,11 +207,8 @@ func (u *Users) UsersList(update *tgbotapi.Update) string {
 	if page == 0 {
 		page = 1
 	}
-	usersArray, ok := u.getUsersWithProfiles()
-	if !ok {
-		return c.Talkers.BotError(update)
-	}
+	users := c.DataCache.GetPlayersWithCurrentProfiles()
 
-	u.usersList(update, page, usersArray)
+	u.usersList(update, page, users)
 	return "ok"
 }

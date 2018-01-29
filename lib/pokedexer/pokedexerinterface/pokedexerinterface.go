@@ -4,8 +4,8 @@
 package pokedexerinterface
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 // PokedexerInterface implements Pokedexer for importing via appcontext.
@@ -15,9 +15,6 @@ type PokedexerInterface interface {
 	PokememesList(update *tgbotapi.Update)
 	PokememeInfo(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
 	BestPokememesList(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
-
-	GetPokememes() ([]dbmapping.PokememeFull, bool)
-	GetPokememeByID(pokememeID string) (dbmapping.PokememeFull, bool)
 
 	DeletePokememe(update *tgbotapi.Update) string
 }

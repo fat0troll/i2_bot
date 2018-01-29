@@ -24,24 +24,3 @@ type Profile struct {
 	Crystalls        int       `db:"crystalls"`
 	CreatedAt        time.Time `db:"created_at"`
 }
-
-// ProfileWithAddons is a struct, which represents `profiles` table item in database and some good external fields.
-type ProfileWithAddons struct {
-	ID               int       `db:"id"`
-	PlayerID         int       `db:"player_id"`
-	TelegramID       int       `db:"telegram_id"`
-	LeagueID         int       `db:"league_id"`
-	LeagueSymbol     string    `db:"league_symbol"`
-	Nickname         string    `db:"nickname"`
-	TelegramNickname string    `db:"telegram_nickname"`
-	LevelID          int       `db:"level_id"`
-	Pokeballs        int       `db:"pokeballs"`
-	Wealth           int       `db:"wealth"`
-	PokememesWealth  int       `db:"pokememes_wealth"`
-	Exp              int       `db:"exp"`
-	EggExp           int       `db:"egg_exp"`
-	Power            int       `db:"power"`
-	WeaponID         int       `db:"weapon_id"`
-	Crystalls        int       `db:"crystalls"`
-	CreatedAt        time.Time `db:"created_at"`
-}

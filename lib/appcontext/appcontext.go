@@ -4,13 +4,13 @@
 package appcontext
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
-	"github.com/jmoiron/sqlx"
-	"github.com/robfig/cron"
+	"bitbucket.org/pztrn/flagger"
+	"bitbucket.org/pztrn/mogrus"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/broadcaster/broadcasterinterface"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/chatter/chatterinterface"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/config"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/connections"
+	"git.wtfteam.pro/fat0troll/i2_bot/lib/datacache/datacacheinterface"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/forwarder/forwarderinterface"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/migrations/migrationsinterface"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/orders/ordersinterface"
@@ -23,8 +23,9 @@ import (
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/talkers/talkersinterface"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/users/usersinterface"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/welcomer/welcomerinterface"
-	"lab.pztrn.name/golibs/flagger"
-	"lab.pztrn.name/golibs/mogrus"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"github.com/jmoiron/sqlx"
+	"github.com/robfig/cron"
 	"os"
 )
 
@@ -35,6 +36,7 @@ type Context struct {
 	Cron         *cron.Cron
 	Log          *mogrus.LoggerHandler
 	Bot          *tgbotapi.BotAPI
+	DataCache    datacacheinterface.DataCacheInterface
 	Forwarder    forwarderinterface.ForwarderInterface
 	Migrations   migrationsinterface.MigrationsInterface
 	Router       routerinterface.RouterInterface
@@ -155,6 +157,12 @@ func (c *Context) RegisterForwarderInterface(fi forwarderinterface.ForwarderInte
 func (c *Context) RegisterChatterInterface(ci chatterinterface.ChatterInterface) {
 	c.Chatter = ci
 	c.Chatter.Init()
+}
+
+// RegisterDataCacheInterface registers datacache interface in application
+func (c *Context) RegisterDataCacheInterface(di datacacheinterface.DataCacheInterface) {
+	c.DataCache = di
+	c.DataCache.Init()
 }
 
 // RegisterSquaderInterface registers squader interface in application

@@ -4,9 +4,9 @@
 package config
 
 import (
+	"bitbucket.org/pztrn/mogrus"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
-	"lab.pztrn.name/golibs/mogrus"
 	"path/filepath"
 )
 

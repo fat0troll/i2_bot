@@ -10,8 +10,9 @@ import (
 
 // RouteCallback routes inline requests to bot
 func (r *Router) RouteCallback(update *tgbotapi.Update) string {
-	playerRaw, ok := c.Users.GetOrCreatePlayer(update.CallbackQuery.From.ID)
-	if !ok {
+	playerRaw, err := c.DataCache.GetOrCreatePlayerByTelegramID(update.CallbackQuery.From.ID)
+	if err != nil {
+		c.Log.Error(err.Error())
 		return "fail"
 	}
 
@@ -20,9 +21,9 @@ func (r *Router) RouteCallback(update *tgbotapi.Update) string {
 
 	switch {
 	case enableAlarmCallback.MatchString(update.CallbackQuery.Data):
-		return c.Reminder.CreateAlarmSetting(update, &playerRaw)
+		return c.Reminder.CreateAlarmSetting(update, playerRaw)
 	case disableAlarmCallback.MatchString(update.CallbackQuery.Data):
-		return c.Reminder.DestroyAlarmSetting(update, &playerRaw)
+		return c.Reminder.DestroyAlarmSetting(update, playerRaw)
 	}
 
 	return "ok"

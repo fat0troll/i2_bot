@@ -15,15 +15,14 @@ import (
 // Internal functions
 
 func (u *Users) fillProfilePokememe(profileID int, meme string, attack string, rarity string) {
-	spkRaw := dbmapping.Pokememe{}
-	err := c.Db.Get(&spkRaw, c.Db.Rebind("SELECT * FROM pokememes WHERE name='"+meme+"';"))
+	spkRaw, err := c.DataCache.GetPokememeByName(meme)
 	if err != nil {
 		c.Log.Error(err.Error())
 	} else {
 		attackInt := c.Statistics.GetPoints(attack)
 		ppk := dbmapping.ProfilePokememe{}
 		ppk.ProfileID = profileID
-		ppk.PokememeID = spkRaw.ID
+		ppk.PokememeID = spkRaw.Pokememe.ID
 		ppk.PokememeAttack = attackInt
 		ppk.PokememeRarity = rarity
 		ppk.CreatedAt = time.Now().UTC()
@@ -75,12 +74,13 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 		currentString := string(profileRunesArray[i])
 		currentRunes := profileRunesArray[i]
 		if strings.HasPrefix(currentString, "🈸") || strings.HasPrefix(currentString, "🈳 ") || strings.HasPrefix(currentString, "🈵") {
-			err1 := c.Db.Get(&league, c.Db.Rebind("SELECT * FROM leagues WHERE symbol='"+string(currentRunes[0])+"'"))
-			if err1 != nil {
-				c.Log.Error(err1.Error())
+			leagueRaw, err := c.DataCache.GetLeagueBySymbol(string(currentRunes[0]))
+			if err != nil {
+				c.Log.Error(err.Error())
 				u.profileAddFailureMessage(update)
 				return "fail"
 			}
+			league = *leagueRaw
 			for j := range currentRunes {
 				if j > 1 {
 					nickname += string(currentRunes[j])
@@ -209,10 +209,9 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 	}
 
 	// Information is gathered, let's create profile in database!
-	weaponRaw := dbmapping.Weapon{}
-	err2 := c.Db.Get(&weaponRaw, c.Db.Rebind("SELECT * FROM weapons WHERE name='"+weapon+"'"))
-	if err2 != nil {
-		c.Log.Error(err2.Error())
+	weaponRaw, err := c.DataCache.GetWeaponTypeByName(weapon)
+	if err != nil {
+		c.Log.Error(err.Error())
 	}
 
 	if playerRaw.LeagueID == 0 {
@@ -221,26 +220,17 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 		if playerRaw.Status == "nobody" {
 			playerRaw.Status = "common"
 		}
-		_, err4 := c.Db.NamedExec("UPDATE `players` SET league_id=:league_id, status=:status WHERE id=:id", &playerRaw)
-		if err4 != nil {
-			c.Log.Error(err4.Error())
+		_, err = c.DataCache.UpdatePlayerFields(playerRaw)
+		if err != nil {
 			u.profileAddFailureMessage(update)
 			return "fail"
 		}
 	} else if playerRaw.LeagueID != league.ID {
-		// Duplicate profile: user changed league, beware!
+		// User changed league, beware!
 		playerRaw.LeagueID = league.ID
 		playerRaw.Status = "league_changed"
-		playerRaw.CreatedAt = time.Now().UTC()
-		_, err5 := c.Db.NamedExec("INSERT INTO players VALUES(NULL, :telegram_id, :league_id, :status, :created_at, :updated_at)", &playerRaw)
-		if err5 != nil {
-			c.Log.Error(err5.Error())
-			u.profileAddFailureMessage(update)
-			return "fail"
-		}
-		err6 := c.Db.Get(&playerRaw, c.Db.Rebind("SELECT * FROM players WHERE telegram_id='"+strconv.Itoa(playerRaw.TelegramID)+"' AND league_id='"+strconv.Itoa(league.ID)+"';"))
-		if err6 != nil {
-			c.Log.Error(err6.Error())
+		_, err = c.DataCache.UpdatePlayerFields(playerRaw)
+		if err != nil {
 			u.profileAddFailureMessage(update)
 			return "fail"
 		}
@@ -261,25 +251,22 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 	profileRaw.Crystalls = crystallsInt
 	profileRaw.CreatedAt = time.Now().UTC()
 
-	_, err3 := c.Db.NamedExec("INSERT INTO `profiles` VALUES(NULL, :player_id, :nickname, :telegram_nickname, :level_id, :pokeballs, :wealth, :pokememes_wealth, :exp, :egg_exp, :power, :weapon_id, :crystalls, :created_at)", &profileRaw)
-	if err3 != nil {
-		c.Log.Error(err3.Error())
+	newProfileID, err := c.DataCache.AddProfile(&profileRaw)
+	if err != nil {
+		c.Log.Error(err.Error())
 		u.profileAddFailureMessage(update)
 		return "fail"
 	}
 
-	err8 := c.Db.Get(&profileRaw, c.Db.Rebind("SELECT * FROM profiles WHERE player_id=? AND created_at=?"), profileRaw.PlayerID, profileRaw.CreatedAt)
-	if err8 != nil {
-		c.Log.Error(err8.Error())
-		c.Log.Error("Profile isn't added!")
+	_, err = c.DataCache.GetProfileByID(newProfileID)
+	if err != nil {
+		c.Log.Error(err.Error())
 		u.profileAddFailureMessage(update)
 		return "fail"
 	}
 
-	playerRaw.UpdatedAt = time.Now().UTC()
-	_, err7 := c.Db.NamedExec("UPDATE `players` SET updated_at=:updated_at WHERE id=:id", &playerRaw)
-	if err7 != nil {
-		c.Log.Error(err7.Error())
+	err = c.DataCache.UpdatePlayerTimestamp(playerRaw.ID)
+	if err != nil {
 		u.profileAddFailureMessage(update)
 		return "fail"
 	}
@@ -304,11 +291,11 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 			rarity = "super liber"
 			meme = strings.Replace(meme, "🔷", "", 1)
 		}
-		if strings.HasPrefix(meme, "❄️") {
+		if strings.HasPrefix(meme, "❄") {
 			rarity = "new year"
-			meme = strings.Replace(meme, "❄️", "", 1)
+			meme = strings.Replace(meme, "❄", "", 1)
 		}
-		u.fillProfilePokememe(profileRaw.ID, meme, attack, rarity)
+		u.fillProfilePokememe(newProfileID, meme, attack, rarity)
 	}
 
 	u.profileAddSuccessMessage(update, league.ID, profileRaw.LevelID)

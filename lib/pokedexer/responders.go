@@ -4,8 +4,9 @@
 package pokedexer
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -18,8 +19,14 @@ func (p *Pokedexer) BestPokememesList(update *tgbotapi.Update, playerRaw *dbmapp
 		return "fail"
 	}
 
-	message := "*Лучшие покемемы для ловли*\n\n"
+	var attacks []int
 	for i := range pokememes {
+		attacks = append(attacks, i)
+	}
+	sort.Sort(sort.Reverse(sort.IntSlice(attacks)))
+
+	message := "*Лучшие покемемы для ловли*\n\n"
+	for _, i := range attacks {
 		pk := pokememes[i].Pokememe
 		pkL := pokememes[i].Locations
 		pkE := pokememes[i].Elements
@@ -63,25 +70,24 @@ func (p *Pokedexer) PokememesList(update *tgbotapi.Update) {
 	if page == 0 {
 		page = 1
 	}
-	pokememesArray, ok := p.GetPokememes()
-	if !ok {
-		c.Talkers.BotError(update)
-	} else {
-		p.pokememesListing(update, page, pokememesArray)
-	}
+	pokememesArray := c.DataCache.GetAllPokememes()
+	p.pokememesListing(update, page, pokememesArray)
 }
 
 // PokememeInfo shows information about single pokememe based on internal ID
 func (p *Pokedexer) PokememeInfo(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
 	pokememeNumber := strings.Replace(update.Message.Text, "/pk", "", 1)
 	var calculatePossibilites = true
-	profileRaw, ok := c.Users.GetProfile(playerRaw.ID)
-	if !ok {
+	profileRaw, err := c.DataCache.GetProfileByPlayerID(playerRaw.ID)
+	if err != nil {
+		c.Log.Error(err.Error())
 		calculatePossibilites = false
 	}
 
-	pokememe, ok := p.GetPokememeByID(pokememeNumber)
-	if !ok {
+	pokememeID, _ := strconv.Atoi(pokememeNumber)
+	pokememe, err := c.DataCache.GetPokememeByID(pokememeID)
+	if err != nil {
+		c.Log.Error(err.Error())
 		return "fail"
 	}
 

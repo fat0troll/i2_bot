@@ -11,8 +11,9 @@ import (
 
 // RouteInline routes inline requests to bot
 func (r *Router) RouteInline(update *tgbotapi.Update) string {
-	playerRaw, ok := c.Users.GetOrCreatePlayer(update.InlineQuery.From.ID)
-	if !ok {
+	playerRaw, err := c.DataCache.GetOrCreatePlayerByTelegramID(update.InlineQuery.From.ID)
+	if err != nil {
+		c.Log.Error(err.Error())
 		return "fail"
 	}
 
@@ -73,7 +74,7 @@ func (r *Router) RouteInline(update *tgbotapi.Update) string {
 		Results:       results,
 	}
 
-	_, err := c.Bot.AnswerInlineQuery(inlineConf)
+	_, err = c.Bot.AnswerInlineQuery(inlineConf)
 	if err != nil {
 		c.Log.Error(err.Error())
 	}

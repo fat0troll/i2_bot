@@ -27,12 +27,18 @@ func (s *Statistics) SquadStatictics(squadID int) string {
 	for i := range squadMembers {
 		fullInfo := dbmapping.SquadPlayerFull{}
 
-		playerRaw, _ := c.Users.GetPlayerByID(squadMembers[i].PlayerID)
-		profileRaw, _ := c.Users.GetProfile(playerRaw.ID)
+		playerRaw, err := c.DataCache.GetPlayerByID(squadMembers[i].PlayerID)
+		if err != nil {
+			c.Log.Error(err.Error())
+		}
+		profileRaw, err := c.DataCache.GetProfileByPlayerID(playerRaw.ID)
+		if err != nil {
+			c.Log.Error(err.Error())
+		}
 
 		fullInfo.Squad = squad
-		fullInfo.Player = playerRaw
-		fullInfo.Profile = profileRaw
+		fullInfo.Player = *playerRaw
+		fullInfo.Profile = *profileRaw
 
 		squadMembersWithInformation = append(squadMembersWithInformation, fullInfo)
 	}

@@ -6,84 +6,70 @@ package users
 import (
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"sort"
 	"strconv"
+	"strings"
+	"time"
 )
 
 // Internal functions for Users package
 
-func (u *Users) getUsersWithProfiles() ([]dbmapping.PlayerProfile, bool) {
-	usersArray := []dbmapping.PlayerProfile{}
-	players := []dbmapping.Player{}
-	err := c.Db.Select(&players, "SELECT * FROM players")
-	if err != nil {
-		c.Log.Error(err)
-		return usersArray, false
-	}
+func (u *Users) findUsersByLevel(levelID int) map[int]*dbmapping.PlayerProfile {
+	selectedUsers := make(map[int]*dbmapping.PlayerProfile)
+	allUsers := c.DataCache.GetPlayersWithCurrentProfiles()
 
-	for i := range players {
-		playerWithProfile := dbmapping.PlayerProfile{}
-		profile, ok := u.GetProfile(players[i].ID)
-		if !ok {
-			playerWithProfile.HaveProfile = false
-		} else {
-			playerWithProfile.HaveProfile = true
-		}
-		playerWithProfile.Profile = profile
-		playerWithProfile.Player = players[i]
-
-		league := dbmapping.League{}
-		if players[i].LeagueID != 0 {
-			err = c.Db.Get(&league, c.Db.Rebind("SELECT * FROM leagues WHERE id=?"), players[i].LeagueID)
-			if err != nil {
-				c.Log.Error(err.Error())
-				return usersArray, false
+	for i := range allUsers {
+		if allUsers[i].Profile.LevelID == levelID {
+			if allUsers[i].Player.UpdatedAt.After(time.Now().UTC().Add(-72 * time.Hour)) {
+				selectedUsers[i] = allUsers[i]
 			}
 		}
-		playerWithProfile.League = league
-
-		usersArray = append(usersArray, playerWithProfile)
 	}
 
-	return usersArray, true
+	return selectedUsers
 }
 
-func (u *Users) findUsersByLevel(levelID int) ([]dbmapping.ProfileWithAddons, bool) {
-	selectedUsers := []dbmapping.ProfileWithAddons{}
+func (u *Users) findUserByName(pattern string) map[int]*dbmapping.PlayerProfile {
+	selectedUsers := make(map[int]*dbmapping.PlayerProfile)
+	allUsers := c.DataCache.GetPlayersWithCurrentProfiles()
 
-	err := c.Db.Select(&selectedUsers, c.Db.Rebind("SELECT p.*, l.symbol AS league_symbol, l.id AS league_id, pl.telegram_id FROM players pl, profiles p, leagues l WHERE pl.id = p.player_id AND l.id = pl.league_id AND p.created_at > NOW() - INTERVAL 72 HOUR AND p.level_id = ? GROUP BY player_id"), levelID)
-	if err != nil {
-		c.Log.Error(err.Error())
-		return selectedUsers, false
+	for i := range allUsers {
+		matchedPattern := false
+		if strings.Contains(strings.ToLower(allUsers[i].Profile.Nickname), strings.ToLower(pattern)) {
+			matchedPattern = true
+		}
+		if strings.Contains(strings.ToLower(allUsers[i].Profile.TelegramNickname), strings.ToLower(pattern)) {
+			matchedPattern = true
+		}
+		if matchedPattern {
+			selectedUsers[i] = allUsers[i]
+		}
 	}
 
-	return selectedUsers, true
+	return selectedUsers
 }
 
-func (u *Users) findUserByName(pattern string) ([]dbmapping.ProfileWithAddons, bool) {
-	selectedUsers := []dbmapping.ProfileWithAddons{}
-
-	err := c.Db.Select(&selectedUsers, c.Db.Rebind("SELECT * FROM (SELECT p.*, l.symbol AS league_symbol, l.id AS league_id, pl.telegram_id FROM players pl, profiles p, leagues l WHERE p.player_id = pl.id AND l.id = pl.league_id AND (p.nickname LIKE ? OR p.telegram_nickname LIKE ?) ORDER BY p.id DESC LIMIT 100000) AS find_users_table GROUP BY player_id"), "%"+pattern+"%", "%"+pattern+"%")
-	if err != nil {
-		c.Log.Error(err.Error())
-		return selectedUsers, false
+func (u *Users) foundUsersMessage(update *tgbotapi.Update, users map[int]*dbmapping.PlayerProfile) {
+	var keys []int
+	for i := range users {
+		keys = append(keys, i)
 	}
+	sort.Ints(keys)
 
-	return selectedUsers, true
-}
-
-func (u *Users) foundUsersMessage(update *tgbotapi.Update, usersArray []dbmapping.ProfileWithAddons) {
 	message := "*Найденные игроки:*\n"
 
-	for i := range usersArray {
-		message += "#" + strconv.Itoa(usersArray[i].PlayerID)
-		message += " " + usersArray[i].LeagueSymbol
-		message += " " + usersArray[i].Nickname
-		if usersArray[i].TelegramNickname != "" {
-			message += " (@" + u.FormatUsername(usersArray[i].TelegramNickname) + ")"
+	for _, i := range keys {
+		message += "#" + strconv.Itoa(users[i].Player.ID)
+		if users[i].HaveProfile {
+			message += " " + users[i].League.Symbol
+			message += " " + users[i].Profile.Nickname
+			if users[i].Profile.TelegramNickname != "" {
+				message += " (@" + u.FormatUsername(users[i].Profile.TelegramNickname) + ")"
+			}
 		}
-		message += " /profile" + strconv.Itoa(usersArray[i].PlayerID) + "\n"
-		message += "Telegram ID: " + strconv.Itoa(usersArray[i].TelegramID) + "\n"
-		message += "Последнее обновление: " + usersArray[i].CreatedAt.Format("02.01.2006 15:04:05") + "\n"
+		message += " /profile" + strconv.Itoa(users[i].Player.ID) + "\n"
+		message += "Telegram ID: " + strconv.Itoa(users[i].Player.TelegramID) + "\n"
+		message += "Последнее обновление: " + users[i].Player.CreatedAt.Format("02.01.2006 15:04:05") + "\n"
 
 		if len(message) > 2000 {
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
@@ -130,12 +116,12 @@ func (u *Users) profileAddFailureMessage(update *tgbotapi.Update) {
 	c.Bot.Send(msg)
 }
 
-func (u *Users) usersList(update *tgbotapi.Update, page int, usersArray []dbmapping.PlayerProfile) {
+func (u *Users) usersList(update *tgbotapi.Update, page int, users map[int]*dbmapping.PlayerProfile) {
 	message := "*Зарегистрированные пользователи бота*\n"
 	message += "Список отсортирован по ID регистрации.\n"
-	message += "Количество зарегистрированных пользователей: " + strconv.Itoa(len(usersArray)) + "\n"
+	message += "Количество зарегистрированных пользователей: " + strconv.Itoa(len(users)) + "\n"
 	message += "Отображаем пользователей с " + strconv.Itoa(((page-1)*25)+1) + " по " + strconv.Itoa(page*25) + "\n"
-	if len(usersArray) > page*25 {
+	if len(users) > page*25 {
 		message += "Переход на следующую страницу: /users" + strconv.Itoa(page+1)
 	}
 	if page > 1 {
@@ -143,30 +129,36 @@ func (u *Users) usersList(update *tgbotapi.Update, page int, usersArray []dbmapp
 	}
 	message += "\n\n"
 
-	for i := range usersArray {
+	var keys []int
+	for i := range users {
+		keys = append(keys, i)
+	}
+	sort.Ints(keys)
+
+	for _, i := range keys {
 		if (i+1 > 25*(page-1)) && (i+1 < (25*page)+1) {
-			message += "#" + strconv.Itoa(usersArray[i].Player.ID)
-			if usersArray[i].HaveProfile {
-				message += " " + usersArray[i].League.Symbol
-				message += " " + usersArray[i].Profile.Nickname
-				if usersArray[i].Profile.TelegramNickname != "" {
-					message += " (@" + u.FormatUsername(usersArray[i].Profile.TelegramNickname) + ")"
+			message += "#" + strconv.Itoa(users[i].Player.ID)
+			if users[i].HaveProfile {
+				message += " " + users[i].League.Symbol
+				message += " " + users[i].Profile.Nickname
+				if users[i].Profile.TelegramNickname != "" {
+					message += " (@" + u.FormatUsername(users[i].Profile.TelegramNickname) + ")"
 				}
-				message += " /profile" + strconv.Itoa(usersArray[i].Player.ID) + "\n"
-				message += "Telegram ID: " + strconv.Itoa(usersArray[i].Player.TelegramID) + "\n"
-				message += "Последнее обновление: " + usersArray[i].Profile.CreatedAt.Format("02.01.2006 15:04:05") + "\n"
+				message += " /profile" + strconv.Itoa(users[i].Player.ID) + "\n"
+				message += "Telegram ID: " + strconv.Itoa(users[i].Player.TelegramID) + "\n"
+				message += "Последнее обновление: " + users[i].Profile.CreatedAt.Format("02.01.2006 15:04:05") + "\n"
 			} else {
-				if usersArray[i].Player.Status == "special" {
+				if users[i].Player.Status == "special" {
 					message += " _суперюзер_\n"
 				} else {
 					message += " _без профиля_\n"
 				}
-				message += "Telegram ID: " + strconv.Itoa(usersArray[i].Player.TelegramID) + "\n"
+				message += "Telegram ID: " + strconv.Itoa(users[i].Player.TelegramID) + "\n"
 			}
 		}
 	}
 
-	if len(usersArray) > page*25 {
+	if len(users) > page*25 {
 		message += "\n"
 		message += "Переход на следующую страницу: /users" + strconv.Itoa(page+1)
 	}
