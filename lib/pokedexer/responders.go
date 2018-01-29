@@ -19,6 +19,12 @@ func (p *Pokedexer) BestPokememesList(update *tgbotapi.Update, playerRaw *dbmapp
 		return "fail"
 	}
 
+	profileRaw, err := c.DataCache.GetProfileByPlayerID(playerRaw.ID)
+	if err != nil {
+		c.Log.Error(err.Error())
+		return "fail"
+	}
+
 	var attacks []int
 	for i := range pokememes {
 		attacks = append(attacks, i)
@@ -37,10 +43,11 @@ func (p *Pokedexer) BestPokememesList(update *tgbotapi.Update, playerRaw *dbmapp
 		for i := range pkE {
 			message += pkE[i].Symbol
 		}
-		message += " /pk" + strconv.Itoa(pk.ID) + "\n"
-		message += "Локации: "
+		message += " /pk" + strconv.Itoa(pk.ID) + "\nЛокации: "
 		for i := range pkL {
 			message += pkL[i].Symbol + pkL[i].Name
+			_, balls := c.Statistics.PossibilityRequiredPokeballs(pkL[i].ID, pk.Grade, profileRaw.LevelID)
+			message += " ⭕" + strconv.Itoa(balls)
 			if i+1 < len(pkL) {
 				message += ", "
 			}
@@ -51,7 +58,16 @@ func (p *Pokedexer) BestPokememesList(update *tgbotapi.Update, playerRaw *dbmapp
 		} else {
 			message += "Нельзя"
 		}
-		message += "\n\n"
+		if len(message) > 3000 {
+			msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
+			msg.ParseMode = "Markdown"
+
+			c.Bot.Send(msg)
+
+			message = ""
+		} else {
+			message += "\n\n"
+		}
 	}
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
