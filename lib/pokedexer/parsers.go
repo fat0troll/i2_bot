@@ -134,6 +134,13 @@ func (p *Pokedexer) ParsePokememe(update *tgbotapi.Update, playerRaw *dbmapping.
 		return "fail"
 	}
 
+	_, err = c.DataCache.GetPokememeByName(pokememeData["name"])
+	if err == nil {
+		// There is already a pokememe with such name
+		p.pokememeAddDuplicateMessage(update)
+		return "fail"
+	}
+
 	newPokememeID, err := c.DataCache.AddPokememe(pokememeData, pokememeLocations, pokememeElements)
 	if err != nil {
 		c.Log.Error(err.Error())
