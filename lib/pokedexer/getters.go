@@ -34,6 +34,21 @@ func (p *Pokedexer) getBestPokememes(playerID int) (map[int]*dbmapping.PokememeF
 				pokememesArray[allPokememes[i].Pokememe.Attack] = allPokememes[i]
 			}
 		}
+	} else if profileRaw.LevelID > 8 {
+		// TODO: Remove it on 10th grade pokememes arrival
+		for i := range allPokememes {
+			if allPokememes[i].Pokememe.Grade == 9 {
+				matchLeague := false
+				for j := range allPokememes[i].Elements {
+					if allPokememes[i].Elements[j].LeagueID == playerRaw.LeagueID {
+						matchLeague = true
+					}
+				}
+				if matchLeague {
+					pokememesArray[allPokememes[i].Pokememe.Attack] = allPokememes[i]
+				}
+			}
+		}
 	} else {
 		for i := range allPokememes {
 			if allPokememes[i].Pokememe.Grade == profileRaw.LevelID+1 {
