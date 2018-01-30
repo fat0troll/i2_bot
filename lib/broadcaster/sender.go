@@ -4,8 +4,8 @@
 package broadcaster
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"strconv"
 )
 
@@ -26,6 +26,14 @@ func (b *Broadcaster) AdminBroadcastMessageSend(update *tgbotapi.Update, playerR
 
 	broadcastingMessageBody := messageRaw.Text
 
+	profileRaw, err := c.DataCache.GetProfileByPlayerID(playerRaw.ID)
+	if err != nil {
+		c.Log.Error(err.Error())
+		return "fail"
+	}
+
+	prettyName := profileRaw.Nickname + "(@" + profileRaw.TelegramNickname + ")"
+
 	privateChats := []dbmapping.Chat{}
 	switch messageRaw.BroadcastType {
 	case "all":
@@ -43,7 +51,7 @@ func (b *Broadcaster) AdminBroadcastMessageSend(update *tgbotapi.Update, playerR
 	for i := range privateChats {
 		chat := privateChats[i]
 		broadcastingMessage := "*Привет, " + chat.Name + "!*\n\n"
-		broadcastingMessage += "*Важное сообщение от администратора *" + c.Users.GetPrettyName(update.Message.From) + "\n\n"
+		broadcastingMessage += "*Важное сообщение от администратора *" + prettyName + "\n\n"
 		broadcastingMessage += broadcastingMessageBody
 
 		msg := tgbotapi.NewMessage(int64(chat.TelegramID), broadcastingMessage)
