@@ -65,15 +65,15 @@ func main() {
 		if update.Message != nil {
 			if update.Message.From != nil {
 				if update.Message.Date > (int(time.Now().Unix()) - 5) {
-					c.Router.RouteRequest(&update)
+					go c.Router.RouteRequest(&update)
 				}
 			}
 		} else if update.InlineQuery != nil {
-			c.Router.RouteInline(&update)
+			go c.Router.RouteInline(&update)
 		} else if update.CallbackQuery != nil {
-			c.Router.RouteCallback(&update)
+			go c.Router.RouteCallback(&update)
 		} else if update.ChosenInlineResult != nil {
-			c.Log.Debug(update.ChosenInlineResult.ResultID)
+			go c.Log.Debug(update.ChosenInlineResult.ResultID)
 		} else {
 			continue
 		}
