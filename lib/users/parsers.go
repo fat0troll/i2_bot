@@ -247,7 +247,11 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 	profileRaw.Exp = expInt
 	profileRaw.EggExp = eggexpInt
 	profileRaw.Power = powerInt
-	profileRaw.WeaponID = weaponRaw.ID
+	if weaponRaw != nil {
+		profileRaw.WeaponID = weaponRaw.ID
+	} else {
+		profileRaw.WeaponID = 0
+	}
 	profileRaw.Crystalls = crystallsInt
 	profileRaw.CreatedAt = time.Now().UTC()
 

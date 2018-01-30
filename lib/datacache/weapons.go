@@ -7,6 +7,7 @@ import (
 	"errors"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
 	"strconv"
+	"strings"
 )
 
 func (dc *DataCache) initWeapons() {
@@ -37,7 +38,7 @@ func (dc *DataCache) loadWeapons() {
 func (dc *DataCache) GetWeaponTypeByName(name string) (*dbmapping.Weapon, error) {
 	dc.weaponsMutex.Lock()
 	for i := range dc.weapons {
-		if dc.weapons[i].Name == name {
+		if strings.HasPrefix(dc.weapons[i].Name, name) {
 			dc.weaponsMutex.Unlock()
 			return dc.weapons[i], nil
 		}
