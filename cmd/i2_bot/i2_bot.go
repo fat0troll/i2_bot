@@ -57,7 +57,7 @@ func main() {
 	c.Cron.Start()
 	c.Log.Info("> Cron started.")
 
-	_, err := c.Bot.SetWebhook(tgbotapi.NewWebhook(c.Cfg.Telegram.WebHookDomain))
+	_, err := c.Bot.SetWebhook(tgbotapi.NewWebhook(c.Cfg.Telegram.WebHookDomain + c.Bot.Token))
 	if err != nil {
 		c.Log.Fatal(err.Error())
 	}
@@ -66,7 +66,7 @@ func main() {
 	go http.ListenAndServe(c.Cfg.Telegram.ListenAddress, nil)
 
 	c.Log.Info("Listening on " + c.Cfg.Telegram.ListenAddress)
-	c.Log.Info("Webhook URL: " + c.Cfg.Telegram.WebHookDomain)
+	c.Log.Info("Webhook URL: " + c.Cfg.Telegram.WebHookDomain + c.Bot.Token)
 
 	for update := range updates {
 		if update.Message != nil {

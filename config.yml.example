@@ -1,6 +1,6 @@
 telegram_connection:
     api_token: "your-awesome-token"
-    webhook_domain: "https://i2bot.wtfteam.pro"
+    webhook_domain: "https://i2bot.wtfteam.pro/"
     listen_address: "0.0.0.0:5000"
 database_connection:
     host: "localhost"
