@@ -21,6 +21,7 @@ import (
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/users"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/welcomer"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"net/http"
 	"time"
 )
 
@@ -56,10 +57,16 @@ func main() {
 	c.Cron.Start()
 	c.Log.Info("> Cron started.")
 
-	u := tgbotapi.NewUpdate(0)
-	u.Timeout = 60
+	_, err := c.Bot.SetWebhook(tgbotapi.NewWebhook(c.Cfg.Telegram.WebHookDomain))
+	if err != nil {
+		c.Log.Fatal(err.Error())
+	}
 
-	updates, _ := c.Bot.GetUpdatesChan(u)
+	updates := c.Bot.ListenForWebhook("/" + c.Bot.Token)
+	go http.ListenAndServe(c.Cfg.Telegram.ListenAddress, nil)
+
+	c.Log.Info("Listening on " + c.Cfg.Telegram.ListenAddress)
+	c.Log.Info("Webhook URL: " + c.Cfg.Telegram.WebHookDomain)
 
 	for update := range updates {
 		if update.Message != nil {

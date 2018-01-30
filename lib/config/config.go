@@ -24,7 +24,9 @@ type DatabaseConnection struct {
 
 // TelegramConnection handles settings for Telegram connection in config.yaml
 type TelegramConnection struct {
-	APIToken string `yaml:"api_token"`
+	APIToken      string `yaml:"api_token"`
+	WebHookDomain string `yaml:"webhook_domain"`
+	ListenAddress string `yaml:"listen_address"`
 }
 
 // SpecialChats handles settings for special chats

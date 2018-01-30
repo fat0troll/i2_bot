@@ -32,7 +32,7 @@ func (b *Broadcaster) AdminBroadcastMessageSend(update *tgbotapi.Update, playerR
 		return "fail"
 	}
 
-	prettyName := profileRaw.Nickname + "(@" + profileRaw.TelegramNickname + ")"
+	prettyName := profileRaw.Nickname + " (@" + profileRaw.TelegramNickname + ")"
 
 	privateChats := []dbmapping.Chat{}
 	switch messageRaw.BroadcastType {
