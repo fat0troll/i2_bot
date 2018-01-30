@@ -69,11 +69,11 @@ func main() {
 				}
 			}
 		} else if update.InlineQuery != nil {
-			go c.Router.RouteInline(&update)
+			c.Router.RouteInline(&update)
 		} else if update.CallbackQuery != nil {
-			go c.Router.RouteCallback(&update)
+			c.Router.RouteCallback(&update)
 		} else if update.ChosenInlineResult != nil {
-			go c.Log.Debug(update.ChosenInlineResult.ResultID)
+			c.Log.Debug(update.ChosenInlineResult.ResultID)
 		} else {
 			continue
 		}

@@ -99,7 +99,7 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 				return c.Talkers.AnyMessageUnauthorized(update)
 			case update.Message.Command() == "send_confirm":
 				if c.Users.PlayerBetterThan(playerRaw, "admin") {
-					c.Broadcaster.AdminBroadcastMessageSend(update, playerRaw)
+					go c.Broadcaster.AdminBroadcastMessageSend(update, playerRaw)
 					return "ok"
 				}
 
