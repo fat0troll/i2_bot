@@ -44,7 +44,7 @@ func (dc *DataCache) AddPlayer(player *dbmapping.Player) (int, error) {
 	}
 
 	insertedPlayer := dbmapping.Player{}
-	err = c.Db.Get(&insertedPlayer, c.Db.Rebind("SELECT * FROM players WHERE telegram_id=:telegram_id, league_id=:league_id, status=:status, created_at=:created_at, updated_at=:updated_at"), &player)
+	err = c.Db.Get(&insertedPlayer, "SELECT * FROM players WHERE telegram_id=? AND created_at=?", player.TelegramID, player.CreatedAt)
 	if err != nil {
 		c.Log.Error(err.Error())
 		return 0, err
