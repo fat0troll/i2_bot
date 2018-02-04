@@ -27,7 +27,7 @@ func (w *Welcomer) groupWelcomeUser(update *tgbotapi.Update, newUser *tgbotapi.U
 		}
 	} else {
 		c.Log.Info("Following profile error is OK.")
-		c.Log.Info(err.Error())
+		c.Log.Info(profileExist.Error())
 		w.alertUserWithoutProfile(update, newUser)
 	}
 
