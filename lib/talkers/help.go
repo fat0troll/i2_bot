@@ -54,6 +54,8 @@ func (t *Talkers) HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Play
 	message += "Список команд\n\n"
 	message += "\\* /me – посмотреть свой сохраненный профиль в боте\n"
 	message += "\\* /best – посмотреть лучших покемонов для поимки\n"
+	message += "\\* /top — топ игроков лиги\n"
+	message += "\\* /top\\_my — топ игроков лиги твоего уровня\n"
 	message += "\\* /pokedeks – получить список известных боту покемемов\n"
 	message += "\\* /reminders — настроить оповещения на Турнир лиг\n"
 	message += "\\* /academy — Академия Инстинкта\n"

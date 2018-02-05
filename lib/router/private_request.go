@@ -75,8 +75,19 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 					c.Users.ProfileMessage(update, playerRaw)
 					return "ok"
 				}
+			case update.Message.Command() == "top":
+				if playerRaw.ID != 0 {
+					return c.Statistics.TopList(update, playerRaw)
+				}
 
 				return c.Talkers.AnyMessageUnauthorized(update)
+			case update.Message.Command() == "top_my":
+				if playerRaw.ID != 0 {
+					return c.Statistics.TopList(update, playerRaw)
+				}
+
+				return c.Talkers.AnyMessageUnauthorized(update)
+
 			case update.Message.Command() == "best":
 				c.Pokedexer.BestPokememesList(update, playerRaw)
 				return "ok"

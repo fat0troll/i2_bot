@@ -26,7 +26,9 @@ import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/jmoiron/sqlx"
 	"github.com/robfig/cron"
+	"net/http"
 	"os"
+	"time"
 )
 
 // Context is an application context struct
@@ -100,57 +102,10 @@ func (c *Context) Init() {
 	c.Cron = crontab
 }
 
-// RegisterRouterInterface registering router interface in application
-func (c *Context) RegisterRouterInterface(ri routerinterface.RouterInterface) {
-	c.Router = ri
-	c.Router.Init()
-}
-
-// RegisterMigrationsInterface registering migrations interface in application
-func (c *Context) RegisterMigrationsInterface(mi migrationsinterface.MigrationsInterface) {
-	c.Migrations = mi
-	c.Migrations.Init()
-}
-
-// RegisterPokedexerInterface registering parsers interface in application
-func (c *Context) RegisterPokedexerInterface(pi pokedexerinterface.PokedexerInterface) {
-	c.Pokedexer = pi
-}
-
-// RegisterTalkersInterface registering talkers interface in application
-func (c *Context) RegisterTalkersInterface(ti talkersinterface.TalkersInterface) {
-	c.Talkers = ti
-	c.Talkers.Init()
-}
-
 // RegisterBroadcasterInterface registering broadcaster interface in application
 func (c *Context) RegisterBroadcasterInterface(bi broadcasterinterface.BroadcasterInterface) {
 	c.Broadcaster = bi
 	c.Broadcaster.Init()
-}
-
-// RegisterWelcomerInterface registering welcomer interface in application
-func (c *Context) RegisterWelcomerInterface(wi welcomerinterface.WelcomerInterface) {
-	c.Welcomer = wi
-	c.Welcomer.Init()
-}
-
-// RegisterPinnerInterface registering pinner interface in application
-func (c *Context) RegisterPinnerInterface(pi pinnerinterface.PinnerInterface) {
-	c.Pinner = pi
-	c.Pinner.Init()
-}
-
-// RegisterReminderInterface registering reminder interface in application
-func (c *Context) RegisterReminderInterface(ri reminderinterface.ReminderInterface) {
-	c.Reminder = ri
-	c.Reminder.Init()
-}
-
-// RegisterForwarderInterface registers forwarder interface in application
-func (c *Context) RegisterForwarderInterface(fi forwarderinterface.ForwarderInterface) {
-	c.Forwarder = fi
-	c.Forwarder.Init()
 }
 
 // RegisterChatterInterface registers chatter interface in application
@@ -165,10 +120,16 @@ func (c *Context) RegisterDataCacheInterface(di datacacheinterface.DataCacheInte
 	c.DataCache.Init()
 }
 
-// RegisterSquaderInterface registers squader interface in application
-func (c *Context) RegisterSquaderInterface(si squaderinterface.SquaderInterface) {
-	c.Squader = si
-	c.Squader.Init()
+// RegisterForwarderInterface registers forwarder interface in application
+func (c *Context) RegisterForwarderInterface(fi forwarderinterface.ForwarderInterface) {
+	c.Forwarder = fi
+	c.Forwarder.Init()
+}
+
+// RegisterMigrationsInterface registering migrations interface in application
+func (c *Context) RegisterMigrationsInterface(mi migrationsinterface.MigrationsInterface) {
+	c.Migrations = mi
+	c.Migrations.Init()
 }
 
 // RegisterOrdersInterface registers orders interface in application
@@ -177,10 +138,27 @@ func (c *Context) RegisterOrdersInterface(oi ordersinterface.OrdersInterface) {
 	c.Orders.Init()
 }
 
-// RegisterUsersInterface registers users interface in application
-func (c *Context) RegisterUsersInterface(ui usersinterface.UsersInterface) {
-	c.Users = ui
-	c.Users.Init()
+// RegisterPinnerInterface registering pinner interface in application
+func (c *Context) RegisterPinnerInterface(pi pinnerinterface.PinnerInterface) {
+	c.Pinner = pi
+	c.Pinner.Init()
+}
+
+// RegisterPokedexerInterface registering parsers interface in application
+func (c *Context) RegisterPokedexerInterface(pi pokedexerinterface.PokedexerInterface) {
+	c.Pokedexer = pi
+}
+
+// RegisterReminderInterface registering reminder interface in application
+func (c *Context) RegisterReminderInterface(ri reminderinterface.ReminderInterface) {
+	c.Reminder = ri
+	c.Reminder.Init()
+}
+
+// RegisterRouterInterface registering router interface in application
+func (c *Context) RegisterRouterInterface(ri routerinterface.RouterInterface) {
+	c.Router = ri
+	c.Router.Init()
 }
 
 // RegisterStatisticsInterface registers statistics interface in application
@@ -189,8 +167,64 @@ func (c *Context) RegisterStatisticsInterface(si statisticsinterface.StatisticsI
 	c.Statistics.Init()
 }
 
+// RegisterSquaderInterface registers squader interface in application
+func (c *Context) RegisterSquaderInterface(si squaderinterface.SquaderInterface) {
+	c.Squader = si
+	c.Squader.Init()
+}
+
+// RegisterTalkersInterface registering talkers interface in application
+func (c *Context) RegisterTalkersInterface(ti talkersinterface.TalkersInterface) {
+	c.Talkers = ti
+	c.Talkers.Init()
+}
+
+// RegisterWelcomerInterface registering welcomer interface in application
+func (c *Context) RegisterWelcomerInterface(wi welcomerinterface.WelcomerInterface) {
+	c.Welcomer = wi
+	c.Welcomer.Init()
+}
+
+// RegisterUsersInterface registers users interface in application
+func (c *Context) RegisterUsersInterface(ui usersinterface.UsersInterface) {
+	c.Users = ui
+	c.Users.Init()
+}
+
 // RunDatabaseMigrations applies migrations on bot's startup
 func (c *Context) RunDatabaseMigrations() {
 	c.Migrations.SetDialect("mysql")
 	c.Migrations.Migrate()
+}
+
+// StartBot starts listening for Telegram updates
+func (c *Context) StartBot() {
+	_, err := c.Bot.SetWebhook(tgbotapi.NewWebhook(c.Cfg.Telegram.WebHookDomain + c.Bot.Token))
+	if err != nil {
+		c.Log.Fatal(err.Error())
+	}
+
+	updates := c.Bot.ListenForWebhook("/" + c.Bot.Token)
+	go http.ListenAndServe(c.Cfg.Telegram.ListenAddress, nil)
+
+	c.Log.Info("Listening on " + c.Cfg.Telegram.ListenAddress)
+	c.Log.Info("Webhook URL: " + c.Cfg.Telegram.WebHookDomain + c.Bot.Token)
+
+	for update := range updates {
+		if update.Message != nil {
+			if update.Message.From != nil {
+				if update.Message.Date > (int(time.Now().Unix()) - 5) {
+					go c.Router.RouteRequest(&update)
+				}
+			}
+		} else if update.InlineQuery != nil {
+			c.Router.RouteInline(&update)
+		} else if update.CallbackQuery != nil {
+			c.Router.RouteCallback(&update)
+		} else if update.ChosenInlineResult != nil {
+			c.Log.Debug(update.ChosenInlineResult.ResultID)
+		} else {
+			continue
+		}
+	}
 }

@@ -20,9 +20,6 @@ import (
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/talkers"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/users"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/welcomer"
-	"github.com/go-telegram-bot-api/telegram-bot-api"
-	"net/http"
-	"time"
 )
 
 var (
@@ -57,32 +54,5 @@ func main() {
 	c.Cron.Start()
 	c.Log.Info("> Cron started.")
 
-	_, err := c.Bot.SetWebhook(tgbotapi.NewWebhook(c.Cfg.Telegram.WebHookDomain + c.Bot.Token))
-	if err != nil {
-		c.Log.Fatal(err.Error())
-	}
-
-	updates := c.Bot.ListenForWebhook("/" + c.Bot.Token)
-	go http.ListenAndServe(c.Cfg.Telegram.ListenAddress, nil)
-
-	c.Log.Info("Listening on " + c.Cfg.Telegram.ListenAddress)
-	c.Log.Info("Webhook URL: " + c.Cfg.Telegram.WebHookDomain + c.Bot.Token)
-
-	for update := range updates {
-		if update.Message != nil {
-			if update.Message.From != nil {
-				if update.Message.Date > (int(time.Now().Unix()) - 5) {
-					go c.Router.RouteRequest(&update)
-				}
-			}
-		} else if update.InlineQuery != nil {
-			c.Router.RouteInline(&update)
-		} else if update.CallbackQuery != nil {
-			c.Router.RouteCallback(&update)
-		} else if update.ChosenInlineResult != nil {
-			c.Log.Debug(update.ChosenInlineResult.ResultID)
-		} else {
-			continue
-		}
-	}
+	c.StartBot()
 }
