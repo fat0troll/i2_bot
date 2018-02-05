@@ -182,6 +182,12 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 				}
 
 				return c.Talkers.AnyMessageUnauthorized(update)
+			case update.Message.Command() == "find_top_attack":
+				if c.Users.PlayerBetterThan(playerRaw, "academic") {
+					return c.Users.FindByTopAttack(update)
+				}
+
+				return c.Talkers.AnyMessageUnauthorized(update)
 
 			case update.Message.Command() == "squad_add_user":
 				return c.Squader.AddUserToSquad(update, playerRaw)

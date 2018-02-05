@@ -49,6 +49,31 @@ func (u *Users) findUserByName(pattern string) map[int]*dbmapping.PlayerProfile 
 	return selectedUsers
 }
 
+func (u *Users) findUserByTopAttack(power int) map[int]*dbmapping.PlayerProfile {
+	selectedUsers := make(map[int]*dbmapping.PlayerProfile)
+	allPlayers := c.DataCache.GetPlayersWithCurrentProfiles()
+
+	profiles := make([]*dbmapping.PlayerProfile, 0)
+
+	for i := range allPlayers {
+		if allPlayers[i].Player.LeagueID == 1 {
+			profiles = append(profiles, allPlayers[i])
+		}
+	}
+
+	sort.Slice(profiles, func(i, j int) bool {
+		return profiles[i].Profile.Power > profiles[j].Profile.Power
+	})
+
+	for i := (power - 1); i < (power + 2); i++ {
+		if profiles[i] != nil {
+			selectedUsers[i] = profiles[i]
+		}
+	}
+
+	return selectedUsers
+}
+
 func (u *Users) foundUsersMessage(update *tgbotapi.Update, users map[int]*dbmapping.PlayerProfile) {
 	var keys []int
 	for i := range users {

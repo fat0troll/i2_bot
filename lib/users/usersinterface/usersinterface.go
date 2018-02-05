@@ -19,6 +19,7 @@ type UsersInterface interface {
 
 	FindByLevel(update *tgbotapi.Update) string
 	FindByName(update *tgbotapi.Update) string
+	FindByTopAttack(update *tgbotapi.Update) string
 	ForeignProfileMessage(update *tgbotapi.Update) string
 	FormatUsername(userName string) string
 	ProfileAddEffectsMessage(update *tgbotapi.Update) string

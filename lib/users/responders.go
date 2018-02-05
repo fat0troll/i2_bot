@@ -51,6 +51,28 @@ func (u *Users) FindByName(update *tgbotapi.Update) string {
 	return "ok"
 }
 
+// FindByTopAttack finds user by top-attack rating
+func (u *Users) FindByTopAttack(update *tgbotapi.Update) string {
+	commandArgs := update.Message.CommandArguments()
+	if commandArgs == "" {
+		c.Talkers.BotError(update)
+		return "fail"
+	}
+
+	attackInt, err := strconv.Atoi(commandArgs)
+	if err != nil {
+		c.Log.Error(err.Error())
+		c.Talkers.BotError(update)
+		return "fail"
+	}
+
+	users := u.findUserByTopAttack(attackInt)
+
+	u.foundUsersMessage(update, users)
+
+	return "ok"
+}
+
 // ForeignProfileMessage shows profile of another user
 func (u *Users) ForeignProfileMessage(update *tgbotapi.Update) string {
 	userNum := strings.TrimPrefix(update.Message.Command(), "profile")
