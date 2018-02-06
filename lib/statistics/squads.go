@@ -30,10 +30,12 @@ func (s *Statistics) SquadStatictics(squadID int) string {
 		playerRaw, err := c.DataCache.GetPlayerByID(squadMembers[i].PlayerID)
 		if err != nil {
 			c.Log.Error(err.Error())
+			continue
 		}
 		profileRaw, err := c.DataCache.GetProfileByPlayerID(playerRaw.ID)
 		if err != nil {
 			c.Log.Error(err.Error())
+			continue
 		}
 
 		fullInfo.Squad = squad
