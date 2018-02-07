@@ -6,9 +6,8 @@ package pokedexer
 import (
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
 	"sort"
+	"strconv"
 )
-
-// External functions
 
 func (p *Pokedexer) getBestPokememes(playerID int) ([]*dbmapping.PokememeFull, bool) {
 	pokememesArray := make([]*dbmapping.PokememeFull, 0)
@@ -30,57 +29,55 @@ func (p *Pokedexer) getBestPokememes(playerID int) ([]*dbmapping.PokememeFull, b
 
 	allPokememes := c.DataCache.GetAllPokememes()
 
-	pokememesArraySorted := make([]*dbmapping.PokememeFull, 0)
-
 	for i := range allPokememes {
-		pokememesArraySorted = append(pokememesArraySorted, allPokememes[i])
+		// Adding only affordable pokememes...
+		if (allPokememes[i].Pokememe.Defence < profileRaw.Power) || allPokememes[i].Pokememe.Purchaseable {
+			// ...and only of needed grade (+1 until 9)
+			neededGrade := 0
+			if profileRaw.LevelID < 9 {
+				neededGrade = profileRaw.LevelID + 1
+			} else {
+				neededGrade = 9
+			}
+			if allPokememes[i].Pokememe.Grade == neededGrade {
+				// ...and only of our elements if our level past 4
+				matchLeague := false
+				if profileRaw.LevelID < 4 {
+					matchLeague = true
+				} else {
+					for j := range allPokememes[i].Elements {
+						if allPokememes[i].Elements[j].LeagueID == playerRaw.LeagueID {
+							matchLeague = true
+						}
+					}
+				}
+				if matchLeague {
+					pokememesArray = append(pokememesArray, allPokememes[i])
+				}
+			}
+		}
 	}
 
-	sort.Slice(pokememesArraySorted, func(i, j int) bool {
-		return pokememesArraySorted[i].Pokememe.Attack > pokememesArraySorted[j].Pokememe.Attack
+	c.Log.Debug(strconv.Itoa(len(pokememesArray)) + " pokememes passed initial /best filtration.")
+
+	// As we have already filtered this array, we need to sort it and pass to view
+	sort.Slice(pokememesArray, func(i, j int) bool {
+		return pokememesArray[i].Pokememe.Attack > pokememesArray[j].Pokememe.Attack
 	})
 
-	if profileRaw.LevelID < 4 {
-		for i := range pokememesArraySorted {
-			if (pokememesArraySorted[i].Pokememe.Defence < profileRaw.Power) || (pokememesArraySorted[i].Pokememe.Purchaseable) {
-				if allPokememes[i].Pokememe.Grade == profileRaw.LevelID+1 {
-					pokememesArray = append(pokememesArray, pokememesArraySorted[i])
-				}
+	if len(pokememesArray) > 5 {
+		idx := 0
+
+		pokememesArrayShorted := make([]*dbmapping.PokememeFull, 0)
+
+		for i := range pokememesArray {
+			if idx < 5 {
+				pokememesArrayShorted = append(pokememesArrayShorted, pokememesArray[i])
 			}
+			idx++
 		}
-	} else if profileRaw.LevelID > 8 {
-		// TODO: Remove it on 10th grade pokememes arrival
-		for i := range allPokememes {
-			if pokememesArraySorted[i].Pokememe.Grade == 9 {
-				matchLeague := false
-				for j := range pokememesArraySorted[i].Elements {
-					if pokememesArraySorted[i].Elements[j].LeagueID == playerRaw.LeagueID {
-						matchLeague = true
-					}
-				}
-				if matchLeague {
-					if (pokememesArraySorted[i].Pokememe.Defence < profileRaw.Power) || (pokememesArraySorted[i].Pokememe.Purchaseable) {
-						pokememesArray = append(pokememesArray, pokememesArraySorted[i])
-					}
-				}
-			}
-		}
-	} else {
-		for i := range allPokememes {
-			if pokememesArraySorted[i].Pokememe.Grade == profileRaw.LevelID+1 {
-				matchLeague := false
-				for j := range pokememesArraySorted[i].Elements {
-					if pokememesArraySorted[i].Elements[j].LeagueID == playerRaw.LeagueID {
-						matchLeague = true
-					}
-				}
-				if matchLeague {
-					if (pokememesArraySorted[i].Pokememe.Defence < profileRaw.Power) || (pokememesArraySorted[i].Pokememe.Purchaseable) {
-						pokememesArray = append(pokememesArray, pokememesArraySorted[i])
-					}
-				}
-			}
-		}
+
+		pokememesArray = pokememesArrayShorted
 	}
 
 	return pokememesArray, true
