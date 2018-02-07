@@ -89,7 +89,10 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 				return c.Talkers.AnyMessageUnauthorized(update)
 
 			case update.Message.Command() == "best":
-				c.Pokedexer.BestPokememesList(update, playerRaw)
+				c.Pokedexer.AdvicePokememesList(update, playerRaw)
+				return "ok"
+			case update.Message.Command() == "advice":
+				c.Pokedexer.AdvicePokememesList(update, playerRaw)
 				return "ok"
 			case update.Message.Command() == "reminders":
 				return c.Reminder.AlarmsList(update, playerRaw)

@@ -210,6 +210,7 @@ func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 	message += "\n\n⏰Последнее обновление профиля: " + profileRaw.CreatedAt.Format("02.01.2006 15:04:05")
 	message += "\nНе забывай обновляться, это важно для получения актуальной информации.\n\n"
 	message += "/best – посмотреть лучших покемемов для поимки\n"
+	message += "/advice – посмотреть самых дорогих покемемов для поимки\n"
 	message += "/top — посмотреть лучших игроков лиги\n"
 	message += "/top\\_my — посмотреть лучших игроков лиги твоего уровня\n"
 

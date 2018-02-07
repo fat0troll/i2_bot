@@ -14,7 +14,7 @@ type PokedexerInterface interface {
 
 	PokememesList(update *tgbotapi.Update)
 	PokememeInfo(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
-	BestPokememesList(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
+	AdvicePokememesList(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
 
 	DeletePokememe(update *tgbotapi.Update) string
 }
