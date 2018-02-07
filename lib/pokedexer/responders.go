@@ -25,14 +25,12 @@ func (p *Pokedexer) BestPokememesList(update *tgbotapi.Update, playerRaw *dbmapp
 		return "fail"
 	}
 
-	var attacks []int
-	for i := range pokememes {
-		attacks = append(attacks, i)
-	}
-	sort.Sort(sort.Reverse(sort.IntSlice(attacks)))
+	sort.Slice(pokememes, func(i, j int) bool {
+		return pokememes[i].Pokememe.Attack > pokememes[j].Pokememe.Attack
+	})
 
 	message := "*Лучшие покемемы для ловли*\n\n"
-	for _, i := range attacks {
+	for i := range pokememes {
 		pk := pokememes[i].Pokememe
 		pkL := pokememes[i].Locations
 		pkE := pokememes[i].Elements
