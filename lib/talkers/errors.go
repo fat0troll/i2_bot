@@ -10,7 +10,7 @@ import (
 // AnyMessageUnauthorized throws when user can't do something
 func (t *Talkers) AnyMessageUnauthorized(update *tgbotapi.Update) string {
 	message := "Извини, действие для тебя недоступно. Возможно, у меня нет твоего профиля или же твои права недостаточны для совершения данного действия\n\n"
-	message += "Если тебе кажется, что это ошибка, пиши @fat0troll.\n"
+	message += "Техническая поддержка бота: https://t.me/joinchat/AAkt5EgFBU9Q9iXJMvDG6A.\n"
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ParseMode = "Markdown"
@@ -23,7 +23,7 @@ func (t *Talkers) AnyMessageUnauthorized(update *tgbotapi.Update) string {
 // BotError throws when bot can't do something
 func (t *Talkers) BotError(update *tgbotapi.Update) string {
 	message := "Ой, внутренняя ошибка в боте :(\n\n"
-	message += "Напиши @fat0troll, приложив форвардом последние сообщения до этого.\n"
+	message += "Техническая поддержка бота: https://t.me/joinchat/AAkt5EgFBU9Q9iXJMvDG6A. Напиши сюда, приложив скриншоты с перепиской бота.\n"
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ParseMode = "Markdown"
