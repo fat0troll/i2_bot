@@ -94,6 +94,15 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 			case update.Message.Command() == "advice":
 				c.Pokedexer.AdvicePokememesList(update, playerRaw)
 				return "ok"
+			case update.Message.Command() == "best_all":
+				c.Pokedexer.AdvicePokememesList(update, playerRaw)
+				return "ok"
+			case update.Message.Command() == "advice_all":
+				c.Pokedexer.AdvicePokememesList(update, playerRaw)
+				return "ok"
+			case update.Message.Command() == "best_nofilter":
+				c.Pokedexer.AdvicePokememesList(update, playerRaw)
+				return "ok"
 			case update.Message.Command() == "reminders":
 				return c.Reminder.AlarmsList(update, playerRaw)
 

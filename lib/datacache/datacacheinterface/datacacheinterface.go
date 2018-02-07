@@ -30,5 +30,7 @@ type DataCacheInterface interface {
 	DeletePokememeByID(pokememeID int) error
 
 	GetLeagueBySymbol(symbol string) (*dbmapping.League, error)
+
+	GetWeaponTypeByID(weaponID int) (*dbmapping.Weapon, error)
 	GetWeaponTypeByName(name string) (*dbmapping.Weapon, error)
 }

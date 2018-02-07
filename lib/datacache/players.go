@@ -92,8 +92,9 @@ func (dc *DataCache) GetOrCreatePlayerByTelegramID(telegramID int) (*dbmapping.P
 
 // GetPlayerByID returns player from datacache by ID
 func (dc *DataCache) GetPlayerByID(playerID int) (*dbmapping.Player, error) {
-	c.Log.Info("DataCache: Getting player with ID=", playerID)
+	c.Log.Info("DataCache: Getting player with ID = ", playerID)
 	if dc.players[playerID] != nil {
+		c.Log.Debug("DataCache: found player with ID = " + strconv.Itoa(playerID))
 		return dc.players[playerID], nil
 	}
 

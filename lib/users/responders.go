@@ -127,12 +127,10 @@ func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 	if err != nil {
 		c.Log.Error(err)
 	}
-	weapon := dbmapping.Weapon{}
-	if profileRaw.WeaponID != 0 {
-		err = c.Db.Get(&weapon, c.Db.Rebind("SELECT * FROM weapons WHERE id=?"), profileRaw.WeaponID)
-		if err != nil {
-			c.Log.Error(err)
-		}
+	weapon, err := c.DataCache.GetWeaponTypeByID(profileRaw.WeaponID)
+	if err != nil {
+		// It's non critical
+		c.Log.Debug(err.Error())
 	}
 	profilePokememes := []dbmapping.ProfilePokememe{}
 	err = c.Db.Select(&profilePokememes, c.Db.Rebind("SELECT * FROM profiles_pokememes WHERE profile_id=?"), profileRaw.ID)

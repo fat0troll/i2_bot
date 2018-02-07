@@ -13,21 +13,10 @@ import (
 // AdvicePokememesList shows list for catching
 // It may be list of best or most valuable pokememes
 func (p *Pokedexer) AdvicePokememesList(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
-	pokememes := make([]*dbmapping.PokememeFull, 0)
-	if update.Message.Command() == "best" {
-		neededPokememes, ok := p.getBestPokememes(playerRaw.ID)
-		if !ok {
-			c.Log.Error("Cannot get pokememes from getter!")
-			return "fail"
-		}
-		pokememes = neededPokememes
-	} else {
-		neededPokememes, ok := p.getHighPricedPokememes(playerRaw.ID)
-		if !ok {
-			c.Log.Error("Cannot get pokememes from getter!")
-			return "fail"
-		}
-		pokememes = neededPokememes
+	pokememes, ok := p.getAdvicePokememes(playerRaw.ID, update.Message.Command())
+	if !ok {
+		c.Log.Error("Cannot get pokememes from getter!")
+		return "fail"
 	}
 
 	profileRaw, err := c.DataCache.GetProfileByPlayerID(playerRaw.ID)
@@ -37,10 +26,17 @@ func (p *Pokedexer) AdvicePokememesList(update *tgbotapi.Update, playerRaw *dbma
 	}
 
 	message := ""
-	if update.Message.Command() == "best" {
-		message += "*Лучшие покемемы для поимки*\n\n"
-	} else {
-		message += "*Самые дорогие покемемы для поимки*\n\n"
+	switch update.Message.Command() {
+	case "best":
+		message += "*Пять топовых покемемов для поимки*\n\n"
+	case "advice":
+		message += "*Пять самых дорогих покемемов*\n\n"
+	case "best_all":
+		message += "*Все топовые покемемы для твоего уровня*\n\n"
+	case "advice_all":
+		message += "*Все самые дорогие покемемы для твоего уровня*\n\n"
+	case "best_nofilter":
+		message += "*Пять топовых покемемов для поимки без фильтра по элементам*\n\n"
 	}
 	for i := range pokememes {
 		pk := pokememes[i].Pokememe
@@ -68,10 +64,10 @@ func (p *Pokedexer) AdvicePokememesList(update *tgbotapi.Update, playerRaw *dbma
 		} else {
 			message += "Нельзя"
 		}
-		if update.Message.Command() == "advice" {
+		if update.Message.Command() == "advice" || update.Message.Command() == "advice_all" {
 			message += "\nСтоимость продажи: 💲" + c.Statistics.GetPrintablePoints(pk.Price)
 		}
-		if len(message) > 3000 {
+		if len(message) > 4000 {
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 			msg.ParseMode = "Markdown"
 

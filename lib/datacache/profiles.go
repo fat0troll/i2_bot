@@ -111,6 +111,7 @@ func (dc *DataCache) GetProfileByID(profileID int) (*dbmapping.Profile, error) {
 // GetProfileByPlayerID returns current profile for player
 func (dc *DataCache) GetProfileByPlayerID(playerID int) (*dbmapping.Profile, error) {
 	if dc.currentProfiles[playerID] != nil {
+		c.Log.Debug("DataCache: found current profile for player with ID = " + strconv.Itoa(playerID))
 		return dc.currentProfiles[playerID], nil
 	}
 

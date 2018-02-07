@@ -34,6 +34,18 @@ func (dc *DataCache) loadWeapons() {
 
 // External functions
 
+// GetWeaponTypeByID returns weapon type from datacache by given ID
+func (dc *DataCache) GetWeaponTypeByID(weaponID int) (*dbmapping.Weapon, error) {
+	dc.weaponsMutex.Lock()
+	if dc.weapons[weaponID] != nil {
+		c.Log.Debug("DataCache: found weapon type with ID = " + strconv.Itoa(weaponID))
+		dc.weaponsMutex.Unlock()
+		return dc.weapons[weaponID], nil
+	}
+	dc.weaponsMutex.Unlock()
+	return nil, errors.New("There is no weapon type with ID = " + strconv.Itoa(weaponID))
+}
+
 // GetWeaponTypeByName returns weapon type from datacache by weapon name
 func (dc *DataCache) GetWeaponTypeByName(name string) (*dbmapping.Weapon, error) {
 	dc.weaponsMutex.Lock()

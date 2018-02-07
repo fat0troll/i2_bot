@@ -7,6 +7,7 @@ import (
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/config"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"time"
 )
 
 // AcademyMessage gives user link to Bastion
@@ -53,8 +54,13 @@ func (t *Talkers) HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Play
 	message += "Текущая версия: *" + config.VERSION + "*\n\n"
 	message += "Список команд\n\n"
 	message += "\\* /me – посмотреть свой сохраненный профиль в боте\n"
-	message += "\\* /best – посмотреть лучших покемонов для поимки\n"
-	message += "\\* /advice – посмотреть самых дорогих покемонов для поимки\n"
+	message += "\\* /best – посмотреть 5 лучших покемонов для поимки\n"
+	message += "\\* /advice – посмотреть 5 самых дорогих покемонов для поимки\n"
+	message += "\\* /best\\_all – посмотреть всех лучших покемонов для поимки\n"
+	message += "\\* /advice\\_all – посмотреть всех самых дорогих покемонов для поимки\n"
+	if playerRaw.CreatedAt.Before(time.Now().Add(30 * 24 * 60 * 60 * time.Second)) {
+		message += "\\* /best\\_nofilter – посмотреть пять лучших покемонов для поимки _без фильтра по элементам_ (полезно для сборки максимально топовой руки на высоком уровне)\n"
+	}
 	message += "\\* /top — топ игроков лиги\n"
 	message += "\\* /top\\_my — топ игроков лиги твоего уровня\n"
 	message += "\\* /pokedeks – получить список известных боту покемемов\n"
