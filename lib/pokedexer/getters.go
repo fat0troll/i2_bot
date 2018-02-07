@@ -30,8 +30,12 @@ func (p *Pokedexer) getBestPokememes(playerID int) (map[int]*dbmapping.PokememeF
 	allPokememes := c.DataCache.GetAllPokememes()
 	if profileRaw.LevelID < 4 {
 		for i := range allPokememes {
-			if allPokememes[i].Pokememe.Grade == profileRaw.LevelID+1 {
-				pokememesArray[allPokememes[i].Pokememe.Attack] = allPokememes[i]
+			if (allPokememes[i].Pokememe.Defence < profileRaw.Power) || (allPokememes[i].Pokememe.Purchaseable) {
+				if len(pokememesArray) < 5 {
+					if allPokememes[i].Pokememe.Grade == profileRaw.LevelID+1 {
+						pokememesArray[allPokememes[i].Pokememe.Attack] = allPokememes[i]
+					}
+				}
 			}
 		}
 	} else if profileRaw.LevelID > 8 {
@@ -45,7 +49,11 @@ func (p *Pokedexer) getBestPokememes(playerID int) (map[int]*dbmapping.PokememeF
 					}
 				}
 				if matchLeague {
-					pokememesArray[allPokememes[i].Pokememe.Attack] = allPokememes[i]
+					if (allPokememes[i].Pokememe.Defence < profileRaw.Power) || (allPokememes[i].Pokememe.Purchaseable) {
+						if len(pokememesArray) < 5 {
+							pokememesArray[allPokememes[i].Pokememe.Attack] = allPokememes[i]
+						}
+					}
 				}
 			}
 		}
@@ -59,7 +67,11 @@ func (p *Pokedexer) getBestPokememes(playerID int) (map[int]*dbmapping.PokememeF
 					}
 				}
 				if matchLeague {
-					pokememesArray[allPokememes[i].Pokememe.Attack] = allPokememes[i]
+					if (allPokememes[i].Pokememe.Defence < profileRaw.Power) || (allPokememes[i].Pokememe.Purchaseable) {
+						if len(pokememesArray) < 5 {
+							pokememesArray[allPokememes[i].Pokememe.Attack] = allPokememes[i]
+						}
+					}
 				}
 			}
 		}
