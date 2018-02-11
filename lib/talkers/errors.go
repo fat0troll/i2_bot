@@ -20,6 +20,18 @@ func (t *Talkers) AnyMessageUnauthorized(update *tgbotapi.Update) string {
 	return "fail"
 }
 
+// BanError throws error for persona non grata
+func (t *Talkers) BanError(update *tgbotapi.Update) string {
+	message := "Вам здесь не рады. Использование бота для вас запрещено."
+
+	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
+	msg.ParseMode = "Markdown"
+
+	c.Bot.Send(msg)
+
+	return "fail"
+}
+
 // BotError throws when bot can't do something
 func (t *Talkers) BotError(update *tgbotapi.Update) string {
 	message := "Ой, внутренняя ошибка в боте :(\n\n"

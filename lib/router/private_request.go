@@ -20,6 +20,10 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 	var squadInfoMsg = regexp.MustCompile("/show_squad(\\d+)\\z")
 	var orderSendMsg = regexp.MustCompile("/send_order(\\d+)\\z")
 
+	if playerRaw.Status == "banned" {
+		return c.Talkers.BanError(update)
+	}
+
 	if update.Message.ForwardFrom != nil {
 		if update.Message.ForwardFrom.ID != 360402625 {
 			c.Log.Info("Forward from another user or bot. Ignoring")

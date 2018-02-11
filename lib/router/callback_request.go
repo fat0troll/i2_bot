@@ -16,6 +16,10 @@ func (r *Router) RouteCallback(update *tgbotapi.Update) string {
 		return "fail"
 	}
 
+	if playerRaw.Status == "banned" {
+		return c.Talkers.BanError(update)
+	}
+
 	var enableAlarmCallback = regexp.MustCompile("enable_reminder_(\\d+)\\z")
 	var disableAlarmCallback = regexp.MustCompile("disable_reminder_(\\d+)\\z")
 

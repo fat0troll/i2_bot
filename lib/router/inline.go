@@ -19,7 +19,7 @@ func (r *Router) RouteInline(update *tgbotapi.Update) string {
 
 	results := make([]interface{}, 0)
 
-	if playerRaw.LeagueID != 1 {
+	if (playerRaw.LeagueID != 1) || (playerRaw.Status == "banned") {
 		article := tgbotapi.NewInlineQueryResultArticle("0", "Команда боту @PokememBroBot:", "👤Герой")
 		article.Description = "👤Герой"
 

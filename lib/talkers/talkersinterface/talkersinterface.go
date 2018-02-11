@@ -4,8 +4,8 @@
 package talkersinterface
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 // TalkersInterface implements Talkers for importing via appcontex
@@ -18,6 +18,7 @@ type TalkersInterface interface {
 	FiveOffer(update *tgbotapi.Update) string
 
 	AnyMessageUnauthorized(update *tgbotapi.Update) string
+	BanError(update *tgbotapi.Update) string
 	BotError(update *tgbotapi.Update) string
 
 	LongMessage(update *tgbotapi.Update) string
