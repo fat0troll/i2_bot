@@ -301,7 +301,7 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 		}
 		if strings.HasPrefix(meme, "❤") {
 			rarity = "valentine"
-			meme = strings.Replace(meme, "❤️", "", 1)
+			meme = strings.Replace(meme, "❤", "", 1)
 		}
 		u.fillProfilePokememe(newProfileID, meme, attack, rarity)
 	}
