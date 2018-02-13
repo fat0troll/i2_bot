@@ -4,9 +4,9 @@
 package pokedexer
 
 import (
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"sort"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"strconv"
 )
 
@@ -70,10 +70,10 @@ func (p *Pokedexer) pokememeAddSuccessMessage(update *tgbotapi.Update, newPokeme
 	c.Bot.Send(msg)
 }
 
-func (p *Pokedexer) pokememeAddDuplicateMessage(update *tgbotapi.Update) {
-	message := "*Мы уже знаем об этом покемеме*\n\n"
-	message += "Посмотреть всех известных боту покемемов можно командой /pokedeks\n\n"
-	message += "Если у покемема изменились описание или характеристики, напиши @fat0troll для обновления базы."
+func (p *Pokedexer) pokememeAddDuplicateMessage(update *tgbotapi.Update, pokememeID int) {
+	message := "*Покемем успешно обновлён.*\n\n"
+	message += "Посмотреть всех известных боту покемемов можно командой /pokedeks\n"
+	message += "Посмотреть свежеобновлённого покемема можно командой /pk" + strconv.Itoa(pokememeID)
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ParseMode = "Markdown"

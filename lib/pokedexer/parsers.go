@@ -4,9 +4,9 @@
 package pokedexer
 
 import (
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"regexp"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"strconv"
 	"strings"
 	// "time"
@@ -136,9 +136,16 @@ func (p *Pokedexer) ParsePokememe(update *tgbotapi.Update, playerRaw *dbmapping.
 
 	_, err = c.DataCache.GetPokememeByName(pokememeData["name"])
 	if err == nil {
-		// There is already a pokememe with such name
-		p.pokememeAddDuplicateMessage(update)
-		return "fail"
+		// There is already a pokememe with such name, updating
+		pokememeID, err := c.DataCache.UpdatePokememe(pokememeData, pokememeLocations, pokememeElements)
+		if err != nil {
+			c.Log.Error(err.Error())
+			p.pokememeAddFailureMessage(update)
+			return "fail"
+		}
+
+		p.pokememeAddDuplicateMessage(update, pokememeID)
+		return "ok"
 	}
 
 	newPokememeID, err := c.DataCache.AddPokememe(pokememeData, pokememeLocations, pokememeElements)

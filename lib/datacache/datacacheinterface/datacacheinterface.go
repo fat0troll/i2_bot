@@ -28,6 +28,7 @@ type DataCacheInterface interface {
 	GetPokememeByID(pokememeID int) (*dbmapping.PokememeFull, error)
 	GetPokememeByName(name string) (*dbmapping.PokememeFull, error)
 	DeletePokememeByID(pokememeID int) error
+	UpdatePokememe(pokememeData map[string]string, pokememeLocations map[string]string, pokememeElements map[string]string) (int, error)
 
 	GetLeagueBySymbol(symbol string) (*dbmapping.League, error)
 
