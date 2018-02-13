@@ -4,22 +4,22 @@
 package main
 
 import (
-	"git.wtfteam.pro/fat0troll/i2_bot/lib/appcontext"
-	"git.wtfteam.pro/fat0troll/i2_bot/lib/broadcaster"
-	"git.wtfteam.pro/fat0troll/i2_bot/lib/chatter"
-	"git.wtfteam.pro/fat0troll/i2_bot/lib/datacache"
-	"git.wtfteam.pro/fat0troll/i2_bot/lib/forwarder"
-	"git.wtfteam.pro/fat0troll/i2_bot/lib/migrations"
-	"git.wtfteam.pro/fat0troll/i2_bot/lib/orders"
-	"git.wtfteam.pro/fat0troll/i2_bot/lib/pinner"
-	"git.wtfteam.pro/fat0troll/i2_bot/lib/pokedexer"
-	"git.wtfteam.pro/fat0troll/i2_bot/lib/reminder"
-	"git.wtfteam.pro/fat0troll/i2_bot/lib/router"
-	"git.wtfteam.pro/fat0troll/i2_bot/lib/squader"
-	"git.wtfteam.pro/fat0troll/i2_bot/lib/statistics"
-	"git.wtfteam.pro/fat0troll/i2_bot/lib/talkers"
-	"git.wtfteam.pro/fat0troll/i2_bot/lib/users"
-	"git.wtfteam.pro/fat0troll/i2_bot/lib/welcomer"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/appcontext"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/broadcaster"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/chatter"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/datacache"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/forwarder"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/migrations"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/orders"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/pinner"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/pokedexer"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/reminder"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/router"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/squader"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/statistics"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/talkers"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/users"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/welcomer"
 )
 
 var (

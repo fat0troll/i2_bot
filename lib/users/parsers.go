@@ -4,7 +4,7 @@
 package users
 
 import (
-	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"regexp"
 	"strconv"
@@ -298,6 +298,10 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 		if strings.HasPrefix(meme, "❄") {
 			rarity = "new year"
 			meme = strings.Replace(meme, "❄", "", 1)
+		}
+		if strings.HasPrefix(meme, "❤️") {
+			rarity = "valentine"
+			meme = strings.Replace(meme, "❤️", "", 1)
 		}
 		u.fillProfilePokememe(newProfileID, meme, attack, rarity)
 	}

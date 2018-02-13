@@ -4,7 +4,7 @@
 package chatter
 
 import (
-	"git.wtfteam.pro/fat0troll/i2_bot/lib/dbmapping"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"strconv"
 	"strings"

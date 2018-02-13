@@ -4,8 +4,8 @@
 package migrations
 
 import (
-	"git.wtfteam.pro/fat0troll/i2_bot/lib/appcontext"
-	"git.wtfteam.pro/fat0troll/i2_bot/lib/migrations/migrationsinterface"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/appcontext"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/migrations/migrationsinterface"
 )
 
 // Migrations handles all functions of migrations package

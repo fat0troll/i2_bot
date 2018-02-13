@@ -5,7 +5,7 @@ package connections
 
 import (
 	"bitbucket.org/pztrn/mogrus"
-	"git.wtfteam.pro/fat0troll/i2_bot/lib/config"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/config"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/jmoiron/sqlx"
