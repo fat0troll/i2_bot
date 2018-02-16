@@ -121,7 +121,7 @@ func (ct *Chatter) GetAllPrivateChats() ([]dbmapping.Chat, bool) {
 func (ct *Chatter) GetLeaguePrivateChats() ([]dbmapping.Chat, bool) {
 	privateChats := []dbmapping.Chat{}
 
-	err := c.Db.Select(&privateChats, "SELECT c.* FROM chats c, players p WHERE c.chat_type='private' AND p.telegram_id = c.telegram_id AND p.league_id = 1 AND p.status != 'spy' AND p.status != 'league_changed'")
+	err := c.Db.Select(&privateChats, "SELECT c.* FROM chats c, players p WHERE c.chat_type='private' AND p.telegram_id = c.telegram_id AND p.league_id = 1 AND p.status != 'spy' AND p.status != 'league_changed' AND p.status !='banned'")
 	if err != nil {
 		c.Log.Error(err)
 		return privateChats, false
