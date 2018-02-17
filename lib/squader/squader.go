@@ -167,10 +167,14 @@ func (s *Squader) AddUserToSquad(update *tgbotapi.Update, adderRaw *dbmapping.Pl
 	if !c.Users.PlayerBetterThan(playerRaw, "admin") {
 		if playerRaw.LeagueID != 1 {
 			return s.squadUserAdditionFailure(update)
-		} else if squadRaw.Squad.MinLevel > profileRaw.LevelID {
-			return s.squadUserAdditionFailure(update)
-		} else if squadRaw.Squad.MaxLevel-1 < profileRaw.LevelID {
-			return s.squadUserAdditionFailure(update)
+		} else if userType != "commander" {
+			if squadRaw.Squad.MinLevel > profileRaw.LevelID {
+				c.Log.Debug("Levels mismatch: min"+strconv.Itoa(squadRaw.Squad.MinLevel), ", player: "+strconv.Itoa(profileRaw.LevelID))
+				return s.squadUserAdditionFailure(update)
+			} else if squadRaw.Squad.MaxLevel-1 < profileRaw.LevelID {
+				c.Log.Debug("Levels mismatch: max"+strconv.Itoa(squadRaw.Squad.MaxLevel), ", player: "+strconv.Itoa(profileRaw.LevelID))
+				return s.squadUserAdditionFailure(update)
+			}
 		}
 	}
 
