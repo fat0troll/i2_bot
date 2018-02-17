@@ -21,6 +21,7 @@ type Pokememe struct {
 	Purchaseable bool      `db:"purchaseable"`
 	ImageURL     string    `db:"image_url"`
 	PlayerID     int       `db:"player_id"`
+	IsActive     int       `db:"is_active"`
 	CreatedAt    time.Time `db:"created_at"`
 }
 

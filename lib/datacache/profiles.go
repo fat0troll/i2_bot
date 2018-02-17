@@ -64,6 +64,16 @@ func (dc *DataCache) AddProfile(profile *dbmapping.Profile) (int, error) {
 	dc.currentProfilesMutex.Lock()
 	dc.profiles[insertedProfile.ID] = &insertedProfile
 	dc.currentProfiles[insertedProfile.PlayerID] = &insertedProfile
+
+	dc.squadsMutex.Lock()
+	for i := range dc.squadPlayers {
+		for j := range dc.squadPlayers[i] {
+			if dc.squadPlayers[i][j].Player.ID == insertedProfile.PlayerID {
+				dc.squadPlayers[i][j].Profile = insertedProfile
+			}
+		}
+	}
+	dc.squadsMutex.Unlock()
 	dc.currentProfilesMutex.Unlock()
 	dc.profilesMutex.Unlock()
 

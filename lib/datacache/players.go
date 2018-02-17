@@ -150,6 +150,15 @@ func (dc *DataCache) UpdatePlayerTimestamp(playerID int) error {
 			dc.playersMutex.Unlock()
 			return err
 		}
+		dc.squadsMutex.Lock()
+		for i := range dc.squadPlayers {
+			for j := range dc.squadPlayers[i] {
+				if dc.squadPlayers[i][j].Player.ID == playerID {
+					dc.squadPlayers[i][j].Player = *dc.players[playerID]
+				}
+			}
+		}
+		dc.squadsMutex.Unlock()
 		dc.playersMutex.Unlock()
 		return nil
 	}

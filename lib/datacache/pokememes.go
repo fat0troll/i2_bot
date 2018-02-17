@@ -21,7 +21,7 @@ func (dc *DataCache) initPokememes() {
 func (dc *DataCache) loadPokememes() {
 	c.Log.Info("Load current Pokememes data from database to DataCache...")
 	pokememes := []dbmapping.Pokememe{}
-	err := c.Db.Select(&pokememes, "SELECT * FROM pokememes")
+	err := c.Db.Select(&pokememes, "SELECT * FROM pokememes WHERE is_active=1")
 	if err != nil {
 		// This is critical error and we need to stop immediately!
 		c.Log.Fatal(err.Error())
