@@ -43,6 +43,8 @@ func (dc *DataCache) loadSquads() {
 			dc.squads[squads[i].ID] = &squads[i]
 			dc.squadsWithChats[squads[i].ID] = &squadWithChat
 		}
+
+		dc.squadPlayers[squads[i].ID] = make(map[int]*dbmapping.SquadPlayerFull)
 	}
 
 	for i := range squadsPlayersRelations {
@@ -57,10 +59,6 @@ func (dc *DataCache) loadSquads() {
 			squadPlayer.Profile = *sProfile
 			squadPlayer.Squad = *sSquad
 			squadPlayer.UserRole = squadsPlayersRelations[i].UserType
-
-			if dc.squadPlayers[sSquad.Squad.ID] == nil {
-				dc.squadPlayers[sSquad.Squad.ID] = make(map[int](*dbmapping.SquadPlayerFull))
-			}
 
 			dc.squadPlayers[sSquad.Squad.ID][sPlayer.ID] = &squadPlayer
 		}
