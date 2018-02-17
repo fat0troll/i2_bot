@@ -65,6 +65,12 @@ func (dc *DataCache) loadSquads() {
 	}
 	c.Log.Info("Loaded squads in DataCache: " + strconv.Itoa(len(dc.squads)))
 	c.Log.Info("Loaded players relations to squads in DataCache: " + strconv.Itoa(len(dc.squadPlayers)))
+	// More debug!!!
+	for i := range dc.squadPlayers {
+		for j := range dc.squadPlayers[i] {
+			c.Log.Debugln(dc.squadPlayers[i][j])
+		}
+	}
 	dc.squadsMutex.Unlock()
 }
 
