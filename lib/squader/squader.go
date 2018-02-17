@@ -58,14 +58,11 @@ func (s *Squader) getPlayersForSquad(squadID int) ([]dbmapping.SquadPlayerFull, 
 }
 
 func (s *Squader) isUserAnyCommander(playerID int) bool {
-	squadPlayers := []dbmapping.SquadPlayer{}
-	err := c.Db.Select(&squadPlayers, c.Db.Rebind("SELECT * FROM squads_players WHERE player_id=? AND user_type='commander'"), playerID)
-	if err != nil {
-		c.Log.Debug(err.Error())
-	}
-
-	if len(squadPlayers) > 0 {
-		return true
+	userRoles := c.DataCache.GetUserRolesInSquads(playerID)
+	for i := range userRoles {
+		if userRoles[i].UserRole == "commander" {
+			return true
+		}
 	}
 
 	return false
@@ -190,6 +187,14 @@ func (s *Squader) AddUserToSquad(update *tgbotapi.Update, adderRaw *dbmapping.Pl
 		c.Log.Error(err.Error())
 		return s.squadUserAdditionFailure(update)
 	}
+
+	message := "Привет! Тебя добавили в отряд «" + squadRaw.Chat.Name + "»\n"
+	message += "Присоединиться к чату отряда тут: " + squadRaw.Squad.InviteLink
+
+	msg := tgbotapi.NewMessage(int64(playerRaw.TelegramID), message)
+	msg.ParseMode = "Markdown"
+
+	c.Bot.Send(msg)
 
 	return s.squadUserAdditionSuccess(update)
 }
