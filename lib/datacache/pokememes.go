@@ -228,8 +228,14 @@ func (dc *DataCache) GetAllPokememes() map[int]*dbmapping.PokememeFull {
 	var keys []string
 	keysToIDs := make(map[string]int)
 	for i := range dc.fullPokememes {
-		keys = append(keys, strconv.Itoa(dc.fullPokememes[i].Pokememe.Grade)+"_"+strconv.Itoa(dc.fullPokememes[i].Pokememe.Attack+100000000000000)+"_"+dc.fullPokememes[i].Pokememe.Name)
-		keysToIDs[strconv.Itoa(dc.fullPokememes[i].Pokememe.Grade)+"_"+strconv.Itoa(dc.fullPokememes[i].Pokememe.Attack+100000000000000)+"_"+dc.fullPokememes[i].Pokememe.Name] = i
+		gradeKey := ""
+		if dc.fullPokememes[i].Pokememe.Grade == 0 {
+			gradeKey += "Z"
+		} else {
+			gradeKey += string(rune('A' - 1 + dc.fullPokememes[i].Pokememe.Grade))
+		}
+		keys = append(keys, gradeKey+"_"+strconv.Itoa(dc.fullPokememes[i].Pokememe.Attack+100000000000000)+"_"+dc.fullPokememes[i].Pokememe.Name)
+		keysToIDs[gradeKey+"_"+strconv.Itoa(dc.fullPokememes[i].Pokememe.Attack+100000000000000)+"_"+dc.fullPokememes[i].Pokememe.Name] = i
 	}
 	sort.Strings(keys)
 
