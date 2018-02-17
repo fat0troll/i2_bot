@@ -21,6 +21,7 @@ type DataCacheInterface interface {
 	UpdateChatTitle(chatID int, newTitle string) (*dbmapping.Chat, error)
 
 	AddPlayerToSquad(relation *dbmapping.SquadPlayer) (int, error)
+	GetAllSquadMembers(squadID int) []dbmapping.SquadPlayerFull
 	GetAllSquadsChats() []dbmapping.Chat
 	GetAllSquadsWithChats() []dbmapping.SquadChat
 	GetAvailableSquadsChatsForUser(userID int) []dbmapping.Chat

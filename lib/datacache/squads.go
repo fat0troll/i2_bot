@@ -122,6 +122,21 @@ func (dc *DataCache) AddPlayerToSquad(relation *dbmapping.SquadPlayer) (int, err
 	return insertedRelation.ID, nil
 }
 
+// GetAllSquadMembers returns all squad members by squad ID
+func (dc *DataCache) GetAllSquadMembers(squadID int) []dbmapping.SquadPlayerFull {
+	players := []dbmapping.SquadPlayerFull{}
+	dc.squadsMutex.Lock()
+	for i := range dc.squadPlayers {
+		if i == squadID {
+			for j := range dc.squadPlayers[i] {
+				players = append(players, *dc.squadPlayers[i][j])
+			}
+		}
+	}
+	dc.squadsMutex.Unlock()
+	return players
+}
+
 // GetAllSquadsChats returns all chats belonging to squads
 func (dc *DataCache) GetAllSquadsChats() []dbmapping.Chat {
 	chats := []dbmapping.Chat{}

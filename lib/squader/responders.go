@@ -66,10 +66,7 @@ func (s *Squader) SquadInfo(update *tgbotapi.Update, playerRaw *dbmapping.Player
 	message += c.Statistics.SquadStatictics(squad.Squad.ID)
 	message += "\n"
 
-	squadMembers, ok := s.getPlayersForSquad(squad.Squad.ID)
-	if !ok {
-		return "fail"
-	}
+	squadMembers := c.DataCache.GetAllSquadMembers(squadID)
 	if len(squadMembers) > 0 {
 		message += "Участники отряда:\n"
 		for i := range squadMembers {

@@ -12,51 +12,6 @@ import (
 	"time"
 )
 
-func (s *Squader) getPlayersForSquad(squadID int) ([]dbmapping.SquadPlayerFull, bool) {
-	players := []dbmapping.SquadPlayerFull{}
-	playersRaw := []dbmapping.Player{}
-	squadPlayers := []dbmapping.SquadPlayer{}
-
-	squad, err := c.DataCache.GetSquadByID(squadID)
-	if err != nil {
-		c.Log.Error(err.Error())
-		return players, false
-	}
-
-	err = c.Db.Select(&playersRaw, c.Db.Rebind("SELECT p.* FROM players p, squads_players sp WHERE p.id = sp.player_id AND sp.squad_id=?"), squad.Squad.ID)
-	if err != nil {
-		c.Log.Error(err.Error())
-		return players, false
-	}
-
-	err = c.Db.Select(&squadPlayers, c.Db.Rebind("SELECT * FROM squads_players WHERE squad_id=?"), squad.Squad.ID)
-	if err != nil {
-		c.Log.Error(err.Error())
-		return players, false
-	}
-
-	for i := range playersRaw {
-		for ii := range squadPlayers {
-			if squadPlayers[ii].PlayerID == playersRaw[i].ID {
-				playerWithProfile := dbmapping.SquadPlayerFull{}
-				profile, err := c.DataCache.GetProfileByPlayerID(playersRaw[i].ID)
-				if err != nil {
-					c.Log.Error(err.Error())
-				} else {
-					playerWithProfile.Profile = *profile
-					playerWithProfile.Player = playersRaw[i]
-					playerWithProfile.Squad = *squad
-					playerWithProfile.UserRole = squadPlayers[ii].UserType
-
-					players = append(players, playerWithProfile)
-				}
-			}
-		}
-	}
-
-	return players, true
-}
-
 func (s *Squader) isUserAnyCommander(playerID int) bool {
 	userRoles := c.DataCache.GetUserRolesInSquads(playerID)
 	for i := range userRoles {
@@ -146,10 +101,6 @@ func (s *Squader) AddUserToSquad(update *tgbotapi.Update, adderRaw *dbmapping.Pl
 	}
 
 	if !c.Users.PlayerBetterThan(adderRaw, "admin") {
-		if userType == "commander" {
-			return c.Talkers.AnyMessageUnauthorized(update)
-		}
-
 		userRoles := c.DataCache.GetUserRolesInSquads(adderRaw.ID)
 		isCommander := false
 		for i := range userRoles {
