@@ -22,7 +22,7 @@ func (ct *Chatter) userPrivilegesCheck(update *tgbotapi.Update, user *tgbotapi.U
 	}
 
 	// There are special users, which will bypass these checks
-	specialUsers := []string{"gantz_yaka", "agentpb", "pbhelp"}
+	specialUsers := []string{"gantz_yaka", "agentpb", "pbhelp", "i2_bot", "i2_dev_bot"}
 
 	for j := range specialUsers {
 		if strings.ToLower(user.UserName) == specialUsers[j] {

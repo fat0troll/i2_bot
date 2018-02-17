@@ -116,13 +116,14 @@ func (dc *DataCache) GetLeaguePrivateChats() []dbmapping.Chat {
 
 // GetOrCreateChat returns current or new Chat object by Telegram update
 func (dc *DataCache) GetOrCreateChat(update *tgbotapi.Update) (*dbmapping.Chat, error) {
-	telegramID := update.Message.From.ID
+	telegramID := update.Message.Chat.ID
 	chatRaw := dbmapping.Chat{}
 	c.Log.Info("DataCache: Getting chat with Telegram ID=", telegramID)
 
 	dc.chatsMutex.Lock()
 	for i := range dc.chats {
 		if dc.chats[i].TelegramID == int64(telegramID) {
+			c.Log.Debug("Chat stream found in DataCache")
 			dc.chatsMutex.Unlock()
 			return dc.chats[i], nil
 		}

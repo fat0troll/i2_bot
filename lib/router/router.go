@@ -9,6 +9,7 @@ import (
 
 // RouteRequest decides, what to do with user input
 func (r *Router) RouteRequest(update *tgbotapi.Update) string {
+	c.Log.Debugln(update)
 	playerRaw, err := c.DataCache.GetOrCreatePlayerByTelegramID(update.Message.From.ID)
 	if err != nil {
 		c.Log.Error(err.Error())
@@ -16,6 +17,7 @@ func (r *Router) RouteRequest(update *tgbotapi.Update) string {
 		return "fail"
 	}
 
+	c.Log.Debug("Getting chat...")
 	chatRaw, err := c.DataCache.GetOrCreateChat(update)
 	if err != nil {
 		c.Log.Error(err.Error())
