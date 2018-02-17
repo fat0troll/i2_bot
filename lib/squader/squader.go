@@ -60,6 +60,7 @@ func (s *Squader) getPlayersForSquad(squadID int) ([]dbmapping.SquadPlayerFull, 
 func (s *Squader) isUserAnyCommander(playerID int) bool {
 	userRoles := c.DataCache.GetUserRolesInSquads(playerID)
 	for i := range userRoles {
+		c.Log.Debug("Role for squad with ID=" + strconv.Itoa(userRoles[i].Squad.Squad.ID) + ":" + userRoles[i].UserRole)
 		if userRoles[i].UserRole == "commander" {
 			return true
 		}
