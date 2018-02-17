@@ -4,8 +4,8 @@
 package pokedexer
 
 import (
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"strconv"
 	"strings"
 )
@@ -147,7 +147,26 @@ func (p *Pokedexer) PokememeInfo(update *tgbotapi.Update, playerRaw *dbmapping.P
 		}
 	}
 
-	if calculatePossibilites {
+	if c.Users.PlayerBetterThan(playerRaw, "academic") {
+		message += "\nВероятность поимки:"
+		idx := 1
+		for idx < 10 {
+			levelHeaderPosted := false
+			for i := range pokememe.Locations {
+				percentile, pokeballs := c.Statistics.PossibilityRequiredPokeballs(pokememe.Locations[i].ID, pk.Grade, idx)
+				if pokeballs > 0 {
+					if !levelHeaderPosted {
+						message += "\nУровень: " + strconv.Itoa(idx)
+						levelHeaderPosted = true
+					}
+					message += "\n" + pokememe.Locations[i].Name + " – "
+					message += strconv.FormatFloat(percentile, 'f', 2, 64) + "% или "
+					message += strconv.Itoa(pokeballs) + "⭕"
+				}
+			}
+			idx++
+		}
+	} else if calculatePossibilites {
 		if (pk.Grade < profileRaw.LevelID+2) && (pk.Grade > profileRaw.LevelID-3) {
 			message += "\nВероятность поимки:"
 			for i := range pokememe.Locations {
