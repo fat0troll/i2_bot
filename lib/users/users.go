@@ -4,9 +4,9 @@
 package users
 
 import (
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"sort"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"strconv"
 	"strings"
 	"time"
@@ -94,7 +94,7 @@ func (u *Users) foundUsersMessage(update *tgbotapi.Update, users map[int]*dbmapp
 		}
 		message += " /profile" + strconv.Itoa(users[i].Player.ID) + "\n"
 		message += "Telegram ID: " + strconv.Itoa(users[i].Player.TelegramID) + "\n"
-		message += "Последнее обновление: " + users[i].Player.CreatedAt.Format("02.01.2006 15:04:05") + "\n"
+		message += "Последнее обновление: " + users[i].Profile.CreatedAt.Format("02.01.2006 15:04:05") + "\n"
 
 		if len(message) > 2000 {
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
