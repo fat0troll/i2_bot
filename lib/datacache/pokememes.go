@@ -143,7 +143,7 @@ func (dc *DataCache) AddPokememe(pokememeData map[string]string, pokememeLocatio
 
 	// All objects are prepared, let's fill database with it!
 	c.Log.Debug("Filling pokememe...")
-	_, err := c.Db.NamedExec("INSERT INTO pokememes VALUES(NULL, :grade, :name, :description, :attack, :hp, :mp, :defence, :price, :purchaseable, :image_url, :player_id, :created_at)", &pokememe)
+	_, err := c.Db.NamedExec("INSERT INTO pokememes VALUES(NULL, :grade, :name, :description, :attack, :hp, :mp, :defence, :price, :purchaseable, :image_url, :player_id, 1, :created_at)", &pokememe)
 	if err != nil {
 		return 0, err
 	}
