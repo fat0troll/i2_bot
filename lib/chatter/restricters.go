@@ -4,8 +4,8 @@
 package chatter
 
 import (
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"strconv"
 	"strings"
 )
@@ -44,15 +44,15 @@ func (ct *Chatter) userPrivilegesCheck(update *tgbotapi.Update, user *tgbotapi.U
 	// So, user is not a PokememBro admin. For Bastion and Academy she needs to be league player
 	switch update.Message.Chat.ID {
 	case academyChatID:
-		if playerRaw.LeagueID == 1 && playerRaw.Status != "spy" && playerRaw.Status != "league_changed" {
+		if playerRaw.LeagueID == 1 && playerRaw.Status != "spy" && playerRaw.Status != "league_changed" && playerRaw.Status != "banned" {
 			return true
 		}
 	case bastionChatID:
-		if playerRaw.LeagueID == 1 && playerRaw.Status != "spy" && playerRaw.Status != "league_changed" {
+		if playerRaw.LeagueID == 1 && playerRaw.Status != "spy" && playerRaw.Status != "league_changed" && playerRaw.Status != "banned" {
 			return true
 		}
 	default:
-		availableChatsForUser, _ := c.Squader.GetAvailableSquadChatsForUser(playerRaw)
+		availableChatsForUser := c.DataCache.GetAvailableSquadsChatsForUser(playerRaw.ID)
 		for i := range availableChatsForUser {
 			if update.Message.Chat.ID == availableChatsForUser[i].TelegramID {
 				return true
@@ -86,9 +86,12 @@ func (ct *Chatter) BanUserFromChat(user *tgbotapi.User, chatRaw *dbmapping.Chat)
 	academyChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.AcademyID, 10, 64)
 	hqChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.HeadquartersID, 10, 64)
 	if (chatRaw.TelegramID != bastionChatID) || (chatRaw.TelegramID != academyChatID) {
-		// In Bastion notifications are public in default chat
-		commanders, ok := c.Squader.GetCommandersForSquadViaChat(chatRaw)
-		if ok {
+		squad, err := c.DataCache.GetSquadByChatID(chatRaw.ID)
+		if err != nil {
+			c.Log.Error(err.Error())
+		} else {
+			// In Bastion notifications are public in default chat
+			commanders := c.DataCache.GetCommandersForSquad(squad.ID)
 			for i := range commanders {
 				message := "Некто " + c.Users.GetPrettyName(user) + " попытался зайти в чат _" + chatRaw.Name + "_ и был изгнан ботом, так как не имеет права посещать этот чат."
 
@@ -128,5 +131,5 @@ func (ct *Chatter) ProtectChat(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 		return "fail"
 	}
 
-	return c.Squader.CleanFlood(update, chatRaw)
+	return "ok"
 }

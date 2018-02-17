@@ -4,8 +4,8 @@
 package users
 
 import (
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"strconv"
 	"strings"
 )
@@ -194,8 +194,8 @@ func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 		message += "\n\nСтатус в боте: _игрок_"
 	}
 
-	squadRoles, ok := c.Squader.GetUserRolesInSquads(playerRaw)
-	if ok && len(squadRoles) > 0 {
+	squadRoles := c.DataCache.GetUserRolesInSquads(playerRaw.ID)
+	if len(squadRoles) > 0 {
 		for i := range squadRoles {
 			if squadRoles[i].UserRole == "commander" {
 				message += "\nКомандир отряда " + squadRoles[i].Squad.Chat.Name

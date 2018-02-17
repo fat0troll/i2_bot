@@ -13,12 +13,13 @@ func (s *Statistics) SquadStatictics(squadID int) string {
 	squadMembersWithInformation := []dbmapping.SquadPlayerFull{}
 	squadMembers := []dbmapping.SquadPlayer{}
 
-	squad, ok := c.Squader.GetSquadByID(squadID)
-	if !ok {
+	squad, err := c.DataCache.GetSquadByID(squadID)
+	if err != nil {
+		c.Log.Error(err.Error())
 		return "Невозможно получить информацию о данном отряде. Возможно, он пуст или произошла ошибка."
 	}
 
-	err := c.Db.Select(&squadMembers, c.Db.Rebind("SELECT * FROM squads_players WHERE squad_id=?"), squadID)
+	err = c.Db.Select(&squadMembers, c.Db.Rebind("SELECT * FROM squads_players WHERE squad_id=?"), squadID)
 	if err != nil {
 		c.Log.Error(err.Error())
 		return "Невозможно получить информацию о данном отряде. Возможно, он пуст или произошла ошибка."
@@ -38,7 +39,7 @@ func (s *Statistics) SquadStatictics(squadID int) string {
 			continue
 		}
 
-		fullInfo.Squad = squad
+		fullInfo.Squad = *squad
 		fullInfo.Player = *playerRaw
 		fullInfo.Profile = *profileRaw
 

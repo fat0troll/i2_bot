@@ -34,6 +34,16 @@ type DataCache struct {
 	fullPokememes      map[int]*dbmapping.PokememeFull
 	fullPokememesMutex sync.Mutex
 
+	// Chats
+	chats      map[int]*dbmapping.Chat
+	chatsMutex sync.Mutex
+	// Squads
+	squads                map[int]*dbmapping.Squad
+	squadsWithChats       map[int]*dbmapping.SquadChat
+	squadPlayersRelations map[int]*dbmapping.SquadPlayer
+	squadPlayers          map[int]map[int]*dbmapping.SquadPlayerFull
+	squadsMutex           sync.Mutex
+
 	// Elements
 	elements      map[int]*dbmapping.Element
 	elementsMutex sync.Mutex
@@ -73,4 +83,8 @@ func (dc *DataCache) Init() {
 	dc.loadPlayers()
 	dc.initProfiles()
 	dc.loadProfiles()
+	dc.initChats()
+	dc.loadChats()
+	dc.initSquads()
+	dc.loadSquads()
 }

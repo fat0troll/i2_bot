@@ -17,10 +17,7 @@ func (s *Squader) SquadsList(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 			return c.Talkers.AnyMessageUnauthorized(update)
 		}
 	}
-	squads, ok := s.getAllSquadsWithChats()
-	if !ok {
-		return "fail"
-	}
+	squads := c.DataCache.GetAllSquadsWithChats()
 
 	message := "*Наши отряды:*\n"
 	message += "---\n"
@@ -33,7 +30,6 @@ func (s *Squader) SquadsList(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 		message += "[#" + strconv.Itoa(squads[i].Squad.ID) + "] _" + squads[i].Chat.Name
 		message += "_ /show\\_squad" + strconv.Itoa(squads[i].Squad.ID) + "\n"
 		message += "Telegram ID: " + strconv.FormatInt(squads[i].Chat.TelegramID, 10) + "\n"
-		message += "Флудилка отряда: _" + squads[i].FloodChat.Name + "_\n"
 		message += "Статистика отряда:\n"
 		message += c.Statistics.SquadStatictics(squads[i].Squad.ID)
 	}
@@ -55,13 +51,14 @@ func (s *Squader) SquadInfo(update *tgbotapi.Update, playerRaw *dbmapping.Player
 	}
 
 	if !c.Users.PlayerBetterThan(playerRaw, "admin") {
-		if s.getUserRoleForSquad(squadID, playerRaw.ID) != "commander" {
+		if c.DataCache.GetUserRoleInSquad(squadID, playerRaw.ID) != "commander" {
 			return c.Talkers.AnyMessageUnauthorized(update)
 		}
 	}
 
-	squad, ok := s.GetSquadByID(squadID)
-	if !ok {
+	squad, err := c.DataCache.GetSquadByID(squadID)
+	if err != nil {
+		c.Log.Error(err.Error())
 		return c.Talkers.BotError(update)
 	}
 

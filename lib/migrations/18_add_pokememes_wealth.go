@@ -8,7 +8,7 @@ import (
 	"database/sql"
 )
 
-// AddPokememesWealth prepares database for latest game update in mid-October
+// AddPokememesWealthUp prepares database for latest game update in mid-October
 func AddPokememesWealthUp(tx *sql.Tx) error {
 	_, err := tx.Exec("ALTER TABLE `profiles` ADD COLUMN `pokememes_wealth` INT(11) NOT NULL DEFAULT 0 COMMENT 'Стоимость покемонов на руках' AFTER `wealth`;")
 	if err != nil {

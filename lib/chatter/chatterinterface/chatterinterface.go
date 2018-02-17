@@ -15,13 +15,6 @@ type ChatterInterface interface {
 	BanUserFromChat(user *tgbotapi.User, chatRaw *dbmapping.Chat)
 	ProtectChat(update *tgbotapi.Update, playerRaw *dbmapping.Player, chatRaw *dbmapping.Chat) string
 
-	GetOrCreateChat(update *tgbotapi.Update) (dbmapping.Chat, bool)
-	GetChatByID(chatID int64) (dbmapping.Chat, bool)
-	GetAllPrivateChats() ([]dbmapping.Chat, bool)
-	GetLeaguePrivateChats() ([]dbmapping.Chat, bool)
-	GetAllGroupChats() ([]dbmapping.Chat, bool)
-	GetGroupChatsByIDs(chatsIDs string) ([]dbmapping.Chat, bool)
-
 	UpdateChatTitle(chatRaw *dbmapping.Chat, newTitle string) (*dbmapping.Chat, bool)
 	UpdateChatTelegramID(update *tgbotapi.Update) (*dbmapping.Chat, bool)
 

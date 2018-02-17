@@ -4,9 +4,9 @@
 package squader
 
 import (
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"regexp"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"strconv"
 	"strings"
 	"time"
@@ -17,12 +17,13 @@ func (s *Squader) getPlayersForSquad(squadID int) ([]dbmapping.SquadPlayerFull, 
 	playersRaw := []dbmapping.Player{}
 	squadPlayers := []dbmapping.SquadPlayer{}
 
-	squad, ok := s.GetSquadByID(squadID)
-	if !ok {
+	squad, err := c.DataCache.GetSquadByID(squadID)
+	if err != nil {
+		c.Log.Error(err.Error())
 		return players, false
 	}
 
-	err := c.Db.Select(&playersRaw, c.Db.Rebind("SELECT p.* FROM players p, squads_players sp WHERE p.id = sp.player_id AND sp.squad_id=?"), squad.Squad.ID)
+	err = c.Db.Select(&playersRaw, c.Db.Rebind("SELECT p.* FROM players p, squads_players sp WHERE p.id = sp.player_id AND sp.squad_id=?"), squad.Squad.ID)
 	if err != nil {
 		c.Log.Error(err.Error())
 		return players, false
@@ -38,152 +39,22 @@ func (s *Squader) getPlayersForSquad(squadID int) ([]dbmapping.SquadPlayerFull, 
 		for ii := range squadPlayers {
 			if squadPlayers[ii].PlayerID == playersRaw[i].ID {
 				playerWithProfile := dbmapping.SquadPlayerFull{}
-				profile, _ := c.DataCache.GetProfileByPlayerID(playersRaw[i].ID)
-				playerWithProfile.Profile = *profile
-				playerWithProfile.Player = playersRaw[i]
-				playerWithProfile.Squad = squad
-				playerWithProfile.UserRole = squadPlayers[ii].UserType
+				profile, err := c.DataCache.GetProfileByPlayerID(playersRaw[i].ID)
+				if err != nil {
+					c.Log.Error(err.Error())
+				} else {
+					playerWithProfile.Profile = *profile
+					playerWithProfile.Player = playersRaw[i]
+					playerWithProfile.Squad = *squad
+					playerWithProfile.UserRole = squadPlayers[ii].UserType
 
-				players = append(players, playerWithProfile)
+					players = append(players, playerWithProfile)
+				}
 			}
 		}
 	}
 
 	return players, true
-}
-
-func (s *Squader) getAllSquadsWithChats() ([]dbmapping.SquadChat, bool) {
-	squadsWithChats := []dbmapping.SquadChat{}
-	squads := []dbmapping.Squad{}
-
-	err := c.Db.Select(&squads, "SELECT * FROM squads")
-	if err != nil {
-		c.Log.Error(err)
-		return squadsWithChats, false
-	}
-
-	for i := range squads {
-		chatSquad := dbmapping.SquadChat{}
-		chat := dbmapping.Chat{}
-		floodChat := dbmapping.Chat{}
-		err = c.Db.Get(&chat, c.Db.Rebind("SELECT * FROM chats WHERE id=?"), squads[i].ChatID)
-		if err != nil {
-			c.Log.Error(err)
-			return squadsWithChats, false
-		}
-		err = c.Db.Get(&floodChat, c.Db.Rebind("SELECT * FROM chats WHERE id=?"), squads[i].FloodChatID)
-		if err != nil {
-			c.Log.Error(err)
-			return squadsWithChats, false
-		}
-
-		chatSquad.Squad = squads[i]
-		chatSquad.Chat = chat
-		chatSquad.FloodChat = floodChat
-
-		squadsWithChats = append(squadsWithChats, chatSquad)
-	}
-
-	return squadsWithChats, true
-}
-
-func (s *Squader) createSquad(update *tgbotapi.Update, chatID int, floodChatID int) (dbmapping.Squad, string) {
-	squad := dbmapping.Squad{}
-	chat := dbmapping.Chat{}
-	floodChat := dbmapping.Chat{}
-
-	// Checking if chats in database exist
-	err := c.Db.Get(&chat, c.Db.Rebind("SELECT * FROM chats WHERE id=?"), chatID)
-	if err != nil {
-		c.Log.Error(err)
-		return squad, "fail"
-	}
-	err = c.Db.Get(&floodChat, c.Db.Rebind("SELECT * FROM chats WHERE id=?"), floodChatID)
-	if err != nil {
-		c.Log.Error(err)
-		return squad, "fail"
-	}
-
-	err2 := c.Db.Get(&squad, c.Db.Rebind("SELECT * FROM squads WHERE chat_id IN (?, ?) OR flood_chat_id IN (?, ?)"), chat.ID, floodChat.ID, chat.ID, floodChat.ID)
-	if err2 == nil {
-		return squad, "dup"
-	}
-	c.Log.Debug(err2)
-
-	err = c.Db.Get(&squad, c.Db.Rebind("SELECT * FROM squads WHERE chat_id=? AND flood_chat_id=?"), chatID, floodChatID)
-	if err != nil {
-		c.Log.Debug(err)
-
-		playerRaw, err := c.DataCache.GetPlayerByTelegramID(update.Message.From.ID)
-		if err != nil {
-			c.Log.Error(err.Error())
-			return squad, "fail"
-		}
-
-		squad.AuthorID = playerRaw.ID
-		squad.ChatID = chatID
-		squad.FloodChatID = floodChatID
-		squad.CreatedAt = time.Now().UTC()
-
-		_, err = c.Db.NamedExec("INSERT INTO `squads` VALUES(NULL, :chat_id, :flood_chat_id, :author_id, :created_at)", &squad)
-		if err != nil {
-			c.Log.Error(err)
-			return squad, "fail"
-		}
-
-		err = c.Db.Get(&squad, c.Db.Rebind("SELECT * FROM squads WHERE chat_id=? AND flood_chat_id=?"), chatID, floodChatID)
-		if err != nil {
-			c.Log.Error(err)
-			return squad, "fail"
-		}
-
-		return squad, "ok"
-	}
-
-	return squad, "dup"
-}
-
-func (s *Squader) getSquadByChatID(update *tgbotapi.Update, chatID int) (dbmapping.Squad, string) {
-	squad := dbmapping.Squad{}
-	chat := dbmapping.Chat{}
-
-	// Checking if chat in database exist
-	err := c.Db.Get(&chat, c.Db.Rebind("SELECT * FROM chats WHERE id=?"), chatID)
-	if err != nil {
-		c.Log.Error(err)
-		return squad, "fail"
-	}
-
-	err = c.Db.Get(&squad, c.Db.Rebind("SELECT * FROM squads WHERE chat_id=?"), chat.ID)
-	if err != nil {
-		c.Log.Error(err)
-		return squad, "fail"
-	}
-
-	return squad, "ok"
-}
-
-func (s *Squader) getUserRoleForSquad(squadID int, playerID int) string {
-	squadPlayer := dbmapping.SquadPlayer{}
-	err := c.Db.Get(&squadPlayer, c.Db.Rebind("SELECT * FROM squads_players WHERE squad_id=? AND player_id=?"), squadID, playerID)
-	if err != nil {
-		c.Log.Debug(err.Error())
-		return "nobody"
-	}
-
-	return squadPlayer.UserType
-}
-
-func (s *Squader) deleteFloodMessage(update *tgbotapi.Update) {
-	deleteMessageConfig := tgbotapi.DeleteMessageConfig{
-		ChatID:    update.Message.Chat.ID,
-		MessageID: update.Message.MessageID,
-	}
-
-	_, err := c.Bot.DeleteMessage(deleteMessageConfig)
-	if err != nil {
-		c.Log.Error(err.Error())
-	}
 }
 
 func (s *Squader) isUserAnyCommander(playerID int) bool {
@@ -198,42 +69,6 @@ func (s *Squader) isUserAnyCommander(playerID int) bool {
 	}
 
 	return false
-}
-
-func (s *Squader) squadCreationDuplicate(update *tgbotapi.Update) string {
-	message := "*Отряд уже существует*\n"
-	message += "Проверьте, правильно ли вы ввели команду, и повторите попытку."
-
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ParseMode = "Markdown"
-
-	c.Bot.Send(msg)
-
-	return "fail"
-}
-
-func (s *Squader) squadCreationFailure(update *tgbotapi.Update) string {
-	message := "*Не удалось добавить отряд в базу*\n"
-	message += "Проверьте, правильно ли вы ввели команду, и повторите попытку."
-
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ParseMode = "Markdown"
-
-	c.Bot.Send(msg)
-
-	return "fail"
-}
-
-func (s *Squader) squadCreationSuccess(update *tgbotapi.Update) string {
-	message := "*Отряд успешно добавлен в базу*\n"
-	message += "Просмотреть список отрядов можно командой /squads."
-
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ParseMode = "Markdown"
-
-	c.Bot.Send(msg)
-
-	return "fail"
 }
 
 func (s *Squader) squadUserAdditionFailure(update *tgbotapi.Update) string {
@@ -293,8 +128,12 @@ func (s *Squader) AddUserToSquad(update *tgbotapi.Update, adderRaw *dbmapping.Pl
 		c.Log.Error(err.Error())
 		return s.squadUserAdditionFailure(update)
 	}
-	squadRaw := dbmapping.Squad{}
-	err = c.Db.Get(&squadRaw, c.Db.Rebind("SELECT * FROM squads WHERE id=?"), squadID)
+	profileRaw, err := c.DataCache.GetProfileByPlayerID(playerRaw.ID)
+	if err != nil {
+		c.Log.Error(err.Error())
+		return s.squadUserAdditionFailure(update)
+	}
+	squadRaw, err := c.DataCache.GetSquadByID(squadID)
 	if err != nil {
 		c.Log.Error(err.Error())
 		return s.squadUserAdditionFailure(update)
@@ -313,7 +152,17 @@ func (s *Squader) AddUserToSquad(update *tgbotapi.Update, adderRaw *dbmapping.Pl
 			return c.Talkers.AnyMessageUnauthorized(update)
 		}
 
-		if s.getUserRoleForSquad(squadRaw.ID, adderRaw.ID) != "commander" {
+		userRoles := c.DataCache.GetUserRolesInSquads(adderRaw.ID)
+		isCommander := false
+		for i := range userRoles {
+			if userRoles[i].UserRole == "commander" {
+				if userRoles[i].Squad.Squad.ID == squadRaw.Squad.ID {
+					isCommander = true
+				}
+			}
+		}
+
+		if !isCommander {
 			return c.Talkers.AnyMessageUnauthorized(update)
 		}
 	}
@@ -321,54 +170,26 @@ func (s *Squader) AddUserToSquad(update *tgbotapi.Update, adderRaw *dbmapping.Pl
 	if !c.Users.PlayerBetterThan(playerRaw, "admin") {
 		if playerRaw.LeagueID != 1 {
 			return s.squadUserAdditionFailure(update)
+		} else if squadRaw.Squad.MinLevel > profileRaw.LevelID {
+			return s.squadUserAdditionFailure(update)
+		} else if squadRaw.Squad.MaxLevel-1 < profileRaw.LevelID {
+			return s.squadUserAdditionFailure(update)
 		}
 	}
 
 	// All checks are passed here, creating new item in database
 	playerSquad := dbmapping.SquadPlayer{}
-	playerSquad.SquadID = squadRaw.ID
+	playerSquad.SquadID = squadRaw.Squad.ID
 	playerSquad.PlayerID = playerRaw.ID
 	playerSquad.UserType = userType
 	playerSquad.AuthorID = adderRaw.ID
 	playerSquad.CreatedAt = time.Now().UTC()
 
-	_, err = c.Db.NamedExec("INSERT INTO squads_players VALUES(NULL, :squad_id, :player_id, :user_type, :author_id, :created_at)", &playerSquad)
+	_, err = c.DataCache.AddPlayerToSquad(&playerSquad)
 	if err != nil {
 		c.Log.Error(err.Error())
 		return s.squadUserAdditionFailure(update)
 	}
 
 	return s.squadUserAdditionSuccess(update)
-}
-
-// CreateSquad creates new squad from chat if not already exist
-func (s *Squader) CreateSquad(update *tgbotapi.Update) string {
-	commandArugments := update.Message.CommandArguments()
-	argumentsRx := regexp.MustCompile(`(\d+)\s(\d+)`)
-
-	if !argumentsRx.MatchString(commandArugments) {
-		return s.squadCreationFailure(update)
-	}
-
-	chatNumbers := strings.Split(commandArugments, " ")
-	if len(chatNumbers) < 2 {
-		return s.squadCreationFailure(update)
-	}
-	chatID, _ := strconv.Atoi(chatNumbers[0])
-	if chatID == 0 {
-		return s.squadCreationFailure(update)
-	}
-	floodChatID, _ := strconv.Atoi(chatNumbers[1])
-	if floodChatID == 0 {
-		return s.squadCreationFailure(update)
-	}
-
-	_, ok := s.createSquad(update, chatID, floodChatID)
-	if ok == "fail" {
-		return s.squadCreationFailure(update)
-	} else if ok == "dup" {
-		return s.squadCreationDuplicate(update)
-	}
-
-	return s.squadCreationSuccess(update)
 }

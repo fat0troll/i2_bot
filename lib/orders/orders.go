@@ -26,13 +26,9 @@ func (o *Orders) getOrderByID(orderID int) (dbmapping.Order, bool) {
 
 func (o *Orders) sendOrder(order *dbmapping.Order) string {
 	targetChats := []dbmapping.Chat{}
-	ok := false
 
 	if order.TargetSquads == "all" {
-		targetChats, ok = c.Squader.GetAllSquadChats()
-		if !ok {
-			return "fail"
-		}
+		targetChats = c.DataCache.GetAllSquadsChats()
 
 		// Adding Academy and Bastion chat as they are both the zero chat
 		academyGroupID, _ := strconv.ParseInt(c.Cfg.SpecialChats.AcademyID, 10, 64)
@@ -51,10 +47,13 @@ func (o *Orders) sendOrder(order *dbmapping.Order) string {
 		targetChats = append(targetChats, academyChat)
 		targetChats = append(targetChats, bastionChat)
 	} else {
-		targetChats, ok = c.Squader.GetSquadChatsBySquadsIDs(order.TargetSquads)
-		if !ok {
-			return "fail"
+		targetIDs := make([]int, 0)
+		targetIDsArray := strings.Split(order.TargetSquads, ",")
+		for i := range targetIDsArray {
+			targetID, _ := strconv.Atoi(targetIDsArray[i])
+			targetIDs = append(targetIDs, targetID)
 		}
+		targetChats = c.DataCache.GetSquadsChatsBySquadsIDs(targetIDs)
 
 		targetChatsIDs := strings.Split(order.TargetSquads, ",")
 		for i := range targetChatsIDs {

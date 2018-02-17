@@ -4,8 +4,8 @@
 package broadcaster
 
 import (
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"strconv"
 )
 
@@ -37,15 +37,9 @@ func (b *Broadcaster) AdminBroadcastMessageSend(update *tgbotapi.Update, playerR
 	privateChats := []dbmapping.Chat{}
 	switch messageRaw.BroadcastType {
 	case "all":
-		privateChats, ok = c.Chatter.GetAllPrivateChats()
-		if !ok {
-			return "fail"
-		}
+		privateChats = c.DataCache.GetAllPrivateChats()
 	case "league":
-		privateChats, ok = c.Chatter.GetLeaguePrivateChats()
-		if !ok {
-			return "fail"
-		}
+		privateChats = c.DataCache.GetLeaguePrivateChats()
 	}
 
 	for i := range privateChats {

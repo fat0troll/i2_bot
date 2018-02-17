@@ -41,6 +41,7 @@ func (m *Migrations) Init() {
 	goose.AddNamedMigration("28_fix_locations.go", FixLocationsUp, FixLocationsDown)
 	goose.AddNamedMigration("29_fix_leagues_names.go", FixLeaguesNamesUp, FixLeaguesNamesDown)
 	goose.AddNamedMigration("30_create_alarms.go", CreateAlarmsUp, CreateAlarmsUp)
+	goose.AddNamedMigration("31_change_squads_table.go", ChangeSquadsTableUp, ChangeSquadsTableDown)
 }
 
 // Migrate migrates database to current version

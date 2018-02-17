@@ -69,10 +69,7 @@ func (p *Pinner) PinMessageToAllChats(update *tgbotapi.Update) string {
 		return "fail"
 	}
 
-	groupChats, ok := c.Chatter.GetAllGroupChats()
-	if !ok {
-		return "fail"
-	}
+	groupChats := c.DataCache.GetAllGroupChats()
 
 	return p.execMassMessagePin(update, groupChats)
 }
@@ -100,10 +97,18 @@ func (p *Pinner) PinMessageToSomeChats(update *tgbotapi.Update) string {
 		return "fail"
 	}
 
-	groupChats, ok := c.Chatter.GetGroupChatsByIDs(chatsToPin)
-	if !ok {
-		return "fail"
+	chatsIDs := make([]int, 0)
+	chatsIDsArray := strings.Split(chatsToPin, ",")
+	for i := range chatsIDsArray {
+		chatIDInt, err := strconv.Atoi(chatsIDsArray[i])
+		if err != nil {
+			c.Log.Error(err.Error())
+			return "fail"
+		}
+		chatsIDs = append(chatsIDs, chatIDInt)
 	}
+
+	groupChats := c.DataCache.GetGroupChatsByIDs(chatsIDs)
 	c.Log.Debug("Got " + strconv.Itoa(len(groupChats)) + " group chats...")
 
 	return p.execMassMessagePin(update, groupChats)

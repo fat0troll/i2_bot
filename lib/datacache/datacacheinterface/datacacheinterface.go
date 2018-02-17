@@ -4,12 +4,31 @@
 package datacacheinterface
 
 import (
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 )
 
 // DataCacheInterface implements DataCache for importing via appcontext.
 type DataCacheInterface interface {
 	Init()
+
+	GetAllGroupChats() []dbmapping.Chat
+	GetAllPrivateChats() []dbmapping.Chat
+	GetChatByID(chatID int) (*dbmapping.Chat, error)
+	GetOrCreateChat(update *tgbotapi.Update) (*dbmapping.Chat, error)
+	GetGroupChatsByIDs(chatIDs []int) []dbmapping.Chat
+	GetLeaguePrivateChats() []dbmapping.Chat
+
+	AddPlayerToSquad(relation *dbmapping.SquadPlayer) (int, error)
+	GetAllSquadsChats() []dbmapping.Chat
+	GetAllSquadsWithChats() []dbmapping.SquadChat
+	GetAvailableSquadsChatsForUser(userID int) []dbmapping.Chat
+	GetCommandersForSquad(squadID int) []dbmapping.Player
+	GetSquadByID(squadID int) (*dbmapping.SquadChat, error)
+	GetSquadByChatID(chatID int) (*dbmapping.Squad, error)
+	GetSquadsChatsBySquadsIDs(squadsIDs []int) []dbmapping.Chat
+	GetUserRoleInSquad(squadID int, playerID int) string
+	GetUserRolesInSquads(userID int) []dbmapping.SquadPlayerFull
 
 	AddPlayer(player *dbmapping.Player) (int, error)
 	GetOrCreatePlayerByTelegramID(telegramID int) (*dbmapping.Player, error)

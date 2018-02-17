@@ -4,9 +4,9 @@
 package router
 
 import (
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"regexp"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 )
 
 func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmapping.Player, chatRaw *dbmapping.Chat) string {
@@ -140,12 +140,7 @@ func (r *Router) routePrivateRequest(update *tgbotapi.Update, playerRaw *dbmappi
 				return c.Talkers.AnyMessageUnauthorized(update)
 			case update.Message.Command() == "squads":
 				return c.Squader.SquadsList(update, playerRaw)
-			case update.Message.Command() == "make_squad":
-				if c.Users.PlayerBetterThan(playerRaw, "admin") {
-					return c.Squader.CreateSquad(update)
-				}
 
-				return c.Talkers.AnyMessageUnauthorized(update)
 			case update.Message.Command() == "pin":
 				if c.Users.PlayerBetterThan(playerRaw, "admin") {
 					return c.Pinner.PinMessageToSomeChats(update)

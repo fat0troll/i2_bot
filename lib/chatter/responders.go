@@ -10,10 +10,7 @@ import (
 
 // GroupsList lists all chats where bot exist
 func (ct *Chatter) GroupsList(update *tgbotapi.Update) string {
-	groupChats, ok := ct.getAllGroupChatsWithSquads()
-	if !ok {
-		return "fail"
-	}
+	groupChats := c.DataCache.GetAllGroupChats()
 
 	academyChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.AcademyID, 10, 64)
 	bastionChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.BastionID, 10, 64)
@@ -24,32 +21,29 @@ func (ct *Chatter) GroupsList(update *tgbotapi.Update) string {
 
 	for i := range groupChats {
 		message += "---\n"
-		message += "\\[#" + strconv.Itoa(groupChats[i].Chat.ID) + "] _" + c.Users.FormatUsername(groupChats[i].Chat.Name) + "_\n"
-		message += "Telegram ID: " + strconv.FormatInt(groupChats[i].Chat.TelegramID, 10) + "\n"
-		if groupChats[i].ChatRole == "squad" {
+		message += "\\[#" + strconv.Itoa(groupChats[i].ID) + "] _" + c.Users.FormatUsername(groupChats[i].Name) + "_\n"
+		message += "Telegram ID: " + strconv.FormatInt(groupChats[i].TelegramID, 10) + "\n"
+		squad, squadExistErr := c.DataCache.GetSquadByChatID(groupChats[i].ID)
+		if squadExistErr == nil {
 			message += "Статистика отряда:\n"
-			message += c.Statistics.SquadStatictics(groupChats[i].Squad.ID)
-		} else if groupChats[i].ChatRole == "flood" {
-			message += "Является флудочатом отряда №" + strconv.Itoa(groupChats[i].Squad.ID) + "\n"
+			message += c.Statistics.SquadStatictics(squad.ID)
 		} else {
-			if groupChats[i].Chat.TelegramID == academyChatID {
+			if groupChats[i].TelegramID == academyChatID {
 				message += "Является академией лиги\n"
 			}
-			if groupChats[i].Chat.TelegramID == bastionChatID {
+			if groupChats[i].TelegramID == bastionChatID {
 				message += "Является бастионом лиги\n"
 			}
 
-			if groupChats[i].Chat.TelegramID == defaultChatID {
+			if groupChats[i].TelegramID == defaultChatID {
 				message += "Является чатом по умолчанию лиги\n"
 			}
 
-			if groupChats[i].Chat.TelegramID == hqChatID {
+			if groupChats[i].TelegramID == hqChatID {
 				message += "Является чатом совета лиги\n"
 			}
 		}
 	}
-
-	message += "\nЧтобы создать отряд, введите команду /make\\_squad _X Y_, где _X_ — номер чата с пинами (в нём позволено писать лишь боту и командирам), а _Y_ — чат-флудилка для общения отряда."
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ParseMode = "Markdown"
