@@ -5,9 +5,9 @@ package router
 
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"math/rand"
 	"regexp"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 )
 
 func (r *Router) routeGroupRequest(update *tgbotapi.Update, playerRaw *dbmapping.Player, chatRaw *dbmapping.Chat) string {
@@ -33,22 +33,13 @@ func (r *Router) routeGroupRequest(update *tgbotapi.Update, playerRaw *dbmapping
 	}
 	// New chat names
 	if update.Message.NewChatTitle != "" {
-		_, ok := c.Chatter.UpdateChatTitle(chatRaw, update.Message.NewChatTitle)
-		if ok {
-			return "ok"
+		_, err := c.DataCache.UpdateChatTitle(chatRaw.ID, update.Message.NewChatTitle)
+		if err != nil {
+			c.Log.Error(err.Error())
+			return "fail"
 		}
 
-		return "fail"
-	}
-
-	// New chat IDs (usually on supergroup creation)
-	if (update.Message.MigrateToChatID != 0) && (update.Message.MigrateFromChatID != 0) {
-		_, ok := c.Chatter.UpdateChatTelegramID(update)
-		if ok {
-			return "ok"
-		}
-
-		return "fail"
+		return "ok"
 	}
 
 	// easter eggs

@@ -18,6 +18,7 @@ type DataCacheInterface interface {
 	GetOrCreateChat(update *tgbotapi.Update) (*dbmapping.Chat, error)
 	GetGroupChatsByIDs(chatIDs []int) []dbmapping.Chat
 	GetLeaguePrivateChats() []dbmapping.Chat
+	UpdateChatTitle(chatID int, newTitle string) (*dbmapping.Chat, error)
 
 	AddPlayerToSquad(relation *dbmapping.SquadPlayer) (int, error)
 	GetAllSquadsChats() []dbmapping.Chat

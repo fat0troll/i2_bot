@@ -168,3 +168,22 @@ func (dc *DataCache) GetOrCreateChat(update *tgbotapi.Update) (*dbmapping.Chat, 
 
 	return &chatRaw, nil
 }
+
+// UpdateChatTitle updates chat title with new one
+func (dc *DataCache) UpdateChatTitle(chatID int, newTitle string) (*dbmapping.Chat, error) {
+	chatRaw, err := c.DataCache.GetChatByID(chatID)
+	if err != nil {
+		return nil, err
+	}
+	chatRaw.Name = newTitle
+	_, err = c.Db.NamedExec("UPDATE chats SET name=:name WHERE id=:id", &chatRaw)
+	if err != nil {
+		return nil, err
+	}
+
+	dc.chatsMutex.Lock()
+	dc.chats[chatRaw.ID] = chatRaw
+	dc.chatsMutex.Unlock()
+
+	return dc.chats[chatRaw.ID], nil
+}
