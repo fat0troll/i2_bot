@@ -50,7 +50,7 @@ func (dc *DataCache) loadSquads() {
 	for i := range squadsPlayersRelations {
 		sPlayer := dc.players[squadsPlayersRelations[i].PlayerID]
 		sProfile := dc.currentProfiles[squadsPlayersRelations[i].PlayerID]
-		sSquad := dc.squadsWithChats[squadsPlayersRelations[i].PlayerID]
+		sSquad := dc.squadsWithChats[squadsPlayersRelations[i].SquadID]
 		if sPlayer != nil && sProfile != nil && sSquad != nil {
 			dc.squadPlayersRelations[squadsPlayersRelations[i].ID] = &squadsPlayersRelations[i]
 
@@ -61,16 +61,20 @@ func (dc *DataCache) loadSquads() {
 			squadPlayer.UserRole = squadsPlayersRelations[i].UserType
 
 			dc.squadPlayers[sSquad.Squad.ID][sPlayer.ID] = &squadPlayer
+		} else {
+			if sPlayer == nil {
+				c.Log.Debug("Alert: player with ID=" + strconv.Itoa(squadsPlayersRelations[i].PlayerID) + "is nil")
+			}
+			if sProfile == nil {
+				c.Log.Debug("Alert: player with ID=" + strconv.Itoa(squadsPlayersRelations[i].PlayerID) + "has no current profile")
+			}
+			if sSquad == nil {
+				c.Log.Debug("Alert: squad with ID=" + strconv.Itoa(squadsPlayersRelations[i].SquadID) + "is nil")
+			}
 		}
 	}
 	c.Log.Info("Loaded squads in DataCache: " + strconv.Itoa(len(dc.squads)))
 	c.Log.Info("Loaded players relations to squads in DataCache: " + strconv.Itoa(len(dc.squadPlayers)))
-	// More debug!!!
-	for i := range dc.squadPlayers {
-		for j := range dc.squadPlayers[i] {
-			c.Log.Debugln(dc.squadPlayers[i][j])
-		}
-	}
 	dc.squadsMutex.Unlock()
 }
 
