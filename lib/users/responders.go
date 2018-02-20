@@ -165,7 +165,11 @@ func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 	message += "\n💲" + c.Statistics.GetPrintablePoints(profileRaw.Wealth)
 	message += " |💎" + strconv.Itoa(profileRaw.Crystalls)
 	message += " |⭕" + strconv.Itoa(profileRaw.Pokeballs)
-	message += "\n⚔Атака: " + c.Statistics.GetPrintablePoints(weapon.Power) + " + " + c.Statistics.GetPrintablePoints(attackPokememes) + "\n"
+	if weapon != nil {
+		message += "\n⚔Атака: " + c.Statistics.GetPrintablePoints(weapon.Power) + " + " + c.Statistics.GetPrintablePoints(attackPokememes) + "\n"
+	} else {
+		message += "\n⚔Атака: " + c.Statistics.GetPrintablePoints(attackPokememes) + "\n"
+	}
 
 	if profileRaw.WeaponID != 0 {
 		message += "\n🔫Оружие: " + weapon.Name + " " + c.Statistics.GetPrintablePoints(weapon.Power) + "⚔"
