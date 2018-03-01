@@ -89,7 +89,7 @@ func (t *Talkers) HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Play
 	message += "Для поддержания сервера и его стабильной оплаты нужны средства. К сожалению, далеко не всегда они находятся в нужный момент, но всегда есть люди, готовые помочь. Я благодарю их за поддержку:\n\n"
 	message += "\\* @vanushinvi, этот месяц 500, суммарно 500\n"
 	message += "\\* @TechniqueOne, этот месяц 500, суммарно 500\n"
-	message += "\\* @Antropophag, этот месяц 500, суммарно 500\n"
+	message += "\\* @Antropophag, этот месяц 300, суммарно 300\n"
 	message += "Выразить благодарность и попасть в список: 4377 7300 0246 7362\n"
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
