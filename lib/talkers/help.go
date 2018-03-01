@@ -90,6 +90,7 @@ func (t *Talkers) HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Play
 	message += "\\* @vanushinvi\n"
 	message += "\\* @TechniqueOne\n"
 	message += "\\* @Antropophag\n"
+	message += "\\* @nokio404\n"
 	message += "Выразить благодарность и попасть в список: 4377 7300 0246 7362\n"
 	message += "_Топ ранжируется по размеру благодарности. Здесь может быть ваша реклама!_"
 
