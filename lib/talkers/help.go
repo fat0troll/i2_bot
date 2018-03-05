@@ -87,6 +87,7 @@ func (t *Talkers) HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Play
 	message += "Техническая поддержка бота: https://t.me/joinchat/AAkt5EgFBU9Q9iXJMvDG6A\n"
 	message += "\n*Благодарности*:\n"
 	message += "Для поддержания сервера и его стабильной оплаты нужны средства. К сожалению, далеко не всегда они находятся в нужный момент, но всегда есть люди, готовые помочь. Я благодарю их за поддержку:\n\n"
+	message += "\\* @Lenorag\n"
 	message += "\\* @vanushinvi\n"
 	message += "\\* @TechniqueOne\n"
 	message += "\\* @Antropophag\n"
