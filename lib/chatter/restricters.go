@@ -4,10 +4,11 @@
 package chatter
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"strconv"
 	"strings"
+
+	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 )
 
 func (ct *Chatter) userPrivilegesCheck(update *tgbotapi.Update, user *tgbotapi.User) bool {
@@ -116,9 +117,11 @@ func (ct *Chatter) ProtectChat(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 	if update.Message.NewChatMembers != nil {
 		newUsers := *update.Message.NewChatMembers
 		if len(newUsers) > 0 {
+			c.Log.Debug("New users joined/added to chat. Checking rights for them.")
 			for i := range newUsers {
 				newUserPassed := ct.userPrivilegesCheck(update, &newUsers[i])
 				if !newUserPassed {
+					c.Log.Debug("This user can't be here: removing from chat...")
 					ct.BanUserFromChat(&newUsers[i], chatRaw)
 				}
 			}
@@ -127,6 +130,7 @@ func (ct *Chatter) ProtectChat(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 
 	existingUserPassed := ct.userPrivilegesCheck(update, update.Message.From)
 	if !existingUserPassed {
+		c.Log.Debug("Existing chat user can't be here. Vanishing...")
 		ct.BanUserFromChat(update.Message.From, chatRaw)
 		return "fail"
 	}
