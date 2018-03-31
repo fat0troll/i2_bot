@@ -34,7 +34,7 @@ func (dc *DataCache) getWeapons() []datamapping.Weapon {
 	weapons = append(weapons, datamapping.Weapon{4, "Титановая бита", 2000, 10000})
 	weapons = append(weapons, datamapping.Weapon{5, "Алмазная бита", 10000, 100000})
 	weapons = append(weapons, datamapping.Weapon{6, "Криптонитовая бита", 100000, 500000})
-	weapons = append(weapons, datamapping.Weapon{5, "Буханка из пятёры", 1000000, 5000000})
+	weapons = append(weapons, datamapping.Weapon{7, "Буханка из пятёры", 1000000, 5000000})
 
 	return weapons
 }
