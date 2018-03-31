@@ -4,6 +4,8 @@
 package router
 
 import (
+	"strconv"
+
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
@@ -25,8 +27,10 @@ func (r *Router) RouteRequest(update tgbotapi.Update) string {
 	}
 
 	if update.Message.Chat.IsGroup() || update.Message.Chat.IsSuperGroup() {
+		c.Log.Debug("Routing group request in group with ID = " + strconv.Itoa(int(chatRaw.TelegramID)))
 		return r.routeGroupRequest(update, playerRaw, chatRaw)
 	} else if update.Message.Chat.IsPrivate() {
+		c.Log.Debug("Routing private request for user with ID = " + strconv.Itoa(int(chatRaw.TelegramID)))
 		return r.routePrivateRequest(update, playerRaw, chatRaw)
 	}
 
