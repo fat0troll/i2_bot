@@ -4,13 +4,14 @@
 package users
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"regexp"
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 )
 
 // Internal functions
@@ -174,8 +175,11 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 					pkAttack := ""
 					if strings.Contains(pokememeString, "🔟") {
 						pkAttack = pkPointsArray[0]
-					} else {
+					} else if strings.Contains(pokememeString, "⃣") {
 						pkAttack = pkPointsArray[1]
+					} else {
+						// Something went wrong
+						return c.Talkers.BotError(update)
 					}
 					pkName := strings.Split(pokememeString, "+")[0]
 					pkName = strings.Replace(pkName, " ⭐", "", 1)
