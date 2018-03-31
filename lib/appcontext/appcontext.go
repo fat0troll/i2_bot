@@ -6,6 +6,11 @@ package appcontext
 import (
 	"bitbucket.org/pztrn/flagger"
 	"bitbucket.org/pztrn/mogrus"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"github.com/jmoiron/sqlx"
+	"github.com/robfig/cron"
+	"net/http"
+	"os"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/broadcaster/broadcasterinterface"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/chatter/chatterinterface"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/config"
@@ -23,11 +28,6 @@ import (
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/talkers/talkersinterface"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/users/usersinterface"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/welcomer/welcomerinterface"
-	"github.com/go-telegram-bot-api/telegram-bot-api"
-	"github.com/jmoiron/sqlx"
-	"github.com/robfig/cron"
-	"net/http"
-	"os"
 	"time"
 )
 
@@ -62,7 +62,7 @@ func (c *Context) Init() {
 	l.Initialize()
 
 	log := l.CreateLogger("i2_bot")
-	log.CreateOutput("stdout", os.Stdout, true, "debug")
+	log.CreateOutput("stdout", os.Stdout, true, "info")
 	c.Log = log
 
 	c.StartupFlags = flagger.New(c.Log)

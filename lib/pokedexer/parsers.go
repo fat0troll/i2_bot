@@ -30,8 +30,17 @@ func (p *Pokedexer) ParsePokememe(update *tgbotapi.Update, playerRaw *dbmapping.
 		c.Log.Debug("Processing string: " + pokememeStringsArray[i])
 		if strings.Contains(pokememeStringsArray[i], "⃣") {
 			// Strings with name and grade
-			pokememeData["grade"] = string(pokememeRunesArray[i][0])
-			pokememeData["name"] = string(pokememeRunesArray[i][3:])
+			splitGradeAndName := strings.Split(string(pokememeRunesArray[i]), " ")
+			gradeNumberRegexp := regexp.MustCompile("[0-9]+")
+			pokememeData["grade"] = strings.Join(gradeNumberRegexp.FindAllString(splitGradeAndName[0], -1), "")
+			pokememeData["name"] = strings.Join(splitGradeAndName[1:], " ")
+		}
+
+		// Special case: "10" emoji
+		if strings.Contains(pokememeStringsArray[i], "🔟") {
+			// Strings with name and grade
+			pokememeData["grade"] = "10"
+			pokememeData["name"] = string(pokememeStringsArray[i][5:])
 		}
 
 		if i == 1 {

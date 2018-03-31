@@ -43,6 +43,7 @@ func (dc *DataCache) loadPokememes() {
 	dc.pokememesMutex.Lock()
 	dc.fullPokememesMutex.Lock()
 	for i := range pokememes {
+		c.Log.Debug("Loading pokememe with name: " + pokememes[i].Name)
 		dc.pokememes[pokememes[i].ID] = &pokememes[i]
 
 		// Filling fullPokememes
@@ -121,6 +122,7 @@ func (dc *DataCache) AddPokememe(pokememeData map[string]string, pokememeLocatio
 	}
 	pokememe.ImageURL = pokememeData["image"]
 	pokememe.PlayerID = creatorID
+	pokememe.IsActive = 1
 	pokememe.CreatedAt = time.Now().UTC()
 
 	locations := []datamapping.Location{}
@@ -153,6 +155,7 @@ func (dc *DataCache) AddPokememe(pokememeData map[string]string, pokememeLocatio
 	insertedPokememe := dbmapping.Pokememe{}
 	err = c.Db.Get(&insertedPokememe, c.Db.Rebind("SELECT * FROM pokememes WHERE grade=? AND name=?"), pokememe.Grade, pokememe.Name)
 	if err != nil {
+		c.Log.Debug("Can't find newly added pokememe!")
 		return 0, err
 	}
 

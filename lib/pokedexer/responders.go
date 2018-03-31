@@ -42,7 +42,7 @@ func (p *Pokedexer) AdvicePokememesList(update *tgbotapi.Update, playerRaw *dbma
 		pk := pokememes[i].Pokememe
 		pkL := pokememes[i].Locations
 		pkE := pokememes[i].Elements
-		message += strconv.Itoa(pk.Grade) + "⃣ "
+		message += "*[" + strconv.Itoa(pk.Grade) + "]* "
 		message += pk.Name + " (⚔"
 		message += c.Statistics.GetPrintablePoints(pk.Attack)
 		message += ", 🛡" + c.Statistics.GetPrintablePoints(pk.Defence) + ")"
@@ -118,7 +118,7 @@ func (p *Pokedexer) PokememeInfo(update *tgbotapi.Update, playerRaw *dbmapping.P
 
 	pk := pokememe.Pokememe
 
-	message := strconv.Itoa(pk.Grade) + "⃣ *" + pk.Name + "*\n"
+	message := "*[" + strconv.Itoa(pk.Grade) + "]* *" + pk.Name + "*\n"
 	message += pk.Description + "\n\n"
 	message += "Элементы:"
 	for i := range pokememe.Elements {

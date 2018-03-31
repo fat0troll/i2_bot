@@ -4,8 +4,8 @@
 package pokedexer
 
 import (
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"sort"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"strconv"
 	"strings"
 )
@@ -40,14 +40,16 @@ func (p *Pokedexer) getAdvicePokememes(playerID int, adviceType string) ([]*dbma
 	}
 
 	allPokememes := c.DataCache.GetAllPokememes()
+	neededGrade := 0
+	if profileRaw.LevelID < 10 {
+		neededGrade = profileRaw.LevelID + 1
+	} else {
+		neededGrade = 10
+	}
+
+	c.Log.Debug("This player will search for grade: " + strconv.Itoa(neededGrade))
 
 	for i := range allPokememes {
-		neededGrade := 0
-		if profileRaw.LevelID < 9 {
-			neededGrade = profileRaw.LevelID + 1
-		} else {
-			neededGrade = 9
-		}
 		if allPokememes[i].Pokememe.Grade == neededGrade {
 			matchLeague := false
 			if profileRaw.LevelID < 4 {

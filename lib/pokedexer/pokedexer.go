@@ -33,8 +33,8 @@ func (p *Pokedexer) pokememesListing(update *tgbotapi.Update, page int, pokememe
 		if (i+1 > 50*(page-1)) && (i+1 < (50*page)+1) {
 			pk := pokememesArray[i].Pokememe
 			pkE := pokememesArray[i].Elements
-			message += strconv.Itoa(i+1) + ". " + strconv.Itoa(pk.Grade)
-			message += "⃣ *" + pk.Name
+			message += strconv.Itoa(i+1) + ". *[" + strconv.Itoa(pk.Grade)
+			message += "]* *" + pk.Name
 			message += "* (" + c.Statistics.GetPrintablePoints(pk.HP) + "-" + c.Statistics.GetPrintablePoints(pk.MP) + ") ⚔️ *"
 			message += c.Statistics.GetPrintablePoints(pk.Attack) + "* \\["
 			for j := range pkE {
