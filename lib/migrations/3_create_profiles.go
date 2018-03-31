@@ -1,5 +1,5 @@
 // i2_bot – Instinct PokememBro Bot
-// Copyright (c) 2017 Vladimir "fat0troll" Hodakov
+// Copyright (c) 2017-2018 Vladimir "fat0troll" Hodakov
 
 package migrations
 
@@ -25,19 +25,16 @@ func CreateProfilesUp(tx *sql.Tx) error {
 	request += "UNIQUE KEY `id` (`id`),"
 	request += "KEY `profiles_created_at` (`created_at`),"
 	request += "KEY `profiles_nickname` (`nickname`)"
-	request += ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='Профили зарегистрированных игроков';"
+	request += ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='Профили зарегистрированных игроков'"
+
 	_, err := tx.Exec(request)
-	if err != nil {
-		return err
-	}
-	return nil
+
+	return err
 }
 
 // CreateProfilesDown drops `profiles` table
 func CreateProfilesDown(tx *sql.Tx) error {
-	_, err := tx.Exec("DROP TABLE `profiles`;")
-	if err != nil {
-		return err
-	}
-	return nil
+	_, err := tx.Exec("DROP TABLE `profiles`")
+
+	return err
 }

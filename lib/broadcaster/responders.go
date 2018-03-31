@@ -1,48 +1,41 @@
 // i2_bot – Instinct PokememBro Bot
-// Copyright (c) 2017 Vladimir "fat0troll" Hodakov
+// Copyright (c) 2017-2018 Vladimir "fat0troll" Hodakov
 
 package broadcaster
 
 import (
+	"strconv"
+
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
-	"strconv"
 )
 
 // AdminBroadcastMessageCompose saves message for future broadcast
 func (b *Broadcaster) AdminBroadcastMessageCompose(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
 	broadcastingMessageBody := update.Message.CommandArguments()
-	messageRaw, ok := dbmapping.Broadcast{}, false
-
+	messageMode := "none"
 	switch update.Message.Command() {
 	case "send_all":
-		messageRaw, ok = b.createBroadcastMessage(playerRaw, broadcastingMessageBody, "all")
-		if !ok {
-			return "fail"
-		}
+		messageMode = "all"
 	case "send_league":
-		messageRaw, ok = b.createBroadcastMessage(playerRaw, broadcastingMessageBody, "league")
-		if !ok {
-			return "fail"
-		}
+		messageMode = "league"
+	}
+
+	messageRaw, ok := b.createBroadcastMessage(playerRaw, broadcastingMessageBody, messageMode)
+	if !ok {
+		return "fail"
 	}
 
 	message := "Сообщение сохранено в базу.\n"
 	message += "Выглядеть оно будет так:"
 
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ParseMode = "Markdown"
-
-	c.Bot.Send(msg)
+	c.Sender.SendMarkdownAnswer(update, message)
 
 	broadcastingMessage := "*Привет, %username%!*\n\n"
 	broadcastingMessage += "*Важное сообщение от администратора " + update.Message.From.FirstName + " " + update.Message.From.LastName + "* (@" + update.Message.From.UserName + ")\n\n"
 	broadcastingMessage += messageRaw.Text
 
-	msg = tgbotapi.NewMessage(update.Message.Chat.ID, broadcastingMessage)
-	msg.ParseMode = "Markdown"
-
-	c.Bot.Send(msg)
+	c.Sender.SendMarkdownAnswer(update, broadcastingMessage)
 
 	switch update.Message.Command() {
 	case "send_all":
@@ -51,10 +44,7 @@ func (b *Broadcaster) AdminBroadcastMessageCompose(update *tgbotapi.Update, play
 		message = "Чтобы отправить сообщение всем игрокам лиги Инстинкт, отправь команду /send\\_confirm " + strconv.Itoa(messageRaw.ID)
 	}
 
-	msg = tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ParseMode = "Markdown"
-
-	c.Bot.Send(msg)
+	c.Sender.SendMarkdownAnswer(update, message)
 
 	return "ok"
 }

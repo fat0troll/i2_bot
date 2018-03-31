@@ -4,12 +4,13 @@
 package router
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"regexp"
+
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 // RouteCallback routes inline requests to bot
-func (r *Router) RouteCallback(update *tgbotapi.Update) string {
+func (r *Router) RouteCallback(update tgbotapi.Update) string {
 	playerRaw, err := c.DataCache.GetOrCreatePlayerByTelegramID(update.CallbackQuery.From.ID)
 	if err != nil {
 		c.Log.Error(err.Error())
@@ -17,7 +18,7 @@ func (r *Router) RouteCallback(update *tgbotapi.Update) string {
 	}
 
 	if playerRaw.Status == "banned" {
-		return c.Talkers.BanError(update)
+		return c.Talkers.BanError(&update)
 	}
 
 	var enableAlarmCallback = regexp.MustCompile("enable_reminder_(\\d+)\\z")
@@ -25,9 +26,9 @@ func (r *Router) RouteCallback(update *tgbotapi.Update) string {
 
 	switch {
 	case enableAlarmCallback.MatchString(update.CallbackQuery.Data):
-		return c.Reminder.CreateAlarmSetting(update, playerRaw)
+		return c.Reminder.CreateAlarmSetting(&update, playerRaw)
 	case disableAlarmCallback.MatchString(update.CallbackQuery.Data):
-		return c.Reminder.DestroyAlarmSetting(update, playerRaw)
+		return c.Reminder.DestroyAlarmSetting(&update, playerRaw)
 	}
 
 	return "ok"

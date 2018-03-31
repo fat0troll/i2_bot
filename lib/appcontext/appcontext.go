@@ -1,16 +1,18 @@
 // i2_bot – Instinct PokememBro Bot
-// Copyright (c) 2017 Vladimir "fat0troll" Hodakov
+// Copyright (c) 2017-2018 Vladimir "fat0troll" Hodakov
 
 package appcontext
 
 import (
+	"net/http"
+	"os"
+	"time"
+
 	"bitbucket.org/pztrn/flagger"
 	"bitbucket.org/pztrn/mogrus"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/jmoiron/sqlx"
 	"github.com/robfig/cron"
-	"net/http"
-	"os"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/broadcaster/broadcasterinterface"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/chatter/chatterinterface"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/config"
@@ -23,12 +25,12 @@ import (
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/pokedexer/pokedexerinterface"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/reminder/reminderinterface"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/router/routerinterface"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/sender/senderinterface"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/squader/squaderinterface"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/statistics/statisticsinterface"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/talkers/talkersinterface"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/users/usersinterface"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/welcomer/welcomerinterface"
-	"time"
 )
 
 // Context is an application context struct
@@ -50,6 +52,7 @@ type Context struct {
 	Pinner       pinnerinterface.PinnerInterface
 	Reminder     reminderinterface.ReminderInterface
 	Chatter      chatterinterface.ChatterInterface
+	Sender       senderinterface.SenderInterface
 	Squader      squaderinterface.SquaderInterface
 	Users        usersinterface.UsersInterface
 	Statistics   statisticsinterface.StatisticsInterface
@@ -89,7 +92,7 @@ func (c *Context) Init() {
 	c.Cfg = config.New()
 	c.Cfg.Init(c.Log, configPath)
 
-	logFile, err := os.OpenFile(c.Cfg.Logs.LogPath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0660)
+	logFile, err := os.OpenFile(c.Cfg.Logs.LogPath, os.O_RDWR|os.O_APPEND|os.O_CREATE, 0600)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -161,6 +164,12 @@ func (c *Context) RegisterRouterInterface(ri routerinterface.RouterInterface) {
 	c.Router.Init()
 }
 
+// RegisterSenderInterface registering sender interface in application
+func (c *Context) RegisterSenderInterface(si senderinterface.SenderInterface) {
+	c.Sender = si
+	c.Sender.Init()
+}
+
 // RegisterStatisticsInterface registers statistics interface in application
 func (c *Context) RegisterStatisticsInterface(si statisticsinterface.StatisticsInterface) {
 	c.Statistics = si
@@ -193,8 +202,14 @@ func (c *Context) RegisterUsersInterface(ui usersinterface.UsersInterface) {
 
 // RunDatabaseMigrations applies migrations on bot's startup
 func (c *Context) RunDatabaseMigrations() {
-	c.Migrations.SetDialect("mysql")
-	c.Migrations.Migrate()
+	err := c.Migrations.SetDialect("mysql")
+	if err != nil {
+		c.Log.Fatal(err.Error())
+	}
+	err = c.Migrations.Migrate()
+	if err != nil {
+		c.Log.Fatal(err.Error())
+	}
 }
 
 // StartBot starts listening for Telegram updates
@@ -205,7 +220,12 @@ func (c *Context) StartBot() {
 	}
 
 	updates := c.Bot.ListenForWebhook("/" + c.Bot.Token)
-	go http.ListenAndServe(c.Cfg.Telegram.ListenAddress, nil)
+	go func() {
+		err = http.ListenAndServe(c.Cfg.Telegram.ListenAddress, nil)
+	}()
+	if err != nil {
+		c.Log.Fatal(err.Error())
+	}
 
 	c.Log.Info("Listening on " + c.Cfg.Telegram.ListenAddress)
 	c.Log.Info("Webhook URL: " + c.Cfg.Telegram.WebHookDomain + c.Bot.Token)
@@ -214,13 +234,13 @@ func (c *Context) StartBot() {
 		if update.Message != nil {
 			if update.Message.From != nil {
 				if update.Message.Date > (int(time.Now().Unix()) - 5) {
-					go c.Router.RouteRequest(&update)
+					go c.Router.RouteRequest(update)
 				}
 			}
 		} else if update.InlineQuery != nil {
-			c.Router.RouteInline(&update)
+			c.Router.RouteInline(update)
 		} else if update.CallbackQuery != nil {
-			c.Router.RouteCallback(&update)
+			c.Router.RouteCallback(update)
 		} else if update.ChosenInlineResult != nil {
 			c.Log.Debug(update.ChosenInlineResult.ResultID)
 		} else {

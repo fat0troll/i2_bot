@@ -1,5 +1,5 @@
 // i2_bot – Instinct PokememBro Bot
-// Copyright (c) 2017 Vladimir "fat0troll" Hodakov
+// Copyright (c) 2017-2018 Vladimir "fat0troll" Hodakov
 
 package migrations
 
@@ -17,34 +17,29 @@ func CreateLeaguesUp(tx *sql.Tx) error {
 	request += "PRIMARY KEY (`id`),"
 	request += "UNIQUE KEY `id` (`id`),"
 	request += "KEY `leagues_created_at` (`created_at`)"
-	request += ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='Лиги';"
+	request += ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='Лиги'"
 	_, err := tx.Exec(request)
 	if err != nil {
 		return err
 	}
 
 	// Insert locations
-	_, err = tx.Exec("INSERT INTO `leagues` VALUES(NULL, ':u7533:', 'ИНСТИНКТ', NOW());")
+	_, err = tx.Exec("INSERT INTO `leagues` VALUES(NULL, ':u7533:', 'ИНСТИНКТ', NOW())")
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec("INSERT INTO `leagues` VALUES(NULL, ':u6e80', 'ОТВАГА', NOW());")
+	_, err = tx.Exec("INSERT INTO `leagues` VALUES(NULL, ':u6e80', 'ОТВАГА', NOW())")
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec("INSERT INTO `leagues` VALUES(NULL, ':u7a7a:', 'МИСТИКА', NOW());")
-	if err != nil {
-		return err
-	}
+	_, err = tx.Exec("INSERT INTO `leagues` VALUES(NULL, ':u7a7a:', 'МИСТИКА', NOW())")
 
-	return nil
+	return err
 }
 
 // CreateLeaguesDown drops `leagues` table
 func CreateLeaguesDown(tx *sql.Tx) error {
-	_, err := tx.Exec("DROP TABLE `leagues`;")
-	if err != nil {
-		return err
-	}
-	return nil
+	_, err := tx.Exec("DROP TABLE `leagues`")
+
+	return err
 }

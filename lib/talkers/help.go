@@ -1,13 +1,14 @@
 // i2_bot – Instinct PokememBro Bot
-// Copyright (c) 2017 Vladimir "fat0troll" Hodakov
+// Copyright (c) 2017-2018 Vladimir "fat0troll" Hodakov
 
 package talkers
 
 import (
+	"time"
+
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/config"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
-	"time"
 )
 
 // AcademyMessage gives user link to Bastion
@@ -42,10 +43,7 @@ func (t *Talkers) BastionMessage(update *tgbotapi.Update, playerRaw *dbmapping.P
 		message += "Общий чат лиги расположен по ссылке: https://t.me/joinchat/G2vME0mIX-QHjjxE\\_JBzoQ"
 	}
 
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ParseMode = "Markdown"
-
-	c.Bot.Send(msg)
+	c.Sender.SendMarkdownAnswer(update, message)
 }
 
 // HelpMessage gives user all available commands
@@ -96,10 +94,7 @@ func (t *Talkers) HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Play
 	message += "Выразить благодарность и попасть в список: 4377 7300 0246 7362\n"
 	message += "_Топ ранжируется по размеру благодарности. Здесь может быть ваша реклама!_"
 
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ParseMode = "Markdown"
-
-	c.Bot.Send(msg)
+	c.Sender.SendMarkdownAnswer(update, message)
 }
 
 // FAQMessage prints frequently asked questions
@@ -142,39 +137,7 @@ func (t *Talkers) FAQMessage(update *tgbotapi.Update) string {
 	message += "_Если не открывать 🥚яйцо, когда оно наберется до нужного количества, оно не будет дальше расти?_\n"
 	message += "Не будет."
 
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ParseMode = "Markdown"
-
-	c.Bot.Send(msg)
-
-	return "ok"
-}
-
-// FiveOffer sends all users with 5 pokeballs limit offer for increasing pokeballs limit
-func (t *Talkers) FiveOffer(update *tgbotapi.Update) string {
-	players := []dbmapping.Player{}
-
-	err := c.Db.Select(&players, "SELECT p.* FROM players p, profiles pp WHERE p.id = pp.player_id AND pp.pokeballs = 5")
-	if err != nil {
-		c.Log.Error(err.Error())
-		return "fail"
-	}
-
-	for i := range players {
-		message := "Псст, я тут заметил, что у тебя всего 5 покеболов? Хочешь увеличить их лимит на 2 или даже больше? У всех игроков есть возможность получить бонус!\n\n1. Перейти по ссылке: https://telegram.me/storebot?start=pokemembrobot\n2. Нажать Start\n3. Выбрать ⭐️⭐️⭐️⭐️⭐️\n4. ОБЯЗАТЕЛЬНО написать, что вам нравится в игре (на русском языке). Оставьте большой и красочный отзыв!\n5. Переслать переписку с @storebot в тех поддержку игры @PBhelp<— только ему! и больше никому! (с текстом вашего отзыва)\n6. После проверки получить бонус 🎁 +2 к лимиту ⭕️ А если отзыв понравится админам (и это бывает очень часто), то бонус будет больше!\n7. Проверка - может занять некоторое время. Админы обязательно ответят вам о результатах проверки."
-
-		msg := tgbotapi.NewMessage(int64(players[i].TelegramID), message)
-		msg.ParseMode = "Markdown"
-
-		c.Bot.Send(msg)
-	}
-
-	message := "Enlarge your pokeballs! Сообщение отправлено."
-
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ParseMode = "Markdown"
-
-	c.Bot.Send(msg)
+	c.Sender.SendMarkdownAnswer(update, message)
 
 	return "ok"
 }

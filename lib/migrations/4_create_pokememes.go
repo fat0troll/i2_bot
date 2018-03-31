@@ -1,5 +1,5 @@
 // i2_bot – Instinct PokememBro Bot
-// Copyright (c) 2017 Vladimir "fat0troll" Hodakov
+// Copyright (c) 2017-2018 Vladimir "fat0troll" Hodakov
 
 package migrations
 
@@ -27,19 +27,16 @@ func CreatePokememesUp(tx *sql.Tx) error {
 	request += "UNIQUE KEY `id` (`id`),"
 	request += "KEY `pokememes_created_at` (`created_at`),"
 	request += "KEY `pokememes_player_id` (`player_id`)"
-	request += ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='Покемемы';"
+	request += ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='Покемемы'"
+
 	_, err := tx.Exec(request)
-	if err != nil {
-		return err
-	}
-	return nil
+
+	return err
 }
 
 // CreatePokememesDown drops `pokememes` table
 func CreatePokememesDown(tx *sql.Tx) error {
-	_, err := tx.Exec("DROP TABLE `pokememes`;")
-	if err != nil {
-		return err
-	}
-	return nil
+	_, err := tx.Exec("DROP TABLE `pokememes`")
+
+	return err
 }

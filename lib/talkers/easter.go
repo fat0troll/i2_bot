@@ -1,13 +1,14 @@
 // i2_bot – Instinct PokememBro Bot
-// Copyright (c) 2017 Vladimir "fat0troll" Hodakov
+// Copyright (c) 2017-2018 Vladimir "fat0troll" Hodakov
 
 package talkers
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"math/rand"
 	"strconv"
 	"time"
+
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 // LongMessage is an easter egg
@@ -20,10 +21,7 @@ func (t *Talkers) LongMessage(update *tgbotapi.Update) string {
 		}
 	}
 
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ReplyToMessageID = update.Message.MessageID
-
-	c.Bot.Send(msg)
+	c.Sender.SendMarkdownAnswer(update, message)
 
 	return "ok"
 }
@@ -42,6 +40,7 @@ func (t *Talkers) DurakMessage(update *tgbotapi.Update) string {
 	if update.Message.From.ID == 324205150 {
 		message = "Молодец, Яру. Возьми с полки пирожок."
 	}
+
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ReplyToMessageID = update.Message.MessageID
 

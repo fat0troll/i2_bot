@@ -1,5 +1,5 @@
 // i2_bot – Instinct PokememBro Bot
-// Copyright (c) 2017 Vladimir "fat0troll" Hodakov
+// Copyright (c) 2017-2018 Vladimir "fat0troll" Hodakov
 
 package migrations
 
@@ -17,46 +17,41 @@ func CreateLocationsUp(tx *sql.Tx) error {
 	request += "PRIMARY KEY (`id`),"
 	request += "UNIQUE KEY `id` (`id`),"
 	request += "KEY `locations_created_at` (`created_at`)"
-	request += ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='Локации';"
+	request += ") ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='Локации'"
 	_, err := tx.Exec(request)
 	if err != nil {
 		return err
 	}
 
 	// Insert locations
-	_, err = tx.Exec("INSERT INTO `locations` VALUES(NULL, ':evergreen_tree:', 'Лес', NOW());")
+	_, err = tx.Exec("INSERT INTO `locations` VALUES(NULL, ':evergreen_tree:', 'Лес', NOW())")
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec("INSERT INTO `locations` VALUES(NULL, '⛰', 'Горы', NOW());")
+	_, err = tx.Exec("INSERT INTO `locations` VALUES(NULL, '⛰', 'Горы', NOW())")
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec("INSERT INTO `locations` VALUES(NULL, ':rowboat:', 'Озеро', NOW());")
+	_, err = tx.Exec("INSERT INTO `locations` VALUES(NULL, ':rowboat:', 'Озеро', NOW())")
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec("INSERT INTO `locations` VALUES(NULL, '🏙', 'Город', NOW());")
+	_, err = tx.Exec("INSERT INTO `locations` VALUES(NULL, '🏙', 'Город', NOW())")
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec("INSERT INTO `locations` VALUES(NULL, '🏛', 'Катакомбы', NOW());")
+	_, err = tx.Exec("INSERT INTO `locations` VALUES(NULL, '🏛', 'Катакомбы', NOW())")
 	if err != nil {
 		return err
 	}
-	_, err = tx.Exec("INSERT INTO `locations` VALUES(NULL, ':church:', 'Кладбище', NOW());")
-	if err != nil {
-		return err
-	}
+	_, err = tx.Exec("INSERT INTO `locations` VALUES(NULL, ':church:', 'Кладбище', NOW())")
 
-	return nil
+	return err
 }
 
 // CreateLocationsDown drops `locations` table
 func CreateLocationsDown(tx *sql.Tx) error {
-	_, err := tx.Exec("DROP TABLE `locations`;")
-	if err != nil {
-		return err
-	}
-	return nil
+	_, err := tx.Exec("DROP TABLE `locations`")
+
+	return err
 }

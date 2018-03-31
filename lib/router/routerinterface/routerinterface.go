@@ -1,5 +1,5 @@
 // i2_bot – Instinct PokememBro Bot
-// Copyright (c) 2017 Vladimir "fat0troll" Hodakov
+// Copyright (c) 2017-2018 Vladimir "fat0troll" Hodakov
 
 package routerinterface
 
@@ -11,7 +11,7 @@ import (
 type RouterInterface interface {
 	Init()
 
-	RouteCallback(update *tgbotapi.Update) string
-	RouteInline(update *tgbotapi.Update) string
-	RouteRequest(update *tgbotapi.Update) string
+	RouteCallback(update tgbotapi.Update) string
+	RouteInline(update tgbotapi.Update) string
+	RouteRequest(update tgbotapi.Update) string
 }

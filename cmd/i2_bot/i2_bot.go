@@ -15,6 +15,7 @@ import (
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/pokedexer"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/reminder"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/router"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/sender"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/squader"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/statistics"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/talkers"
@@ -34,6 +35,7 @@ func main() {
 	migrations.New(c)
 	c.RunDatabaseMigrations()
 	datacache.New(c)
+	sender.New(c)
 	forwarder.New(c)
 	pokedexer.New(c)
 	pinner.New(c)

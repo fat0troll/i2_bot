@@ -1,5 +1,5 @@
 // i2_bot – Instinct PokememBro Bot
-// Copyright (c) 2017 Vladimir "fat0troll" Hodakov
+// Copyright (c) 2017-2018 Vladimir "fat0troll" Hodakov
 
 package talkersinterface
 
@@ -16,7 +16,6 @@ type TalkersInterface interface {
 	BastionMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player)
 	HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player)
 	FAQMessage(update *tgbotapi.Update) string
-	FiveOffer(update *tgbotapi.Update) string
 
 	AnyMessageUnauthorized(update *tgbotapi.Update) string
 	BanError(update *tgbotapi.Update) string

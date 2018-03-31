@@ -4,13 +4,14 @@
 package router
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"math/rand"
 	"regexp"
+
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 )
 
-func (r *Router) routeGroupRequest(update *tgbotapi.Update, playerRaw *dbmapping.Player, chatRaw *dbmapping.Chat) string {
+func (r *Router) routeGroupRequest(update tgbotapi.Update, playerRaw *dbmapping.Player, chatRaw *dbmapping.Chat) string {
 	text := update.Message.Text
 	// Regular expressions
 	var durakMsg = regexp.MustCompile("(Д|д)(У|у)(Р|р)(А|а|Е|е|О|о)")
@@ -19,7 +20,7 @@ func (r *Router) routeGroupRequest(update *tgbotapi.Update, playerRaw *dbmapping
 	var ebMsg = regexp.MustCompile("(\\s|^|ЗА|За|зА|за)(Е|е|Ё|ё)(Б|б)(\\s|Л|л|А|а|Т|т|У|у|Е|е|Ё|ё|И|и)")
 	var piMsg = regexp.MustCompile("(П|п)(И|и)(З|з)(Д|д)")
 
-	restrictionStatus := c.Chatter.ProtectChat(update, playerRaw, chatRaw)
+	restrictionStatus := c.Chatter.ProtectChat(&update, playerRaw, chatRaw)
 	if restrictionStatus != "protection_passed" {
 		return restrictionStatus
 	}
@@ -28,7 +29,7 @@ func (r *Router) routeGroupRequest(update *tgbotapi.Update, playerRaw *dbmapping
 	if update.Message.NewChatMembers != nil {
 		newUsers := *update.Message.NewChatMembers
 		if len(newUsers) > 0 {
-			return c.Welcomer.GroupWelcomeMessage(update)
+			return c.Welcomer.GroupWelcomeMessage(&update)
 		}
 	}
 	// New chat names
@@ -47,21 +48,21 @@ func (r *Router) routeGroupRequest(update *tgbotapi.Update, playerRaw *dbmapping
 	if trigger == 4 {
 		switch {
 		case huMsg.MatchString(text):
-			return c.Talkers.MatMessage(update)
+			return c.Talkers.MatMessage(&update)
 		case blMsg.MatchString(text):
-			return c.Talkers.MatMessage(update)
+			return c.Talkers.MatMessage(&update)
 		case ebMsg.MatchString(text):
-			return c.Talkers.MatMessage(update)
+			return c.Talkers.MatMessage(&update)
 		case piMsg.MatchString(text):
-			return c.Talkers.MatMessage(update)
+			return c.Talkers.MatMessage(&update)
 		case durakMsg.MatchString(text):
-			return c.Talkers.DurakMessage(update)
+			return c.Talkers.DurakMessage(&update)
 		}
 	}
 
 	switch {
 	case update.Message.Command() == "long":
-		return c.Talkers.LongMessage(update)
+		return c.Talkers.LongMessage(&update)
 	}
 
 	// Ah, we're still here

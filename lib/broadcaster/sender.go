@@ -1,12 +1,14 @@
 // i2_bot – Instinct PokememBro Bot
-// Copyright (c) 2017 Vladimir "fat0troll" Hodakov
+// Copyright (c) 2017-2018 Vladimir "fat0troll" Hodakov
 
 package broadcaster
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"strconv"
+
+	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/constants"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 )
 
 // AdminBroadcastMessageSend sends saved message to all private chats
@@ -15,13 +17,13 @@ func (b *Broadcaster) AdminBroadcastMessageSend(update *tgbotapi.Update, playerR
 	messageNumInt, _ := strconv.Atoi(messageNum)
 	messageRaw, ok := b.getBroadcastMessageByID(messageNumInt)
 	if !ok {
-		return "fail"
+		return constants.BotError
 	}
 	if messageRaw.AuthorID != playerRaw.ID {
-		return "fail"
+		return constants.UserRequestForbidden
 	}
 	if messageRaw.Status != "new" {
-		return "fail"
+		return constants.UserRequestFailed
 	}
 
 	broadcastingMessageBody := messageRaw.Text
@@ -29,7 +31,7 @@ func (b *Broadcaster) AdminBroadcastMessageSend(update *tgbotapi.Update, playerR
 	profileRaw, err := c.DataCache.GetProfileByPlayerID(playerRaw.ID)
 	if err != nil {
 		c.Log.Error(err.Error())
-		return "fail"
+		return constants.UserRequestFailed
 	}
 
 	prettyName := profileRaw.Nickname + " (@" + profileRaw.TelegramNickname + ")"
@@ -48,22 +50,17 @@ func (b *Broadcaster) AdminBroadcastMessageSend(update *tgbotapi.Update, playerR
 		broadcastingMessage += "*Важное сообщение от администратора *" + prettyName + "\n\n"
 		broadcastingMessage += broadcastingMessageBody
 
-		msg := tgbotapi.NewMessage(int64(chat.TelegramID), broadcastingMessage)
-		msg.ParseMode = "Markdown"
-		c.Bot.Send(msg)
+		c.Sender.SendMarkdownMessageToChatID(chat.TelegramID, broadcastingMessage)
 	}
 
 	messageRaw, ok = b.updateBroadcastMessageStatus(messageRaw.ID, "sent")
 	if !ok {
-		return "fail"
+		return constants.BotError
 	}
 
 	message := "Сообщение отправлено. Надеюсь, пользователи бота за него тебя не убьют.\n"
 
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ParseMode = "Markdown"
+	c.Sender.SendMarkdownAnswer(update, message)
 
-	c.Bot.Send(msg)
-
-	return "ok"
+	return constants.UserRequestSuccess
 }

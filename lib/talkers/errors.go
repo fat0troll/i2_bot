@@ -12,10 +12,7 @@ func (t *Talkers) AnyMessageUnauthorized(update *tgbotapi.Update) string {
 	message := "Извини, действие для тебя недоступно. Возможно, у меня нет твоего профиля или же твои права недостаточны для совершения данного действия\n\n"
 	message += "Техническая поддержка бота: https://t.me/joinchat/AAkt5EgFBU9Q9iXJMvDG6A.\n"
 
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ParseMode = "Markdown"
-
-	c.Bot.Send(msg)
+	c.Sender.SendMarkdownAnswer(update, message)
 
 	return "fail"
 }
@@ -24,10 +21,7 @@ func (t *Talkers) AnyMessageUnauthorized(update *tgbotapi.Update) string {
 func (t *Talkers) BanError(update *tgbotapi.Update) string {
 	message := "Вам здесь не рады. Использование бота для вас запрещено."
 
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ParseMode = "Markdown"
-
-	c.Bot.Send(msg)
+	c.Sender.SendMarkdownAnswer(update, message)
 
 	return "fail"
 }
@@ -37,10 +31,7 @@ func (t *Talkers) BotError(update *tgbotapi.Update) string {
 	message := "Ой, внутренняя ошибка в боте :(\n\n"
 	message += "Техническая поддержка бота: https://t.me/joinchat/AAkt5EgFBU9Q9iXJMvDG6A. Напиши сюда, приложив скриншоты с перепиской бота.\n"
 
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ParseMode = "Markdown"
-
-	c.Bot.Send(msg)
+	c.Sender.SendMarkdownAnswer(update, message)
 
 	return "fail"
 }

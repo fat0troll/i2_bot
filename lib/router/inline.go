@@ -4,13 +4,14 @@
 package router
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"strconv"
 	"strings"
+
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 // RouteInline routes inline requests to bot
-func (r *Router) RouteInline(update *tgbotapi.Update) string {
+func (r *Router) RouteInline(update tgbotapi.Update) string {
 	playerRaw, err := c.DataCache.GetOrCreatePlayerByTelegramID(update.InlineQuery.From.ID)
 	if err != nil {
 		c.Log.Error(err.Error())
