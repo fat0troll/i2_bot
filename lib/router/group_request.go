@@ -21,7 +21,7 @@ func (r *Router) routeGroupRequest(update tgbotapi.Update, playerRaw *dbmapping.
 	var piMsg = regexp.MustCompile("(П|п)(И|и)(З|з)(Д|д)")
 
 	restrictionStatus := c.Chatter.ProtectChat(&update, playerRaw, chatRaw)
-	if restrictionStatus != "protection_passed" {
+	if restrictionStatus != "ok" {
 		return restrictionStatus
 	}
 
