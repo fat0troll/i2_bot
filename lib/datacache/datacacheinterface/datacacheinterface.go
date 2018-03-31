@@ -5,6 +5,7 @@ package datacacheinterface
 
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 )
 
@@ -51,8 +52,11 @@ type DataCacheInterface interface {
 	DeletePokememeByID(pokememeID int) error
 	UpdatePokememe(pokememeData map[string]string, pokememeLocations map[string]string, pokememeElements map[string]string) (int, error)
 
-	GetLeagueBySymbol(symbol string) (*dbmapping.League, error)
+	GetElementByID(elementID int) (*datamapping.Element, error)
 
-	GetWeaponTypeByID(weaponID int) (*dbmapping.Weapon, error)
-	GetWeaponTypeByName(name string) (*dbmapping.Weapon, error)
+	GetLeagueByID(leagueID int) (*datamapping.League, error)
+	GetLeagueBySymbol(symbol string) (*datamapping.League, error)
+
+	GetWeaponTypeByID(weaponID int) (*datamapping.Weapon, error)
+	GetWeaponTypeByName(name string) (*datamapping.Weapon, error)
 }

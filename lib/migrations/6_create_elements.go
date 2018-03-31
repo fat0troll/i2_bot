@@ -25,53 +25,53 @@ func CreateElementsUp(tx *sql.Tx) error {
 	}
 
 	// Insert elements
-	_, err2 := tx.Exec("INSERT INTO `elements` VALUES(NULL, '👊', 'Боевой', 1, NOW());")
-	if err2 != nil {
-		return err2
+	_, err = tx.Exec("INSERT INTO `elements` VALUES(NULL, '👊', 'Боевой', 1, NOW());")
+	if err != nil {
+		return err
 	}
-	_, err3 := tx.Exec("INSERT INTO `elements` VALUES(NULL, '🌀', 'Летающий', 1, NOW());")
-	if err3 != nil {
-		return err3
+	_, err = tx.Exec("INSERT INTO `elements` VALUES(NULL, '🌀', 'Летающий', 1, NOW());")
+	if err != nil {
+		return err
 	}
-	_, err4 := tx.Exec("INSERT INTO `elements` VALUES(NULL, '💀', 'Ядовитый', 1, NOW());")
-	if err4 != nil {
-		return err4
+	_, err = tx.Exec("INSERT INTO `elements` VALUES(NULL, '💀', 'Ядовитый', 1, NOW());")
+	if err != nil {
+		return err
 	}
-	_, err5 := tx.Exec("INSERT INTO `elements` VALUES(NULL, '🗿', 'Каменный', 1, NOW());")
-	if err5 != nil {
-		return err5
+	_, err = tx.Exec("INSERT INTO `elements` VALUES(NULL, '🗿', 'Каменный', 1, NOW());")
+	if err != nil {
+		return err
 	}
-	_, err6 := tx.Exec("INSERT INTO `elements` VALUES(NULL, '🔥', 'Огненный', 2, NOW());")
-	if err6 != nil {
-		return err6
+	_, err = tx.Exec("INSERT INTO `elements` VALUES(NULL, '🔥', 'Огненный', 2, NOW());")
+	if err != nil {
+		return err
 	}
-	_, err7 := tx.Exec("INSERT INTO `elements` VALUES(NULL, '⚡', 'Электрический', 2, NOW());")
-	if err7 != nil {
-		return err7
+	_, err = tx.Exec("INSERT INTO `elements` VALUES(NULL, '⚡', 'Электрический', 2, NOW());")
+	if err != nil {
+		return err
 	}
-	_, err8 := tx.Exec("INSERT INTO `elements` VALUES(NULL, '💧', 'Водяной', 2, NOW());")
-	if err8 != nil {
-		return err8
+	_, err = tx.Exec("INSERT INTO `elements` VALUES(NULL, '💧', 'Водяной', 2, NOW());")
+	if err != nil {
+		return err
 	}
-	_, err9 := tx.Exec("INSERT INTO `elements` VALUES(NULL, '🍀', 'Травяной', 2, NOW());")
-	if err9 != nil {
-		return err9
+	_, err = tx.Exec("INSERT INTO `elements` VALUES(NULL, '🍀', 'Травяной', 2, NOW());")
+	if err != nil {
+		return err
 	}
-	_, err10 := tx.Exec("INSERT INTO `elements` VALUES(NULL, '💩', 'Шоколадный', 3, NOW());")
-	if err10 != nil {
-		return err10
+	_, err = tx.Exec("INSERT INTO `elements` VALUES(NULL, '💩', 'Шоколадный', 3, NOW());")
+	if err != nil {
+		return err
 	}
-	_, err11 := tx.Exec("INSERT INTO `elements` VALUES(NULL, '👁', 'Психический', 3, NOW());")
-	if err11 != nil {
-		return err11
+	_, err = tx.Exec("INSERT INTO `elements` VALUES(NULL, '👁', 'Психический', 3, NOW());")
+	if err != nil {
+		return err
 	}
-	_, err12 := tx.Exec("INSERT INTO `elements` VALUES(NULL, '👿', 'Темный', 3, NOW());")
-	if err12 != nil {
-		return err12
+	_, err = tx.Exec("INSERT INTO `elements` VALUES(NULL, '👿', 'Темный', 3, NOW());")
+	if err != nil {
+		return err
 	}
-	_, err13 := tx.Exec("INSERT INTO `elements` VALUES(NULL, '⌛', 'Времени', 1, NOW());")
-	if err13 != nil {
-		return err13
+	_, err = tx.Exec("INSERT INTO `elements` VALUES(NULL, '⌛', 'Времени', 1, NOW());")
+	if err != nil {
+		return err
 	}
 
 	return nil

@@ -6,6 +6,7 @@ package datacache
 import (
 	"errors"
 	"sort"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"strconv"
 	"strings"
@@ -46,8 +47,8 @@ func (dc *DataCache) loadPokememes() {
 
 		// Filling fullPokememes
 		fullPokememe := dbmapping.PokememeFull{}
-		elementsListed := []dbmapping.Element{}
-		locationsListed := []dbmapping.Location{}
+		elementsListed := []datamapping.Element{}
+		locationsListed := []datamapping.Location{}
 
 		for j := range pokememesLocations {
 			if pokememesLocations[j].PokememeID == pokememes[i].ID {
@@ -122,8 +123,8 @@ func (dc *DataCache) AddPokememe(pokememeData map[string]string, pokememeLocatio
 	pokememe.PlayerID = creatorID
 	pokememe.CreatedAt = time.Now().UTC()
 
-	locations := []dbmapping.Location{}
-	elements := []dbmapping.Element{}
+	locations := []datamapping.Location{}
+	elements := []datamapping.Element{}
 
 	for i := range pokememeLocations {
 		locationID, err := dc.findLocationIDByName(pokememeLocations[i])
@@ -343,8 +344,8 @@ func (dc *DataCache) UpdatePokememe(pokememeData map[string]string, pokememeLoca
 	pokememe.PlayerID = creatorID
 	pokememe.CreatedAt = time.Now().UTC()
 
-	locations := []dbmapping.Location{}
-	elements := []dbmapping.Element{}
+	locations := []datamapping.Location{}
+	elements := []datamapping.Element{}
 
 	for i := range pokememeLocations {
 		locationID, err := dc.findLocationIDByName(pokememeLocations[i])

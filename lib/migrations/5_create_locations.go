@@ -24,29 +24,29 @@ func CreateLocationsUp(tx *sql.Tx) error {
 	}
 
 	// Insert locations
-	_, err2 := tx.Exec("INSERT INTO `locations` VALUES(NULL, ':evergreen_tree:', 'Лес', NOW());")
-	if err2 != nil {
-		return err2
+	_, err = tx.Exec("INSERT INTO `locations` VALUES(NULL, ':evergreen_tree:', 'Лес', NOW());")
+	if err != nil {
+		return err
 	}
-	_, err3 := tx.Exec("INSERT INTO `locations` VALUES(NULL, '⛰', 'Горы', NOW());")
-	if err3 != nil {
-		return err2
+	_, err = tx.Exec("INSERT INTO `locations` VALUES(NULL, '⛰', 'Горы', NOW());")
+	if err != nil {
+		return err
 	}
-	_, err4 := tx.Exec("INSERT INTO `locations` VALUES(NULL, ':rowboat:', 'Озеро', NOW());")
-	if err4 != nil {
-		return err2
+	_, err = tx.Exec("INSERT INTO `locations` VALUES(NULL, ':rowboat:', 'Озеро', NOW());")
+	if err != nil {
+		return err
 	}
-	_, err5 := tx.Exec("INSERT INTO `locations` VALUES(NULL, '🏙', 'Город', NOW());")
-	if err5 != nil {
-		return err2
+	_, err = tx.Exec("INSERT INTO `locations` VALUES(NULL, '🏙', 'Город', NOW());")
+	if err != nil {
+		return err
 	}
-	_, err6 := tx.Exec("INSERT INTO `locations` VALUES(NULL, '🏛', 'Катакомбы', NOW());")
-	if err6 != nil {
-		return err2
+	_, err = tx.Exec("INSERT INTO `locations` VALUES(NULL, '🏛', 'Катакомбы', NOW());")
+	if err != nil {
+		return err
 	}
-	_, err7 := tx.Exec("INSERT INTO `locations` VALUES(NULL, ':church:', 'Кладбище', NOW());")
-	if err7 != nil {
-		return err2
+	_, err = tx.Exec("INSERT INTO `locations` VALUES(NULL, ':church:', 'Кладбище', NOW());")
+	if err != nil {
+		return err
 	}
 
 	return nil

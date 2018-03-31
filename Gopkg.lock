@@ -74,19 +74,6 @@
   revision = "ff2a66f350cefa5c93a634eadb5d25bb60c85a9c"
 
 [[projects]]
-  branch = "master"
-  name = "golang.org/x/text"
-  packages = [
-    "internal/gen",
-    "internal/triegen",
-    "internal/ucd",
-    "transform",
-    "unicode/cldr",
-    "unicode/norm"
-  ]
-  revision = "e19ae1496984b1c655b8044a65c0300a3c878dd3"
-
-[[projects]]
   branch = "v2"
   name = "gopkg.in/yaml.v2"
   packages = ["."]
@@ -95,6 +82,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "99811036e66782056cb66f37e4a2570ac81f0e3da2fe399c4d54d83acc5a368d"
+  inputs-digest = "1f9ca287338c3a5d515174b67ff79568a1e3be9df49bee694fac57d9de9802f9"
   solver-name = "gps-cdcl"
   solver-version = 1

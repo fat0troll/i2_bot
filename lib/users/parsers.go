@@ -6,6 +6,7 @@ package users
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"regexp"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"strconv"
 	"strings"
@@ -46,7 +47,7 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 		profileRunesArray = append(profileRunesArray, []rune(profileStringsArray[i]))
 	}
 
-	league := dbmapping.League{}
+	league := datamapping.League{}
 
 	telegramNickname := update.Message.From.UserName
 	nickname := ""

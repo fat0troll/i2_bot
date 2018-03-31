@@ -6,6 +6,7 @@ package datacache
 import (
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/appcontext"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/datacache/datacacheinterface"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"sync"
 )
@@ -44,18 +45,15 @@ type DataCache struct {
 	squadPlayers          map[int]map[int]*dbmapping.SquadPlayerFull
 	squadsMutex           sync.Mutex
 
+	// Non-database data
 	// Elements
-	elements      map[int]*dbmapping.Element
-	elementsMutex sync.Mutex
+	elements map[int]*datamapping.Element
 	// Leagues
-	leagues      map[int]*dbmapping.League
-	leaguesMutex sync.Mutex
+	leagues map[int]*datamapping.League
 	// Locations
-	locations      map[int]*dbmapping.Location
-	locationsMutex sync.Mutex
+	locations map[int]*datamapping.Location
 	// Weapons
-	weapons      map[int]*dbmapping.Weapon
-	weaponsMutex sync.Mutex
+	weapons map[int]*datamapping.Weapon
 }
 
 // New is an initialization function for appcontext

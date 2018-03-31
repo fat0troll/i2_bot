@@ -4,6 +4,7 @@
 package dbmapping
 
 import (
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
 	"time"
 )
 
@@ -21,6 +22,6 @@ type Player struct {
 type PlayerProfile struct {
 	Player      Player
 	Profile     Profile
-	League      League
+	League      datamapping.League
 	HaveProfile bool
 }

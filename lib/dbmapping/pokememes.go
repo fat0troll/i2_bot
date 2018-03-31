@@ -4,6 +4,7 @@
 package dbmapping
 
 import (
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
 	"time"
 )
 
@@ -28,6 +29,6 @@ type Pokememe struct {
 // PokememeFull is a struct for handling pokememe with all informations about locations and elements
 type PokememeFull struct {
 	Pokememe  Pokememe
-	Locations []Location
-	Elements  []Element
+	Locations []datamapping.Location
+	Elements  []datamapping.Element
 }

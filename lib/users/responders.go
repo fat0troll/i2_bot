@@ -117,10 +117,10 @@ func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 		c.Log.Error(err.Error())
 		return c.Talkers.AnyMessageUnauthorized(update)
 	}
-	league := dbmapping.League{}
-	err = c.Db.Get(&league, c.Db.Rebind("SELECT * FROM leagues WHERE id=?"), playerRaw.LeagueID)
+	league, err := c.DataCache.GetLeagueByID(playerRaw.LeagueID)
 	if err != nil {
-		c.Log.Error(err)
+		c.Log.Error(err.Error())
+		return c.Talkers.BotError(update)
 	}
 	level := dbmapping.Level{}
 	err = c.Db.Get(&level, c.Db.Rebind("SELECT * FROM levels WHERE id=?"), profileRaw.LevelID)

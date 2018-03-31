@@ -24,17 +24,17 @@ func CreateLeaguesUp(tx *sql.Tx) error {
 	}
 
 	// Insert locations
-	_, err2 := tx.Exec("INSERT INTO `leagues` VALUES(NULL, ':u7533:', 'ИНСТИНКТ', NOW());")
-	if err2 != nil {
-		return err2
+	_, err = tx.Exec("INSERT INTO `leagues` VALUES(NULL, ':u7533:', 'ИНСТИНКТ', NOW());")
+	if err != nil {
+		return err
 	}
-	_, err3 := tx.Exec("INSERT INTO `leagues` VALUES(NULL, ':u6e80', 'ОТВАГА', NOW());")
-	if err3 != nil {
-		return err2
+	_, err = tx.Exec("INSERT INTO `leagues` VALUES(NULL, ':u6e80', 'ОТВАГА', NOW());")
+	if err != nil {
+		return err
 	}
-	_, err4 := tx.Exec("INSERT INTO `leagues` VALUES(NULL, ':u7a7a:', 'МИСТИКА', NOW());")
-	if err4 != nil {
-		return err2
+	_, err = tx.Exec("INSERT INTO `leagues` VALUES(NULL, ':u7a7a:', 'МИСТИКА', NOW());")
+	if err != nil {
+		return err
 	}
 
 	return nil
