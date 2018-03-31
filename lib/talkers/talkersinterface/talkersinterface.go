@@ -12,9 +12,9 @@ import (
 type TalkersInterface interface {
 	Init()
 
-	AcademyMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player)
-	BastionMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player)
-	HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player)
+	AcademyMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
+	BastionMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
+	HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
 	FAQMessage(update *tgbotapi.Update) string
 
 	AnyMessageUnauthorized(update *tgbotapi.Update) string

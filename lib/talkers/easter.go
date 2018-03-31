@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/constants"
 )
 
 // LongMessage is an easter egg
@@ -23,7 +24,7 @@ func (t *Talkers) LongMessage(update *tgbotapi.Update) string {
 
 	c.Sender.SendMarkdownAnswer(update, message)
 
-	return "ok"
+	return constants.UserRequestSuccess
 }
 
 // DurakMessage is an easter egg
@@ -41,12 +42,9 @@ func (t *Talkers) DurakMessage(update *tgbotapi.Update) string {
 		message = "Молодец, Яру. Возьми с полки пирожок."
 	}
 
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ReplyToMessageID = update.Message.MessageID
+	c.Sender.SendMarkdownReply(update, message, update.Message.MessageID)
 
-	c.Bot.Send(msg)
-
-	return "ok"
+	return constants.UserRequestSuccess
 }
 
 // MatMessage is an easter rgg
@@ -60,12 +58,9 @@ func (t *Talkers) MatMessage(update *tgbotapi.Update) string {
 
 	// Praise the Random Gods!
 	rand.Seed(time.Now().Unix())
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, reactions[rand.Intn(len(reactions))])
-	msg.ReplyToMessageID = update.Message.MessageID
+	c.Sender.SendMarkdownReply(update, reactions[rand.Intn(len(reactions))], update.Message.MessageID)
 
-	c.Bot.Send(msg)
-
-	return "ok"
+	return constants.UserRequestSuccess
 }
 
 // NewYearMessage2018 pins new year 2018 message to bastion, default and academy chats.
@@ -73,6 +68,7 @@ func (t *Talkers) NewYearMessage2018() {
 	academyChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.AcademyID, 10, 64)
 	bastionChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.BastionID, 10, 64)
 	defaultChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.DefaultID, 10, 64)
+	parseMode := "Markdown"
 
 	message := "*Совет лиги Инстинкт поздравляет вас, дорогие игроки, с Новым 2018 Годом!*\n"
 	message += "*Важное сообщение от* Совета лиги Инстинкт (коллективное сознательное)\n\n"
@@ -87,7 +83,7 @@ func (t *Talkers) NewYearMessage2018() {
 	message += "*Х*уй им, в общем, всем — с бантиком!"
 
 	msg := tgbotapi.NewMessage(defaultChatID, message)
-	msg.ParseMode = "Markdown"
+	msg.ParseMode = parseMode
 
 	pinnableMessage, _ := c.Bot.Send(msg)
 
@@ -103,7 +99,7 @@ func (t *Talkers) NewYearMessage2018() {
 	}
 
 	msg = tgbotapi.NewMessage(bastionChatID, message)
-	msg.ParseMode = "Markdown"
+	msg.ParseMode = parseMode
 
 	pinnableMessage, _ = c.Bot.Send(msg)
 
@@ -119,7 +115,7 @@ func (t *Talkers) NewYearMessage2018() {
 	}
 
 	msg = tgbotapi.NewMessage(academyChatID, message)
-	msg.ParseMode = "Markdown"
+	msg.ParseMode = parseMode
 
 	pinnableMessage, _ = c.Bot.Send(msg)
 

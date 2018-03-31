@@ -26,5 +26,6 @@ func New(ac *appcontext.Context) {
 func (t *Talkers) Init() {
 	c.Log.Info("Initializing common Responders...")
 
-	c.Cron.AddFunc("0 0 0 1 1 *", t.NewYearMessage2018)
+	// Uncomment and edit this before New Year 2019!
+	// c.Cron.AddFunc("0 0 0 1 1 *", t.NewYearMessage2018)
 }

@@ -5,6 +5,7 @@ package talkers
 
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/constants"
 )
 
 // AnyMessageUnauthorized throws when user can't do something
@@ -14,7 +15,7 @@ func (t *Talkers) AnyMessageUnauthorized(update *tgbotapi.Update) string {
 
 	c.Sender.SendMarkdownAnswer(update, message)
 
-	return "fail"
+	return constants.UserRequestFailed
 }
 
 // BanError throws error for persona non grata
@@ -23,7 +24,7 @@ func (t *Talkers) BanError(update *tgbotapi.Update) string {
 
 	c.Sender.SendMarkdownAnswer(update, message)
 
-	return "fail"
+	return constants.UserRequestForbidden
 }
 
 // BotError throws when bot can't do something
@@ -33,5 +34,5 @@ func (t *Talkers) BotError(update *tgbotapi.Update) string {
 
 	c.Sender.SendMarkdownAnswer(update, message)
 
-	return "fail"
+	return constants.BotError
 }

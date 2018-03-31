@@ -12,6 +12,10 @@ var (
 	c *appcontext.Context
 )
 
+const (
+	parseMode = "Markdown"
+)
+
 // Sender is a function-handling struct for sender
 type Sender struct{}
 

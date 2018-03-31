@@ -13,4 +13,5 @@ type SenderInterface interface {
 
 	SendMarkdownAnswer(update *tgbotapi.Update, message string)
 	SendMarkdownMessageToChatID(chatID int64, message string)
+	SendMarkdownReply(update *tgbotapi.Update, message string, messageID int)
 }

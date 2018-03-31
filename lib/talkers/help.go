@@ -8,11 +8,12 @@ import (
 
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/config"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/constants"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 )
 
 // AcademyMessage gives user link to Bastion
-func (t *Talkers) AcademyMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) {
+func (t *Talkers) AcademyMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
 	message := ""
 
 	if playerRaw.LeagueID > 1 {
@@ -24,14 +25,13 @@ func (t *Talkers) AcademyMessage(update *tgbotapi.Update, playerRaw *dbmapping.P
 		message += "Чат для обучения новичков предумростям игры расположен по ссылке: https://t.me/joinchat/G2vME04jk02v2etRmumylg"
 	}
 
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ParseMode = "Markdown"
+	c.Sender.SendMarkdownAnswer(update, message)
 
-	c.Bot.Send(msg)
+	return constants.UserRequestSuccess
 }
 
 // BastionMessage gives user link to Bastion
-func (t *Talkers) BastionMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) {
+func (t *Talkers) BastionMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
 	message := ""
 
 	if playerRaw.LeagueID > 1 {
@@ -44,10 +44,12 @@ func (t *Talkers) BastionMessage(update *tgbotapi.Update, playerRaw *dbmapping.P
 	}
 
 	c.Sender.SendMarkdownAnswer(update, message)
+
+	return constants.UserRequestSuccess
 }
 
 // HelpMessage gives user all available commands
-func (t *Talkers) HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) {
+func (t *Talkers) HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
 	message := "*Бот Инстинкта Enhanced.*\n\n"
 	message += "Текущая версия: *" + config.VERSION + "*\n\n"
 	message += "Список команд\n\n"
@@ -95,6 +97,8 @@ func (t *Talkers) HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Play
 	message += "_Топ ранжируется по размеру благодарности. Здесь может быть ваша реклама!_"
 
 	c.Sender.SendMarkdownAnswer(update, message)
+
+	return constants.UserRequestSuccess
 }
 
 // FAQMessage prints frequently asked questions
@@ -139,5 +143,5 @@ func (t *Talkers) FAQMessage(update *tgbotapi.Update) string {
 
 	c.Sender.SendMarkdownAnswer(update, message)
 
-	return "ok"
+	return constants.UserRequestSuccess
 }
