@@ -179,8 +179,8 @@ func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 	for i := range profilePokememes {
 		for j := range pokememes {
 			if profilePokememes[i].PokememeID == pokememes[j].ID {
-				message += "\n" + strconv.Itoa(pokememes[j].Grade)
-				message += "⃣ " + pokememes[j].Name
+				message += "\n *[" + strconv.Itoa(pokememes[j].Grade)
+				message += "]* " + pokememes[j].Name
 				message += " +" + c.Statistics.GetPrintablePoints(profilePokememes[i].PokememeAttack) + "⚔"
 			}
 		}
