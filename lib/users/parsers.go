@@ -175,7 +175,11 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 					pkName := strings.Split(pokememeString, "+")[0]
 					pkName = strings.Replace(pkName, " ⭐", "", 1)
 					pkName = strings.TrimSuffix(pkName, " ")
-					pkName = strings.Split(pkName, "⃣ ")[1]
+					if strings.Contains(pkName, "🔟") {
+						pkName = strings.Split(pkName, "🔟 ")[1]
+					} else {
+						pkName = strings.Split(pkName, "⃣ ")[1]
+					}
 					pokememes[strconv.Itoa(pi)+"_"+pkName] = pkAttack
 					powerInt += c.Statistics.GetPoints(pkAttack)
 				}
