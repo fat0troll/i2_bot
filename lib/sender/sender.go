@@ -9,6 +9,7 @@ import (
 
 // SendMarkdownAnswer sends markdown-powered message as answer
 func (s *Sender) SendMarkdownAnswer(update *tgbotapi.Update, message string) {
+	c.Log.Debug("Sending Markdown answer...")
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ParseMode = parseMode
 
@@ -20,6 +21,7 @@ func (s *Sender) SendMarkdownAnswer(update *tgbotapi.Update, message string) {
 
 // SendMarkdownMessageToChatID sends markdown-powered message to specified chat
 func (s *Sender) SendMarkdownMessageToChatID(chatID int64, message string) {
+	c.Log.Debug("Sending Markdown message to specified chat...")
 	msg := tgbotapi.NewMessage(chatID, message)
 	msg.ParseMode = parseMode
 
@@ -31,6 +33,7 @@ func (s *Sender) SendMarkdownMessageToChatID(chatID int64, message string) {
 
 // SendMarkdownReply sends markdown-powered message as reply
 func (s *Sender) SendMarkdownReply(update *tgbotapi.Update, message string, messageID int) {
+	c.Log.Debug("Sending Markdown reply...")
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ParseMode = parseMode
 	msg.ReplyToMessageID = messageID
