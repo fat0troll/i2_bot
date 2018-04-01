@@ -183,7 +183,6 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 					}
 					pkName := strings.Split(pokememeString, "+")[0]
 					pkName = strings.Replace(pkName, " ⭐", "", 1)
-					pkName = strings.TrimSuffix(pkName, " ")
 					if strings.Contains(pkName, "🔟") {
 						pkName = strings.Split(pkName, "🔟 ")[1]
 					} else {
