@@ -1,5 +1,5 @@
 // i2_bot – Instinct PokememBro Bot
-// Copyright (c) 2017 Vladimir "fat0troll" Hodakov
+// Copyright (c) 2017-2018 Vladimir "fat0troll" Hodakov
 
 package router
 
@@ -63,6 +63,9 @@ func (r *Router) routePrivateRequest(update tgbotapi.Update, playerRaw *dbmappin
 				return "ok"
 			case update.Message.Command() == "bastion":
 				c.Talkers.BastionMessage(&update, playerRaw)
+				return "ok"
+			case update.Message.Command() == "games_chat":
+				c.Talkers.GamesMessage(&update, playerRaw)
 				return "ok"
 
 			case pokedexMsg.MatchString(text):

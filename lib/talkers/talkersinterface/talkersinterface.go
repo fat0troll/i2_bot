@@ -14,6 +14,7 @@ type TalkersInterface interface {
 
 	AcademyMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
 	BastionMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
+	GamesMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
 	HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
 	FAQMessage(update *tgbotapi.Update) string
 

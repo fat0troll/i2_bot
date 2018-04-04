@@ -48,6 +48,24 @@ func (t *Talkers) BastionMessage(update *tgbotapi.Update, playerRaw *dbmapping.P
 	return constants.UserRequestSuccess
 }
 
+// GamesMessage gives user link to Bastion
+func (t *Talkers) GamesMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
+	message := ""
+
+	if playerRaw.LeagueID > 1 {
+		message = "Иди нахуй, шпионское отродье"
+	} else if playerRaw.LeagueID == 0 {
+		message = "Заполни профиль и попробуй ещё раз"
+	} else {
+		message += "*Игровой чат Инстинкта*\n"
+		message += "Чат для игр в различные Телеграм-игрушки: https://t.me/joinchat/AAkt5E6bs\\_tGNybxbFMAxA"
+	}
+
+	c.Sender.SendMarkdownAnswer(update, message)
+
+	return constants.UserRequestSuccess
+}
+
 // HelpMessage gives user all available commands
 func (t *Talkers) HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
 	message := "*Бот Инстинкта Enhanced.*\n\n"
@@ -67,6 +85,7 @@ func (t *Talkers) HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Play
 	message += "\\* /reminders — настроить оповещения на Турнир лиг\n"
 	message += "\\* /academy — Академия Инстинкта\n"
 	message += "\\* /bastion — Бастион Инстинкта\n"
+	message += "\\* /games\\_chat — Игровой чат Инстинкта\n"
 	message += "\\* /faq — получить ответы на часто задаваемые вопросы\n"
 	if c.Users.PlayerBetterThan(playerRaw, "admin") {
 		message += "\\* /send\\_all _текст_ — отправить сообщение всем пользователям бота\n"
