@@ -1,11 +1,12 @@
 // i2_bot – Instinct PokememBro Bot
-// Copyright (c) 2017 Vladimir "fat0troll" Hodakov
+// Copyright (c) 2017-2018 Vladimir "fat0troll" Hodakov
 
 package chatter
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"strconv"
+
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 // GroupsList lists all chats where bot exist
@@ -16,6 +17,7 @@ func (ct *Chatter) GroupsList(update *tgbotapi.Update) string {
 	bastionChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.BastionID, 10, 64)
 	defaultChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.DefaultID, 10, 64)
 	hqChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.HeadquartersID, 10, 64)
+	gamesChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.GamesID, 10, 64)
 
 	message := "*Бот состоит в следующих групповых чатах:*\n"
 
@@ -41,6 +43,10 @@ func (ct *Chatter) GroupsList(update *tgbotapi.Update) string {
 
 			if groupChats[i].TelegramID == hqChatID {
 				message += "Является чатом совета лиги\n"
+			}
+
+			if groupChats[i].TelegramID == gamesChatID {
+				message += "Является игровым чатом\n"
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 // i2_bot – Instinct PokememBro Bot
-// Copyright (c) 2017 Vladimir "fat0troll" Hodakov
+// Copyright (c) 2017-2018 Vladimir "fat0troll" Hodakov
 
 package chatter
 
@@ -17,6 +17,7 @@ func (ct *Chatter) userPrivilegesCheck(update *tgbotapi.Update, user *tgbotapi.U
 	bastionChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.BastionID, 10, 64)
 	academyChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.AcademyID, 10, 64)
 	hqChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.HeadquartersID, 10, 64)
+	gamesChatID, _ := strconv.ParseInt(c.Cfg.SpecialChats.GamesID, 10, 64)
 
 	if update.Message.Chat.ID == defaultChatID || update.Message.Chat.ID == hqChatID {
 		return true
@@ -32,6 +33,10 @@ func (ct *Chatter) userPrivilegesCheck(update *tgbotapi.Update, user *tgbotapi.U
 		}
 	}
 
+	if update.Message.Chat.ID == gamesChatID && strings.Contains(user.UserName, "bot") {
+		return true
+	}
+
 	playerRaw, err := c.DataCache.GetPlayerByTelegramID(user.ID)
 	if err != nil {
 		c.Log.Error(err.Error())
@@ -44,11 +49,7 @@ func (ct *Chatter) userPrivilegesCheck(update *tgbotapi.Update, user *tgbotapi.U
 
 	// So, user is not a PokememBro admin. For Bastion and Academy she needs to be league player
 	switch update.Message.Chat.ID {
-	case academyChatID:
-		if playerRaw.LeagueID == 1 && playerRaw.Status != "spy" && playerRaw.Status != "league_changed" && playerRaw.Status != "banned" {
-			return true
-		}
-	case bastionChatID:
+	case academyChatID, bastionChatID, gamesChatID:
 		if playerRaw.LeagueID == 1 && playerRaw.Status != "spy" && playerRaw.Status != "league_changed" && playerRaw.Status != "banned" {
 			return true
 		}

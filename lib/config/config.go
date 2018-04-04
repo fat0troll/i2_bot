@@ -1,17 +1,18 @@
 // i2_bot – Instinct PokememBro Bot
-// Copyright (c) 2017 Vladimir "fat0troll" Hodakov
+// Copyright (c) 2017-2018 Vladimir "fat0troll" Hodakov
 
 package config
 
 import (
-	"bitbucket.org/pztrn/mogrus"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"path/filepath"
+
+	"bitbucket.org/pztrn/mogrus"
+	"gopkg.in/yaml.v2"
 )
 
 // VERSION is the current bot's version
-const VERSION = "0.7.2"
+const VERSION = "0.7.4"
 
 // DatabaseConnection handles database connection settings in config.yaml
 type DatabaseConnection struct {
@@ -35,6 +36,7 @@ type SpecialChats struct {
 	BastionID      string `yaml:"bastion_id"`
 	DefaultID      string `yaml:"default_id"`
 	HeadquartersID string `yaml:"headquarters_id"`
+	GamesID        string `yaml:"games_id"`
 }
 
 // LoggingConfig handles log file configuration

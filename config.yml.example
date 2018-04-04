@@ -13,5 +13,6 @@ special_chats:
     bastion_id: "group_id"
     default_id: "group_id"
     headquarters_id: "group_id"
+    games_id: "group_id"
 logs:
     log_path: "./i2_bot.log"
