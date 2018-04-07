@@ -45,7 +45,7 @@ func (ct *Chatter) userPrivilegesCheck(update *tgbotapi.Update, user *tgbotapi.U
 	}
 
 	if update.Message.Chat.ID == gamesChatID && strings.Contains(strings.ToLower(user.UserName), "bot") {
-		c.Log.Debug("Game bot with username @" + update.Message.From.UserName + " passed filtration")
+		c.Log.Debug("Game bot with username @" + user.UserName + " passed filtration")
 		return true
 	}
 
