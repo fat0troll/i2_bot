@@ -33,7 +33,19 @@ func (ct *Chatter) userPrivilegesCheck(update *tgbotapi.Update, user *tgbotapi.U
 		}
 	}
 
+	switch update.Message.Chat.ID {
+	case academyChatID:
+		c.Log.Debug("Checking user rights in academy chat...")
+	case bastionChatID:
+		c.Log.Debug("Checking user rights in bastion chat...")
+	case gamesChatID:
+		c.Log.Debug("Checking user rights in games chat...")
+	case hqChatID:
+		c.Log.Debug("Checking user rights in headquarters chat...")
+	}
+
 	if update.Message.Chat.ID == gamesChatID && strings.Contains(user.UserName, "bot") {
+		c.Log.Debug("Game bot with username @" + update.Message.From.UserName + " passed filtration")
 		return true
 	}
 
@@ -61,6 +73,8 @@ func (ct *Chatter) userPrivilegesCheck(update *tgbotapi.Update, user *tgbotapi.U
 			}
 		}
 	}
+
+	c.Log.Debug("User failed to prove identity. Ban sequence arrived.")
 
 	return false
 }
