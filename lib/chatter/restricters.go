@@ -24,10 +24,10 @@ func (ct *Chatter) userPrivilegesCheck(update *tgbotapi.Update, user *tgbotapi.U
 	}
 
 	// There are special users, which will bypass these checks
-	specialUsers := []string{"gantz_yaka", "agentpb", "pbhelp", "i2_bot", "i2_dev_bot"}
+	specialUsers := []string{"gantz_yaka", "agentpb", "pbhelp", "i2_bot", "i2_dev_bot", "grstatsbot"}
 
 	for j := range specialUsers {
-		if strings.ToLower(user.UserName) == specialUsers[j] {
+		if strings.Contains(strings.ToLower(user.UserName), specialUsers[j]) {
 			// This is for PokememBro admins, they can join any chat at any time
 			return true
 		}
@@ -44,7 +44,7 @@ func (ct *Chatter) userPrivilegesCheck(update *tgbotapi.Update, user *tgbotapi.U
 		c.Log.Debug("Checking user rights in headquarters chat...")
 	}
 
-	if update.Message.Chat.ID == gamesChatID && strings.Contains(strings.ToLower(user.UserName), "bot") {
+	if update.Message.Chat.ID == gamesChatID && user.IsBot {
 		c.Log.Debug("Game bot with username @" + user.UserName + " passed filtration")
 		return true
 	}
