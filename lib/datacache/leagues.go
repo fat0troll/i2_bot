@@ -5,7 +5,9 @@ package datacache
 
 import (
 	"errors"
+	"gopkg.in/yaml.v2"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
+	"source.wtfteam.pro/i2_bot/i2_bot/static"
 	"strconv"
 )
 
@@ -27,9 +29,17 @@ func (dc *DataCache) loadLeagues() {
 func (dc *DataCache) getLeagues() []datamapping.League {
 	leagues := []datamapping.League{}
 
-	leagues = append(leagues, datamapping.League{1, "🈸", "ИНСТИНКТ"})
-	leagues = append(leagues, datamapping.League{2, "🈳 ", "МИСТИКА"})
-	leagues = append(leagues, datamapping.League{3, "🈵", "ОТВАГА"})
+	yamlFile, err := static.ReadFile("leagues.yml")
+	if err != nil {
+		c.Log.Error(err.Error())
+		c.Log.Fatal("Can't read leagues data file")
+	}
+
+	err = yaml.Unmarshal(yamlFile, &leagues)
+	if err != nil {
+		c.Log.Error(err.Error())
+		c.Log.Fatal("Can't parse leagues data file")
+	}
 
 	return leagues
 }

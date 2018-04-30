@@ -5,7 +5,9 @@ package datacache
 
 import (
 	"errors"
+	"gopkg.in/yaml.v2"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
+	"source.wtfteam.pro/i2_bot/i2_bot/static"
 	"strconv"
 )
 
@@ -27,12 +29,17 @@ func (dc *DataCache) loadLocations() {
 func (dc *DataCache) getLocations() []datamapping.Location {
 	locations := []datamapping.Location{}
 
-	locations = append(locations, datamapping.Location{1, "🌲", "Лес"})
-	locations = append(locations, datamapping.Location{2, "⛰", "Горы"})
-	locations = append(locations, datamapping.Location{3, "🚣", "Озеро"})
-	locations = append(locations, datamapping.Location{4, "🏙", "Город"})
-	locations = append(locations, datamapping.Location{5, "🏛", "Катакомбы"})
-	locations = append(locations, datamapping.Location{6, "⛪️", "Кладбище"})
+	yamlFile, err := static.ReadFile("locations.yml")
+	if err != nil {
+		c.Log.Error(err.Error())
+		c.Log.Fatal("Can't read locations data file")
+	}
+
+	err = yaml.Unmarshal(yamlFile, &locations)
+	if err != nil {
+		c.Log.Error(err.Error())
+		c.Log.Fatal("Can't parse locations data file")
+	}
 
 	return locations
 }

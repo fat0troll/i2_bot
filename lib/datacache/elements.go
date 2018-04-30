@@ -5,7 +5,9 @@ package datacache
 
 import (
 	"errors"
+	"gopkg.in/yaml.v2"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
+	"source.wtfteam.pro/i2_bot/i2_bot/static"
 	"strconv"
 )
 
@@ -27,18 +29,17 @@ func (dc *DataCache) loadElements() {
 func (dc *DataCache) getElements() []datamapping.Element {
 	elements := []datamapping.Element{}
 
-	elements = append(elements, datamapping.Element{1, "👊", "Боевой", 1})
-	elements = append(elements, datamapping.Element{2, "🌀", "Летающий", 1})
-	elements = append(elements, datamapping.Element{3, "💀", "Ядовитый", 1})
-	elements = append(elements, datamapping.Element{4, "🗿", "Каменный", 1})
-	elements = append(elements, datamapping.Element{5, "🔥", "Огненный", 2})
-	elements = append(elements, datamapping.Element{6, "⚡", "Электрический", 2})
-	elements = append(elements, datamapping.Element{7, "💧", "Водяной", 2})
-	elements = append(elements, datamapping.Element{8, "🍀", "Травяной", 2})
-	elements = append(elements, datamapping.Element{9, "💩", "Отважный", 3})
-	elements = append(elements, datamapping.Element{10, "👁", "Психический", 3})
-	elements = append(elements, datamapping.Element{11, "👿", "Тёмный", 3})
-	elements = append(elements, datamapping.Element{12, "⌛", "Времени", 3})
+	yamlFile, err := static.ReadFile("elements.yml")
+	if err != nil {
+		c.Log.Error(err.Error())
+		c.Log.Fatal("Can't read elements data file")
+	}
+
+	err = yaml.Unmarshal(yamlFile, &elements)
+	if err != nil {
+		c.Log.Error(err.Error())
+		c.Log.Fatal("Can't parse elements data file")
+	}
 
 	return elements
 }

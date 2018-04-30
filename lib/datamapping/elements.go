@@ -5,8 +5,8 @@ package datamapping
 
 // Element is a struct, which represents element data
 type Element struct {
-	ID       int
-	Symbol   string
-	Name     string
-	LeagueID int
+	ID       int    `yaml:"id"`
+	Symbol   string `yaml:"symbol"`
+	Name     string `yaml:"name"`
+	LeagueID int    `yaml:"league_id"`
 }

@@ -5,7 +5,7 @@ package datamapping
 
 // League is a struct, which represents league data
 type League struct {
-	ID     int
-	Symbol string
-	Name   string
+	ID     int    `yaml:"id"`
+	Symbol string `yaml:"symbol"`
+	Name   string `yaml:"name"`
 }

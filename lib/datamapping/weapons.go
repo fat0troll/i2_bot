@@ -5,8 +5,8 @@ package datamapping
 
 // Weapon is a struct, which represents weapon data
 type Weapon struct {
-	ID    int
-	Name  string
-	Power int
-	Price int
+	ID    int    `yaml:"id"`
+	Name  string `yaml:"name"`
+	Power int    `yaml:"power"`
+	Price int    `yaml:"price"`
 }

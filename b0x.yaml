@@ -1,0 +1,18 @@
+pkg: static
+dest: "./static/"
+fmt: true
+updater:
+  enabled: false
+compression:
+  compress: false
+clean: false
+output: "ab0x.go"
+unexporTed: false
+spread: false
+lcf: true
+debug: false
+custom:
+  - files:
+    - "data/*.yml"
+    base: "data/"
+    prefix: ""

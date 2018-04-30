@@ -1,0 +1,44 @@
+- id: 1
+  name: "Бита"
+  power: 3
+  price: 5
+- id: 2
+  name: "Стальная бита"
+  power: 30
+  price: 2700
+- id: 3
+  name: "Чугунная бита"
+  power: 60
+  price: 5400
+- id: 4
+  name: "Титановая бита"
+  power: 100
+  price: 9000
+- id: 5
+  name: "Алмазная бита"
+  power: 140
+  price: 12500
+- id: 6
+  name: "Криптонитовая бита"
+  power: 160
+  price: 14500
+- id: 7
+  name: "Буханка из пятёры"
+  power: 180
+  price: 16000
+- id: 8
+  name: "Руки-базуки"
+  power: 200
+  price: 18000
+- id: 9
+  name: "Какахи-торпеды"
+  power: 220
+  price: 20000
+- id: 10
+  name: "Бита Бесконечности"
+  power: 250
+  price: 23000
+- id: 11
+  name: "Бита 280"
+  power: 280
+  price: 25000

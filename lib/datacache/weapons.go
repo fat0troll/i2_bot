@@ -5,7 +5,9 @@ package datacache
 
 import (
 	"errors"
+	"gopkg.in/yaml.v2"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
+	"source.wtfteam.pro/i2_bot/i2_bot/static"
 	"strconv"
 	"strings"
 )
@@ -28,13 +30,17 @@ func (dc *DataCache) loadWeapons() {
 func (dc *DataCache) getWeapons() []datamapping.Weapon {
 	weapons := []datamapping.Weapon{}
 
-	weapons = append(weapons, datamapping.Weapon{1, "Бита", 2, 5})
-	weapons = append(weapons, datamapping.Weapon{2, "Стальная бита", 10, 40})
-	weapons = append(weapons, datamapping.Weapon{3, "Чугунная бита", 200, 500})
-	weapons = append(weapons, datamapping.Weapon{4, "Титановая бита", 2000, 10000})
-	weapons = append(weapons, datamapping.Weapon{5, "Алмазная бита", 10000, 100000})
-	weapons = append(weapons, datamapping.Weapon{6, "Криптонитовая бита", 100000, 500000})
-	weapons = append(weapons, datamapping.Weapon{7, "Буханка из пятёры", 1000000, 5000000})
+	yamlFile, err := static.ReadFile("weapons.yml")
+	if err != nil {
+		c.Log.Error(err.Error())
+		c.Log.Fatal("Can't read weapons data file")
+	}
+
+	err = yaml.Unmarshal(yamlFile, &weapons)
+	if err != nil {
+		c.Log.Error(err.Error())
+		c.Log.Fatal("Can't parse weapons data file")
+	}
 
 	return weapons
 }
