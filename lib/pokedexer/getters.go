@@ -5,14 +5,14 @@ package pokedexer
 
 import (
 	"sort"
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
 	"strconv"
 	"strings"
 )
 
-func (p *Pokedexer) getAdvicePokememes(playerID int, adviceType string) ([]*dbmapping.PokememeFull, bool) {
+func (p *Pokedexer) getAdvicePokememes(playerID int, adviceType string) ([]*datamapping.PokememeFull, bool) {
 	c.Log.Debug("Getting advice for pokememes...")
-	pokememesArray := make([]*dbmapping.PokememeFull, 0)
+	pokememesArray := make([]*datamapping.PokememeFull, 0)
 
 	playerRaw, err := c.DataCache.GetPlayerByID(playerID)
 	if err != nil {
@@ -90,7 +90,7 @@ func (p *Pokedexer) getAdvicePokememes(playerID int, adviceType string) ([]*dbma
 	case "best", "advice", "best_nofilter":
 		if len(pokememesArray) > 5 {
 			idx := 0
-			pokememesArrayShorted := make([]*dbmapping.PokememeFull, 0)
+			pokememesArrayShorted := make([]*datamapping.PokememeFull, 0)
 			for i := range pokememesArray {
 				if idx < 5 {
 					pokememesArrayShorted = append(pokememesArrayShorted, pokememesArray[i])

@@ -1,0 +1,728 @@
+- id: 553
+  grade: 17
+  name: "557"
+  description: "557: описание"
+  attack: 320
+  defence: 1420
+  health: 1600
+  mana: 1600
+  cost: 320
+  purchaseable: true
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [11]
+  locations: [3, 5, 6]
+- id: 554
+  grade: 17
+  name: "558"
+  description: "558: описание"
+  attack: 320
+  defence: 1420
+  health: 1600
+  mana: 1600
+  cost: 320
+  purchaseable: true
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [1]
+  locations: [3, 5, 6]
+- id: 555
+  grade: 17
+  name: "559"
+  description: "559: описание"
+  attack: 320
+  defence: 1420
+  health: 1600
+  mana: 1600
+  cost: 320
+  purchaseable: true
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [6]
+  locations: [3, 5, 6]
+- id: 556
+  grade: 17
+  name: "560"
+  description: "560: описание"
+  attack: 321
+  defence: 1425
+  health: 1605
+  mana: 1605
+  cost: 321
+  purchaseable: true
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [9]
+  locations: [3, 5, 6]
+- id: 557
+  grade: 17
+  name: "561"
+  description: "561: описание"
+  attack: 321
+  defence: 1425
+  health: 1605
+  mana: 1605
+  cost: 321
+  purchaseable: true
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [2]
+  locations: [3, 5, 6]
+- id: 558
+  grade: 17
+  name: "562"
+  description: "562: описание"
+  attack: 321
+  defence: 1425
+  health: 1605
+  mana: 1605
+  cost: 321
+  purchaseable: true
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [7]
+  locations: [3, 5, 6]
+- id: 559
+  grade: 17
+  name: "563"
+  description: "563: описание"
+  attack: 322
+  defence: 1430
+  health: 1610
+  mana: 1610
+  cost: 322
+  purchaseable: true
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [10]
+  locations: [3]
+- id: 560
+  grade: 17
+  name: "564"
+  description: "564: описание"
+  attack: 322
+  defence: 1430
+  health: 1610
+  mana: 1610
+  cost: 322
+  purchaseable: true
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [3]
+  locations: [5]
+- id: 561
+  grade: 17
+  name: "565"
+  description: "565: описание"
+  attack: 322
+  defence: 1430
+  health: 1610
+  mana: 1610
+  cost: 322
+  purchaseable: true
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [5]
+  locations: [6]
+- id: 562
+  grade: 17
+  name: "566"
+  description: "566: описание"
+  attack: 323
+  defence: 1435
+  health: 1615
+  mana: 1615
+  cost: 323
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [12]
+  locations: [3]
+- id: 563
+  grade: 17
+  name: "567"
+  description: "567: описание"
+  attack: 323
+  defence: 1435
+  health: 1615
+  mana: 1615
+  cost: 323
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [4]
+  locations: [5]
+- id: 564
+  grade: 17
+  name: "568"
+  description: "568: описание"
+  attack: 323
+  defence: 1435
+  health: 1615
+  mana: 1615
+  cost: 323
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [8]
+  locations: [6]
+- id: 565
+  grade: 17
+  name: "569"
+  description: "569: описание"
+  attack: 324
+  defence: 1440
+  health: 1620
+  mana: 1620
+  cost: 324
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [11]
+  locations: [3]
+- id: 566
+  grade: 17
+  name: "570"
+  description: "570: описание"
+  attack: 324
+  defence: 1440
+  health: 1620
+  mana: 1620
+  cost: 324
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [1]
+  locations: [5]
+- id: 567
+  grade: 17
+  name: "571"
+  description: "571: описание"
+  attack: 324
+  defence: 1440
+  health: 1620
+  mana: 1620
+  cost: 324
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [6]
+  locations: [6]
+- id: 568
+  grade: 17
+  name: "572"
+  description: "572: описание"
+  attack: 325
+  defence: 1445
+  health: 1625
+  mana: 1625
+  cost: 325
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [9]
+  locations: [3]
+- id: 569
+  grade: 17
+  name: "573"
+  description: "573: описание"
+  attack: 325
+  defence: 1445
+  health: 1625
+  mana: 1625
+  cost: 325
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [2]
+  locations: [5]
+- id: 570
+  grade: 17
+  name: "574"
+  description: "574: описание"
+  attack: 325
+  defence: 1445
+  health: 1625
+  mana: 1625
+  cost: 325
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [7]
+  locations: [6]
+- id: 571
+  grade: 17
+  name: "575"
+  description: "575: описание"
+  attack: 326
+  defence: 1450
+  health: 1630
+  mana: 1630
+  cost: 326
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [5, 3, 10]
+  locations: [3, 5, 6]
+- id: 572
+  grade: 17
+  name: "576"
+  description: "576: описание"
+  attack: 328
+  defence: 1460
+  health: 1640
+  mana: 1640
+  cost: 328
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [10]
+  locations: [3]
+- id: 573
+  grade: 17
+  name: "577"
+  description: "577: описание"
+  attack: 328
+  defence: 1460
+  health: 1640
+  mana: 1640
+  cost: 328
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [3]
+  locations: [5]
+- id: 574
+  grade: 17
+  name: "578"
+  description: "578: описание"
+  attack: 328
+  defence: 1460
+  health: 1640
+  mana: 1640
+  cost: 328
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [5]
+  locations: [6]
+- id: 575
+  grade: 17
+  name: "579"
+  description: "579: описание"
+  attack: 330
+  defence: 1470
+  health: 1650
+  mana: 1650
+  cost: 330
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [12]
+  locations: [3]
+- id: 576
+  grade: 17
+  name: "580"
+  description: "580: описание"
+  attack: 330
+  defence: 1470
+  health: 1650
+  mana: 1650
+  cost: 330
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [4]
+  locations: [5]
+- id: 577
+  grade: 17
+  name: "581"
+  description: "581: описание"
+  attack: 330
+  defence: 1470
+  health: 1650
+  mana: 1650
+  cost: 330
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [8]
+  locations: [6]
+- id: 578
+  grade: 17
+  name: "582"
+  description: "582: описание"
+  attack: 332
+  defence: 1480
+  health: 1660
+  mana: 1660
+  cost: 332
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [11]
+  locations: [3]
+- id: 579
+  grade: 17
+  name: "583"
+  description: "583: описание"
+  attack: 332
+  defence: 1480
+  health: 1660
+  mana: 1660
+  cost: 332
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [1]
+  locations: [5]
+- id: 580
+  grade: 17
+  name: "584"
+  description: "584: описание"
+  attack: 332
+  defence: 1480
+  health: 1660
+  mana: 1660
+  cost: 332
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [6]
+  locations: [6]
+- id: 581
+  grade: 17
+  name: "585"
+  description: "585: описание"
+  attack: 334
+  defence: 1490
+  health: 1670
+  mana: 1670
+  cost: 334
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [9]
+  locations: [3]
+- id: 582
+  grade: 17
+  name: "586"
+  description: "586: описание"
+  attack: 334
+  defence: 1490
+  health: 1670
+  mana: 1670
+  cost: 334
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [2]
+  locations: [5]
+- id: 583
+  grade: 17
+  name: "587"
+  description: "587: описание"
+  attack: 334
+  defence: 1490
+  health: 1670
+  mana: 1670
+  cost: 334
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [7]
+  locations: [6]
+- id: 584
+  grade: 17
+  name: "588"
+  description: "588: описание"
+  attack: 336
+  defence: 1500
+  health: 1680
+  mana: 1680
+  cost: 336
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [10]
+  locations: [3]
+- id: 585
+  grade: 17
+  name: "589"
+  description: "589: описание"
+  attack: 336
+  defence: 1500
+  health: 1680
+  mana: 1680
+  cost: 336
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [3]
+  locations: [5]
+- id: 586
+  grade: 17
+  name: "590"
+  description: "590: описание"
+  attack: 336
+  defence: 1500
+  health: 1680
+  mana: 1680
+  cost: 336
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [5]
+  locations: [6]
+- id: 587
+  grade: 17
+  name: "591"
+  description: "591: описание"
+  attack: 338
+  defence: 1510
+  health: 1690
+  mana: 1690
+  cost: 338
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [8, 4, 12]
+  locations: [1, 2, 4]
+- id: 588
+  grade: 17
+  name: "592"
+  description: "592: описание"
+  attack: 340
+  defence: 1515
+  health: 1700
+  mana: 1700
+  cost: 340
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [11]
+  locations: [4]
+- id: 589
+  grade: 17
+  name: "593"
+  description: "593: описание"
+  attack: 340
+  defence: 1515
+  health: 1700
+  mana: 1700
+  cost: 340
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [1]
+  locations: [2]
+- id: 590
+  grade: 17
+  name: "594"
+  description: "594: описание"
+  attack: 340
+  defence: 1515
+  health: 1700
+  mana: 1700
+  cost: 340
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [6]
+  locations: [1]
+- id: 591
+  grade: 17
+  name: "595"
+  description: "595: описание"
+  attack: 342
+  defence: 1520
+  health: 1710
+  mana: 1710
+  cost: 342
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [9]
+  locations: [4]
+- id: 592
+  grade: 17
+  name: "596"
+  description: "596: описание"
+  attack: 342
+  defence: 1520
+  health: 1710
+  mana: 1710
+  cost: 342
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [2]
+  locations: [2]
+- id: 593
+  grade: 17
+  name: "597"
+  description: "597: описание"
+  attack: 342
+  defence: 1520
+  health: 1710
+  mana: 1710
+  cost: 342
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [7]
+  locations: [1]
+- id: 594
+  grade: 17
+  name: "598"
+  description: "598: описание"
+  attack: 344
+  defence: 1530
+  health: 1720
+  mana: 1720
+  cost: 344
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [10]
+  locations: [4]
+- id: 595
+  grade: 17
+  name: "599"
+  description: "599: описание"
+  attack: 344
+  defence: 1530
+  health: 1720
+  mana: 1720
+  cost: 344
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [3]
+  locations: [2]
+- id: 596
+  grade: 17
+  name: "600"
+  description: "600: описание"
+  attack: 344
+  defence: 1530
+  health: 1720
+  mana: 1720
+  cost: 344
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [5]
+  locations: [1]
+- id: 597
+  grade: 17
+  name: "601"
+  description: "601: описание"
+  attack: 346
+  defence: 1540
+  health: 1730
+  mana: 1730
+  cost: 346
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [12]
+  locations: [4]
+- id: 598
+  grade: 17
+  name: "602"
+  description: "602: описание"
+  attack: 346
+  defence: 1540
+  health: 1730
+  mana: 1730
+  cost: 346
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [4]
+  locations: [2]
+- id: 599
+  grade: 17
+  name: "603"
+  description: "603: описание"
+  attack: 346
+  defence: 1540
+  health: 1730
+  mana: 1730
+  cost: 346
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [8]
+  locations: [1]
+- id: 600
+  grade: 17
+  name: "604"
+  description: "604: описание"
+  attack: 348
+  defence: 1550
+  health: 1740
+  mana: 1740
+  cost: 348
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [11]
+  locations: [4]
+- id: 601
+  grade: 17
+  name: "605"
+  description: "605: описание"
+  attack: 348
+  defence: 1550
+  health: 1740
+  mana: 1740
+  cost: 348
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [1]
+  locations: [2]
+- id: 602
+  grade: 17
+  name: "606"
+  description: "606: описание"
+  attack: 348
+  defence: 1550
+  health: 1740
+  mana: 1740
+  cost: 348
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [6]
+  locations: [1]
+- id: 603
+  grade: 17
+  name: "607"
+  description: "607: описание"
+  attack: 350
+  defence: 1560
+  health: 1750
+  mana: 1750
+  cost: 350
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [8, 12]
+  locations: [1, 4]
+- id: 604
+  grade: 17
+  name: "608"
+  description: "608: описание"
+  attack: 350
+  defence: 1560
+  health: 1750
+  mana: 1750
+  cost: 350
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [2, 7]
+  locations: [1, 2]
+- id: 605
+  grade: 17
+  name: "609"
+  description: "609: описание"
+  attack: 350
+  defence: 1560
+  health: 1750
+  mana: 1750
+  cost: 350
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [11, 10]
+  locations: [4]
+- id: 606
+  grade: 17
+  name: "610"
+  description: "610: описание"
+  attack: 350
+  defence: 1560
+  health: 1750
+  mana: 1750
+  cost: 350
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [9, 3]
+  locations: [2, 4]
+- id: 607
+  grade: 17
+  name: "611"
+  description: "611: описание"
+  attack: 350
+  defence: 1560
+  health: 1750
+  mana: 1750
+  cost: 350
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [5, 6]
+  locations: [1]
+- id: 608
+  grade: 17
+  name: "612"
+  description: "612: описание"
+  attack: 350
+  defence: 1560
+  health: 1750
+  mana: 1750
+  cost: 350
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [1, 4]
+  locations: [2]

@@ -23,12 +23,15 @@ func (r *Router) RouteCallback(update tgbotapi.Update) string {
 
 	var enableAlarmCallback = regexp.MustCompile("enable_reminder_(\\d+)\\z")
 	var disableAlarmCallback = regexp.MustCompile("disable_reminder_(\\d+)\\z")
+	var pokedeksPageCallback = regexp.MustCompile("pokedeks(\\d+)\\z")
 
 	switch {
 	case enableAlarmCallback.MatchString(update.CallbackQuery.Data):
 		return c.Reminder.CreateAlarmSetting(&update, playerRaw)
 	case disableAlarmCallback.MatchString(update.CallbackQuery.Data):
 		return c.Reminder.DestroyAlarmSetting(&update, playerRaw)
+	case pokedeksPageCallback.MatchString(update.CallbackQuery.Data):
+		return c.Pokedexer.PokememesListUpdater(&update)
 	}
 
 	return "ok"

@@ -16,3 +16,7 @@ custom:
     - "data/*.yml"
     base: "data/"
     prefix: ""
+  - files:
+    - "data/pokememes/*.yml"
+    base: "data/"
+    prefix: ""

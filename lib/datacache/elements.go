@@ -44,16 +44,6 @@ func (dc *DataCache) getElements() []datamapping.Element {
 	return elements
 }
 
-func (dc *DataCache) findElementIDBySymbol(symbol string) (int, error) {
-	for i := range dc.elements {
-		if dc.elements[i].Symbol == symbol {
-			return i, nil
-		}
-	}
-
-	return 0, errors.New("There is no element with symbol = " + symbol)
-}
-
 // External functions
 
 // GetElementByID returns element with given ID
@@ -63,4 +53,15 @@ func (dc *DataCache) GetElementByID(elementID int) (*datamapping.Element, error)
 	}
 
 	return nil, errors.New("There is no element with ID = " + strconv.Itoa(elementID))
+}
+
+// FindElementIDBySymbol returns element ID for given symbol
+func (dc *DataCache) FindElementIDBySymbol(symbol string) (int, error) {
+	for i := range dc.elements {
+		if dc.elements[i].Symbol == symbol {
+			return i, nil
+		}
+	}
+
+	return 0, errors.New("There is no element with symbol = " + symbol)
 }

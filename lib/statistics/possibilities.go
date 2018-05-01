@@ -60,12 +60,7 @@ func (s *Statistics) PossibilityRequiredPokeballs(location int, grade int, lvl i
 		}
 	}
 
-	var pokememesCount int
-
-	err := c.Db.Get(&pokememesCount, c.Db.Rebind("SELECT count(*) FROM pokememes p, pokememes_locations pl WHERE p.grade = ? AND pl.location_id = ? AND pl.pokememe_id = p.id;"), grade, location)
-	if err != nil {
-		c.Log.Error(err)
-	}
+	pokememesCount := c.DataCache.GetPokememesCountByGradeAndLocation(grade, location)
 
 	if basePossibility != 0 && pokememesCount != 0 {
 		percentile = basePossibility * 100.0 / float64(pokememesCount)

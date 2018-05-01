@@ -1,0 +1,221 @@
+- id: 13
+  grade: 2
+  name: "Тигруша"
+  description: "Веселый гиперактивный покемем с сильным хвостом. Очень тяжелый и сладкий, падает с деревьев на врагов и хвастается им своей спелостью."
+  attack: 10
+  defence: 10
+  health: 50
+  mana: 50
+  cost: 10
+  purchaseable: true
+  image: "http://i.imgur.com/mYNVLJm.jpg"
+  elements: [8]
+  locations: [1]
+- id: 14
+  grade: 2
+  name: "Колобоксер"
+  description: "Мучной агрессивный покемем, ушатавший бабушку и дедушку. Отличается крайней доверчивостью и способностью перекатываться не хуже Йобушка."
+  attack: 11
+  defence: 11
+  health: 55
+  mana: 55
+  cost: 11
+  purchaseable: true
+  image: "http://i.yapx.ru/4dRZ.jpg"
+  elements: [9]
+  locations: [2]
+- id: 15
+  grade: 2
+  name: "Муравейпер"
+  description: "Страстный трудяга и курильщик. Парит, где хотит, на 95% безопасней дыма для людей, но не для покемемов. Больно кусается и иногда взрывается."
+  attack: 12
+  defence: 12
+  health: 60
+  mana: 60
+  cost: 12
+  purchaseable: true
+  image: "http://i.imgur.com/aNWdnWl.jpg"
+  elements: [3]
+  locations: [4]
+- id: 16
+  grade: 2
+  name: "Ежжик"
+  description: "Колючий и дерзкий чемпион по карате Дагестана. Тусует со смешариками. Любит участвовать в разборках. Убежден, что безделье - игрушка дьявола. Наводит ужас на город криками: \"ТААА!!! ШААА!!!\", - во время своих тренировок."
+  attack: 13
+  defence: 13
+  health: 65
+  mana: 65
+  cost: 13
+  purchaseable: true
+  image: "http://i.imgur.com/LsIUzQV.jpg"
+  elements: [10]
+  locations: [2]
+- id: 17
+  grade: 2
+  name: "Попугайка"
+  description: "Летучий покемем, проказник, обманщик и лгун. Умеет заговорить зубы кому-угодно и навинтиться на врага, обездвиживая его."
+  attack: 14
+  defence: 14
+  health: 70
+  mana: 70
+  cost: 14
+  purchaseable: true
+  image: "http://i.imgur.com/0a5r9tg.jpg"
+  elements: [2]
+  locations: [4]
+- id: 18
+  grade: 2
+  name: "Кенгуруза"
+  description: "Покемем сильный и быстрый, умеет стрелять по врагу попкорном, но предпочитает в бою ближние дистанции."
+  attack: 15
+  defence: 15
+  health: 75
+  mana: 75
+  cost: 15
+  purchaseable: true
+  image: "http://i.imgur.com/2dJyLyc.jpg"
+  elements: [8]
+  locations: [1]
+- id: 19
+  grade: 2
+  name: "Свинь-Янь"
+  description: "Покемем-божество, воплощает собой гармонию совершенства формы и бренности бытия. Живет в грязи, приносит удачу, хрюками и визгами искривляет время. Сражается, кусаясь и закидывая врагов какулями."
+  attack: 16
+  defence: 16
+  health: 80
+  mana: 80
+  cost: 16
+  purchaseable: true
+  image: "http://i.imgur.com/3s8ZEWO.jpg"
+  elements: [1]
+  locations: [4]
+- id: 20
+  grade: 2
+  name: "Колждун"
+  description: "Грустный, ленивый, вялый и вечно чего-то ждущий покемем-колдун. Умеет оборачивать время себе на пользу, убивая врагов ожиданием своих атак."
+  attack: 17
+  defence: 17
+  health: 85
+  mana: 85
+  cost: 17
+  purchaseable: true
+  image: "http://i.imgur.com/uPO9kfs.jpg"
+  elements: [11]
+  locations: [2]
+- id: 21
+  grade: 2
+  name: "Носорогурец"
+  description: "Мощный и сильный покемем, растет на грядке, имеет сильный реген, насаживает врагов своим крепким рогом и даёт им влагу и, скорей всего, силу земли."
+  attack: 18
+  defence: 18
+  health: 90
+  mana: 90
+  cost: 18
+  purchaseable: true
+  image: "http://i.imgur.com/quclz0R.jpg"
+  elements: [8]
+  locations: [1]
+- id: 22
+  grade: 2
+  name: "Пепелино"
+  description: "Покемем-мимик. Выглядит как пепельница, пока его не потревожить. Извергает зловонную тучу из пепла и бычков в сторону противника."
+  attack: 19
+  defence: 19
+  health: 95
+  mana: 95
+  cost: 19
+  purchaseable: true
+  image: "http://i.imgur.com/yTqQasH.jpg"
+  elements: [3, 10]
+  locations: [2, 4]
+- id: 23
+  grade: 2
+  name: "Петушина"
+  description: "Покемем наглый и самоуверенный, с тягой к воровству. Одинаково быстр как в воздухе, так и на суше и в воде. Имеет высокие показатели управляемости на сухой и на мокрой дороге. Имеет способность сохранять баланс на сложном дорожном покрытии."
+  attack: 19
+  defence: 19
+  health: 95
+  mana: 95
+  cost: 19
+  purchaseable: true
+  image: "http://i.imgur.com/ksh6CwU.jpg"
+  elements: [2]
+  locations: [4]
+- id: 24
+  grade: 2
+  name: "Аристокраб"
+  description: "Давний близкий приятель матушки противника. Затащил бы любую катку, будь он в руках нормального покемем-мастера. Под видом образованного и интеллигентного покемема входит в доверие к противнику, после чего делает кусь своей могучей клешней."
+  attack: 20
+  defence: 35
+  health: 100
+  mana: 100
+  cost: 20
+  purchaseable: false
+  image: "http://i.yapx.ru/4dwk.jpg"
+  elements: [2, 7]
+  locations: [3, 5]
+- id: 25
+  grade: 2
+  name: "Боярышня"
+  description: "Лучший друг Телеватника. Коварный покемем, лечащий (на самом деле нет) гниющие душевные раны. Возникает там, куда Самогончая не может доставить. Близкий родственник C2H5OH. Атакует противника фунфыриками. Нейтрализуется чебуреком."
+  attack: 20
+  defence: 35
+  health: 100
+  mana: 100
+  cost: 20
+  purchaseable: false
+  image: "http://i.yapx.ru/4djy.jpg"
+  elements: [3, 9]
+  locations: [5, 6]
+- id: 26
+  grade: 2
+  name: "КАРТОХА"
+  description: "Очень жирный потный покемем с зашкаливающим чсв. Протокартофель, родоначальник всего картофеля на земле. Боевой клич: \"Ты-то куда лезешь, неразборчиво!!?\" За каждую атаку Картоха требует награды. Если оставить без внимания его просьбы, наглый клубень будет орать про сворованную японскую франшизу и то, насколько это глупо - делать вместо всем известных монстров смишнявки с мемами."
+  attack: 20
+  defence: 35
+  health: 100
+  mana: 100
+  cost: 20
+  purchaseable: false
+  image: "http://i.yapx.ru/4dV4.jpg"
+  elements: [6, 5]
+  locations: [3]
+- id: 27
+  grade: 2
+  name: "Кофейог"
+  description: "Бодрый покемем. Обожает водяной раствор жженого помета Ведьмакаки. Целыми днями занимается поисками и собирательствами ценного ингридиента. На два полных мешка целый день уходит. Атакует противника тахикардией."
+  attack: 20
+  defence: 35
+  health: 100
+  mana: 100
+  cost: 20
+  purchaseable: false
+  image: "http://i.yapx.ru/4dy3.jpg"
+  elements: [11, 10]
+  locations: [6]
+- id: 28
+  grade: 2
+  name: "Пикачок"
+  description: "Очень сильный электрический покемем-переросток. Обитает в качалочках и магазинах спортпита. При выборе из двух противников выбирает более белкового. Всегда напевает себе под нос: \"Надо подкачаться, надо, надо подкачаться...\""
+  attack: 20
+  defence: 35
+  health: 100
+  mana: 100
+  cost: 20
+  purchaseable: false
+  image: "http://i.yapx.ru/4dfB.jpg"
+  elements: [8, 12]
+  locations: [3, 6]
+- id: 29
+  grade: 2
+  name: "Принц Пенсии"
+  description: "Обитает в собственных песках (от времени) и часто маскируется под Телеватника. Практически всегда передвигается верхом на Ссущих Копейках. Атакует врага восхитительными историями о том, как всё было хорошо, пока не пришел Ельцинтурион."
+  attack: 20
+  defence: 35
+  health: 100
+  mana: 100
+  cost: 20
+  purchaseable: false
+  image: "http://i.yapx.ru/4dqW.jpg"
+  elements: [4, 1]
+  locations: [5]

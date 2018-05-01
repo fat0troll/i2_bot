@@ -99,6 +99,19 @@ func (p *Pokedexer) PokememesList(update *tgbotapi.Update) {
 	p.pokememesListing(update, page, pokememesArray)
 }
 
+// PokememesListUpdater updates page in pokedeks message
+func (p *Pokedexer) PokememesListUpdater(update *tgbotapi.Update) string {
+	pageNumber := strings.Replace(update.CallbackQuery.Data, "pokedeks", "", 1)
+	page, _ := strconv.Atoi(pageNumber)
+	if page == 0 {
+		page = 1
+	}
+	pokememesArray := c.DataCache.GetAllPokememes()
+	p.pokememesListingUpdate(update, page, pokememesArray)
+
+	return "ok"
+}
+
 // PokememeInfo shows information about single pokememe based on internal ID
 func (p *Pokedexer) PokememeInfo(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
 	pokememeNumber := strings.Replace(update.Message.Text, "/pk", "", 1)
@@ -150,7 +163,7 @@ func (p *Pokedexer) PokememeInfo(update *tgbotapi.Update, playerRaw *dbmapping.P
 	if c.Users.PlayerBetterThan(playerRaw, "academic") {
 		message += "\nВероятность поимки:"
 		idx := 1
-		for idx < 10 {
+		for idx < 23 {
 			levelHeaderPosted := false
 			for i := range pokememe.Locations {
 				percentile, pokeballs := c.Statistics.PossibilityRequiredPokeballs(pokememe.Locations[i].ID, pk.Grade, idx)
@@ -183,6 +196,7 @@ func (p *Pokedexer) PokememeInfo(update *tgbotapi.Update, playerRaw *dbmapping.P
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	keyboard := tgbotapi.InlineKeyboardMarkup{}
 	for i := range pokememe.Locations {
+		c.Log.Info("wow, location")
 		var row []tgbotapi.InlineKeyboardButton
 		btn := tgbotapi.NewInlineKeyboardButtonSwitch(pokememe.Locations[i].Symbol+pokememe.Locations[i].Name, pokememe.Locations[i].Symbol+pokememe.Locations[i].Name)
 		row = append(row, btn)

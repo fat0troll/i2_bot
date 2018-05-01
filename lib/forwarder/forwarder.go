@@ -13,7 +13,7 @@ import (
 func (f *Forwarder) ProcessForward(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
 	text := update.Message.Text
 	// Forwards
-	var pokememeMsg = regexp.MustCompile("(Уровень)(.+)(Опыт)(.+)\n(Элементы:)(.+)\n(.+)(💙MP)")
+	var pokememeMsg = regexp.MustCompile(`Dex(.+)\nGrade(.+)\nName(.+)`)
 	var profileMsg = regexp.MustCompile(`(Онлайн: )(\d+)(| Турнир: )(.+)\n(.+)\n(.+)\n(👤Уровень)(.+)\n`)
 	var profileWithEffectsMsg = regexp.MustCompile(`(Онлайн: )(\d+)(| Турнир: )(.+)\n(.+)\n(.+)\n(.+)\n(👤Уровень)(.+)\n`)
 

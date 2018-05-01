@@ -44,7 +44,18 @@ func (dc *DataCache) getLocations() []datamapping.Location {
 	return locations
 }
 
-func (dc *DataCache) findLocationIDByName(name string) (int, error) {
+func (dc *DataCache) getLocationByID(locationID int) (*datamapping.Location, error) {
+	if dc.locations[locationID] != nil {
+		return dc.locations[locationID], nil
+	}
+
+	return nil, errors.New("There is no localtion with ID = " + strconv.Itoa(locationID))
+}
+
+// External functions
+
+// FindLocationIDByName returns location ID for given location name
+func (dc *DataCache) FindLocationIDByName(name string) (int, error) {
 	for i := range dc.locations {
 		if dc.locations[i].Name == name {
 			return i, nil

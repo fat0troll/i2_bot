@@ -1,0 +1,156 @@
+- id: 1
+  grade: 1
+  name: "Рулитка"
+  description: "Противоударный, водонепроницаемый покемем, умеет замедлять время и увеличивать расстояния. В бою он, конечно, так себе."
+  attack: 1
+  defence: 1
+  health: 5
+  mana: 5
+  cost: 1
+  purchaseable: true
+  image: "http://i.imgur.com/JJ4Kq64.jpg"
+  elements: [12]
+  locations: [3, 6]
+- id: 2
+  grade: 1
+  name: "Сердиглетт"
+  description: "Покемем-червь. Очень слабый и оттого скрытный. Роет тоннели под врагами, щекоча им пятки, иногда кусается. Вечно сердитый от того, что его в бою не воспринимают всерьез."
+  attack: 1
+  defence: 1
+  health: 5
+  mana: 5
+  cost: 1
+  purchaseable: true
+  image: "http://i.imgur.com/qyzBkUf.jpg"
+  elements: [1, 8]
+  locations: [5, 6]
+- id: 3
+  grade: 1
+  name: "Шлакоблокунь"
+  description: "Шлакоблокунь обитает в пресных водоемах. Ну как обитает? Лежит камнем на дне. Самый бесполезный покемем. Может укусить, если сунуть ему палец в рот. Сражаются этим покемемом так: с размаху швыряются им во врага."
+  attack: 1
+  defence: 1
+  health: 5
+  mana: 5
+  cost: 1
+  purchaseable: true
+  image: "http://i.imgur.com/86DdKTk.jpg"
+  elements: [7, 4]
+  locations: [3, 5]
+- id: 4
+  grade: 1
+  name: "Forever A Stone"
+  description: "Вечно одинокий покемем-булыжник. Обитает в горах, в лесу и в катакомбах. От отчаяния умеет очень больно месить кулаками. Не чувствует никакой боли, кроме душевной. Любит обнимашки."
+  attack: 2
+  defence: 2
+  health: 10
+  mana: 10
+  cost: 2
+  purchaseable: true
+  image: "http://i.imgur.com/LYjAtxJ.jpg"
+  elements: [4]
+  locations: [1]
+- id: 5
+  grade: 1
+  name: "БульбаПепе"
+  description: "Милый пепезаврик. Умеет впадать в дикую ярость, но в основном грустит. Носит на спине луковицу, источающую едкий запах, раздражающий слизистую глаз, из-за чего враги, которые бьют Пепе, тоже начинают плакать."
+  attack: 2
+  defence: 2
+  health: 10
+  mana: 10
+  cost: 2
+  purchaseable: true
+  image: "http://i.imgur.com/nchWUql.jpg"
+  elements: [8]
+  locations: [1]
+- id: 6
+  grade: 1
+  name: "Узбечик"
+  description: "Ловкий, прыгучий, трудолюбивый и мирный покемем. Может консультировать, как выровнять стены или положить плитку, может построить стадион Зенит-Арена в рамках первоначального бюджета и сроков. Замуровывает врагов в кирпичных стенах домов-новостроек."
+  attack: 2
+  defence: 2
+  health: 10
+  mana: 10
+  cost: 2
+  purchaseable: true
+  image: "http://i.imgur.com/SWEXZ4U.jpg"
+  elements: [8, 10]
+  locations: [1]
+- id: 7
+  grade: 1
+  name: "Драконфета"
+  description: "Карликовый дракончик, не сводит глаз со своего врага, деморализуя его. Сладкий внутри, зубастый снаружи. Атакует калориями, вызывает у врагов ожирение и кариес."
+  attack: 3
+  defence: 3
+  health: 15
+  mana: 15
+  cost: 3
+  purchaseable: true
+  image: "http://i.imgur.com/ymuM5Mg.jpg"
+  elements: [5]
+  locations: [2]
+- id: 8
+  grade: 1
+  name: "Слоупокер"
+  description: "Заторможенный и медлительный покемем-маньяк. Издевается над врагами изощренными фокусами и философскими диалогами. Умеет усыплять бдительность врагов своей медлительностью."
+  attack: 3
+  defence: 3
+  health: 15
+  mana: 15
+  cost: 3
+  purchaseable: true
+  image: "http://i.imgur.com/HI1bH36.jpg"
+  elements: [10]
+  locations: [2]
+- id: 9
+  grade: 1
+  name: "Снегиря"
+  description: "Массивный, морозостойкий летучий покемем. Помогает своему покебро-тренеру поддерживать физическую форму. Расправляется с врагами, врываясь на поле боя аки ангри-бёрд."
+  attack: 3
+  defence: 3
+  health: 15
+  mana: 15
+  cost: 3
+  purchaseable: true
+  image: "http://i.imgur.com/JwHojOi.jpg"
+  elements: [2]
+  locations: [2]
+- id: 10
+  grade: 1
+  name: "Koffee"
+  description: "Летучий покемем-вонючка, уничтожающий противников своим противным ароматом прокисшего кофе. Он уж точно не даст заснуть своим врагам."
+  attack: 5
+  defence: 5
+  health: 25
+  mana: 25
+  cost: 5
+  purchaseable: false
+  image: "http://i.imgur.com/OBnPAvS.jpg"
+  elements: [3]
+  locations: [4]
+- id: 11
+  grade: 1
+  name: "Вжухо"
+  description: "Весьма опасный покемем, умеющий колдовать всякие зловредства и выслушивать подкрадывающихся врагов за километр."
+  attack: 5
+  defence: 5
+  health: 25
+  mana: 25
+  cost: 5
+  purchaseable: false
+  image: "http://i.imgur.com/NE4AJdH.jpg"
+  elements: [11]
+  locations: [4]
+- id: 12
+  grade: 1
+  name: "Гомерчу"
+  description: "Покемем электрического типа. Умеет бить током, беспощадно тупить и безудержно лениться. Необычайно быстрый, особенно когда бежит за пивом или пончиками."
+  attack: 5
+  defence: 5
+  health: 25
+  mana: 25
+  cost: 5
+  purchaseable: false
+  image: "http://i.imgur.com/5iwm5AA.jpg"
+  elements: [6]
+  locations: [4]

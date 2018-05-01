@@ -45,17 +45,20 @@ type DataCacheInterface interface {
 	GetProfileByID(profileID int) (*dbmapping.Profile, error)
 	GetProfileByPlayerID(playerID int) (*dbmapping.Profile, error)
 
-	AddPokememe(pokememeData map[string]string, pokememeLocations map[string]string, pokememeElements map[string]string) (int, error)
-	GetAllPokememes() map[int]*dbmapping.PokememeFull
-	GetPokememeByID(pokememeID int) (*dbmapping.PokememeFull, error)
-	GetPokememeByName(name string) (*dbmapping.PokememeFull, error)
-	DeletePokememeByID(pokememeID int) error
-	UpdatePokememe(pokememeData map[string]string, pokememeLocations map[string]string, pokememeElements map[string]string) (int, error)
-
 	GetElementByID(elementID int) (*datamapping.Element, error)
+	FindElementIDBySymbol(symbol string) (int, error)
 
 	GetLeagueByID(leagueID int) (*datamapping.League, error)
 	GetLeagueBySymbol(symbol string) (*datamapping.League, error)
+
+	GetLevelByID(levelID int) (*datamapping.Level, error)
+
+	FindLocationIDByName(name string) (int, error)
+
+	GetAllPokememes() map[int]*datamapping.PokememeFull
+	GetPokememeByID(pokememeID int) (*datamapping.PokememeFull, error)
+	GetPokememeByName(name string) (*datamapping.PokememeFull, error)
+	GetPokememesCountByGradeAndLocation(grade int, locationID int) int
 
 	GetWeaponTypeByID(weaponID int) (*datamapping.Weapon, error)
 	GetWeaponTypeByName(name string) (*datamapping.Weapon, error)

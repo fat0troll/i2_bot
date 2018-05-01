@@ -1,0 +1,572 @@
+- id: 359
+  grade: 13
+  name: "Всратико"
+  description: "Добрый и верный покемем, к которому, тем не менее, вряд ли кто вернется, хоть раз от него избавившись. Способен прождать на одном месте сколь угодно долго, распугивая своим видом окружающих. Уничтожает врага сидя на месте и дружелюбно улыбаясь."
+  attack: 205
+  defence: 890
+  health: 1025
+  mana: 1025
+  cost: 205
+  purchaseable: true
+  image: "https://i.yapx.ru/BP02r.jpg"
+  elements: [9]
+  locations: [3, 5, 6]
+- id: 360
+  grade: 13
+  name: "Пекинесквик"
+  description: "Покемем из старого азиатского рода. Согласно легендам, кормил детей всякой дрянью на завтрак еще на заре человечества. Способен закормить врага молоком и хлопьями до полного изнеможения, радостно похрюкивая в процессе."
+  attack: 205
+  defence: 890
+  health: 1025
+  mana: 1025
+  cost: 205
+  purchaseable: true
+  image: "https://i.yapx.ru/BP02w.jpg"
+  elements: [6]
+  locations: [3, 5, 6]
+- id: 361
+  grade: 13
+  name: "Хабиблиотекарь"
+  description: "Искусный покемем-боец, отличающийся поразительным сочетанием силы, выносливости, и ума. Умеет без труда взбесить врагов, да так, что те начинаются кидаться на автобусы и получать увечья."
+  attack: 205
+  defence: 890
+  health: 1025
+  mana: 1025
+  cost: 205
+  purchaseable: true
+  image: "https://i.yapx.ru/BP02v.jpg"
+  elements: [1]
+  locations: [3, 5, 6]
+- id: 362
+  grade: 13
+  name: "ВесельЧак"
+  description: "Жизнерадостный и крайне опасный покемем. Завсегдатай детских праздников и фильмов категории Б. Упоминание его способностей в приличном обществе считается моветоном, ибо все шутки об этом старше, чем все тренеры покемемов вместе взятые. В бою убивает врага, разумеется, ударом ногой с разворота."
+  attack: 206
+  defence: 895
+  health: 1030
+  mana: 1030
+  cost: 206
+  purchaseable: true
+  image: "https://i.yapx.ru/BP02u.jpg"
+  elements: [10]
+  locations: [3, 5, 6]
+- id: 363
+  grade: 13
+  name: "Муравьети"
+  description: "Мифический покемем, за которым долго и безуспешно охотятся Тарантулеев и Буйвалуев. До сих пор единственным свидетельством его существования были лишь огромные следы муравьиных лап на снегу. В бою предпочитает действовать скрытно до такой степени, что не каждый враг после сражения может достоверно описать внешность Муравьети."
+  attack: 206
+  defence: 895
+  health: 1030
+  mana: 1030
+  cost: 206
+  purchaseable: true
+  image: "https://i.yapx.ru/BP02z.jpg"
+  elements: [7]
+  locations: [3, 5, 6]
+- id: 364
+  grade: 13
+  name: "Оруто"
+  description: "Бурятский покемем-долгожитель. Соперничает с Наруткой за звание самого умелого бойца среди школьников. Любое свое действие сопровождает громким криком \"Йо, собаки!\""
+  attack: 206
+  defence: 895
+  health: 1030
+  mana: 1030
+  cost: 206
+  purchaseable: true
+  image: "https://i.yapx.ru/BP02y.jpg"
+  elements: [2]
+  locations: [3, 5, 6]
+- id: 365
+  grade: 13
+  name: "371"
+  description: "371: описание"
+  attack: 207
+  defence: 900
+  health: 1035
+  mana: 1035
+  cost: 207
+  purchaseable: true
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [2]
+  locations: [5]
+- id: 366
+  grade: 13
+  name: "Пакмент"
+  description: "Пакмент: описание"
+  attack: 207
+  defence: 900
+  health: 1035
+  mana: 1035
+  cost: 207
+  purchaseable: true
+  image: "https://i.yapx.ru/BQ4ES.jpg"
+  elements: [12]
+  locations: [3]
+- id: 367
+  grade: 13
+  name: "Рахитман"
+  description: "Рахитман: описание"
+  attack: 207
+  defence: 900
+  health: 1035
+  mana: 1035
+  cost: 207
+  purchaseable: true
+  image: "https://i.yapx.ru/BQ4ET.jpg"
+  elements: [4]
+  locations: [6]
+- id: 368
+  grade: 13
+  name: "372"
+  description: "372: описание"
+  attack: 208
+  defence: 905
+  health: 1040
+  mana: 1040
+  cost: 208
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [11]
+  locations: [5]
+- id: 369
+  grade: 13
+  name: "373"
+  description: "373: описание"
+  attack: 208
+  defence: 905
+  health: 1040
+  mana: 1040
+  cost: 208
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [3]
+  locations: [3]
+- id: 370
+  grade: 13
+  name: "374"
+  description: "374: описание"
+  attack: 208
+  defence: 905
+  health: 1040
+  mana: 1040
+  cost: 208
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [8]
+  locations: [6]
+- id: 371
+  grade: 13
+  name: "375"
+  description: "375: описание"
+  attack: 209
+  defence: 910
+  health: 1045
+  mana: 1045
+  cost: 209
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [9]
+  locations: [6]
+- id: 372
+  grade: 13
+  name: "376"
+  description: "376: описание"
+  attack: 209
+  defence: 910
+  health: 1045
+  mana: 1045
+  cost: 209
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [1]
+  locations: [5]
+- id: 373
+  grade: 13
+  name: "377"
+  description: "377: описание"
+  attack: 209
+  defence: 910
+  health: 1045
+  mana: 1045
+  cost: 209
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [6]
+  locations: [3]
+- id: 374
+  grade: 13
+  name: "378"
+  description: "378: описание"
+  attack: 210
+  defence: 915
+  health: 1050
+  mana: 1050
+  cost: 210
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [10]
+  locations: [2, 5]
+- id: 375
+  grade: 13
+  name: "379"
+  description: "379: описание"
+  attack: 210
+  defence: 915
+  health: 1050
+  mana: 1050
+  cost: 210
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [2]
+  locations: [1, 3]
+- id: 376
+  grade: 13
+  name: "380"
+  description: "380: описание"
+  attack: 210
+  defence: 915
+  health: 1050
+  mana: 1050
+  cost: 210
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [7]
+  locations: [4, 6]
+- id: 377
+  grade: 13
+  name: "381"
+  description: "381: описание"
+  attack: 211
+  defence: 920
+  health: 1055
+  mana: 1055
+  cost: 211
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [5, 4, 12]
+  locations: [3, 5, 6]
+- id: 378
+  grade: 13
+  name: "382"
+  description: "382: описание"
+  attack: 212
+  defence: 925
+  health: 1060
+  mana: 1060
+  cost: 212
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [12]
+  locations: [3]
+- id: 379
+  grade: 13
+  name: "383"
+  description: "383: описание"
+  attack: 212
+  defence: 925
+  health: 1060
+  mana: 1060
+  cost: 212
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [4]
+  locations: [6]
+- id: 380
+  grade: 13
+  name: "384"
+  description: "384: описание"
+  attack: 212
+  defence: 925
+  health: 1060
+  mana: 1060
+  cost: 212
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [5]
+  locations: [5]
+- id: 381
+  grade: 13
+  name: "385"
+  description: "385: описание"
+  attack: 213
+  defence: 930
+  health: 1065
+  mana: 1065
+  cost: 213
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [11]
+  locations: [6]
+- id: 382
+  grade: 13
+  name: "386"
+  description: "386: описание"
+  attack: 213
+  defence: 930
+  health: 1065
+  mana: 1065
+  cost: 213
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [3]
+  locations: [5]
+- id: 383
+  grade: 13
+  name: "387"
+  description: "387: описание"
+  attack: 213
+  defence: 930
+  health: 1065
+  mana: 1065
+  cost: 213
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [8]
+  locations: [3]
+- id: 384
+  grade: 13
+  name: "388"
+  description: "388: описание"
+  attack: 214
+  defence: 935
+  health: 1070
+  mana: 1070
+  cost: 214
+  purchaseable: true
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [9]
+  locations: [5]
+- id: 385
+  grade: 13
+  name: "389"
+  description: "389: описание"
+  attack: 214
+  defence: 935
+  health: 1070
+  mana: 1070
+  cost: 214
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [1]
+  locations: [3]
+- id: 386
+  grade: 13
+  name: "390"
+  description: "390: описание"
+  attack: 214
+  defence: 935
+  health: 1070
+  mana: 1070
+  cost: 214
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [6]
+  locations: [6]
+- id: 387
+  grade: 13
+  name: "391"
+  description: "391: описание"
+  attack: 215
+  defence: 940
+  health: 1075
+  mana: 1075
+  cost: 215
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [10]
+  locations: [3]
+- id: 388
+  grade: 13
+  name: "392"
+  description: "392: описание"
+  attack: 215
+  defence: 940
+  health: 1075
+  mana: 1075
+  cost: 215
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [2]
+  locations: [6]
+- id: 389
+  grade: 13
+  name: "393"
+  description: "393: описание"
+  attack: 215
+  defence: 940
+  health: 1075
+  mana: 1075
+  cost: 215
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [7]
+  locations: [5]
+- id: 390
+  grade: 13
+  name: "394"
+  description: "394: описание"
+  attack: 216
+  defence: 950
+  health: 1080
+  mana: 1080
+  cost: 216
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [12]
+  locations: [6]
+- id: 391
+  grade: 13
+  name: "395"
+  description: "395: описание"
+  attack: 216
+  defence: 950
+  health: 1080
+  mana: 1080
+  cost: 216
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [4]
+  locations: [5]
+- id: 392
+  grade: 13
+  name: "396"
+  description: "396: описание"
+  attack: 216
+  defence: 950
+  health: 1080
+  mana: 1080
+  cost: 216
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [5]
+  locations: [3]
+- id: 393
+  grade: 13
+  name: "397"
+  description: "397: описание"
+  attack: 217
+  defence: 960
+  health: 1085
+  mana: 1085
+  cost: 217
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [8, 3, 11]
+  locations: [1, 2, 4]
+- id: 394
+  grade: 13
+  name: "398"
+  description: "398: описание"
+  attack: 218
+  defence: 970
+  health: 1090
+  mana: 1090
+  cost: 218
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [11]
+  locations: [1]
+- id: 395
+  grade: 13
+  name: "399"
+  description: "399: описание"
+  attack: 218
+  defence: 970
+  health: 1090
+  mana: 1090
+  cost: 218
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [3]
+  locations: [4]
+- id: 396
+  grade: 13
+  name: "400"
+  description: "400: описание"
+  attack: 218
+  defence: 970
+  health: 1090
+  mana: 1090
+  cost: 218
+  purchaseable: false
+  image: "http://i.yapx.ru/BKzZn.jpg"
+  elements: [8]
+  locations: [2]
+- id: 397
+  grade: 13
+  name: "Господин Психопатрик"
+  description: "Представитель маленькой коллекции господ-донатеров, оставивших след в истории игры. Господин Психопатрик любит расслабляться в компании с баночкой пивчанского, ведя личный алкоблог на ютубе, и всегда поприветствует: \"Велком в наш уютный дурдом!\""
+  attack: 220
+  defence: 980
+  health: 1100
+  mana: 1100
+  cost: 220
+  purchaseable: false
+  image: "https://i.yapx.ru/BQ4D0.jpg"
+  elements: [5, 6]
+  locations: [2]
+- id: 398
+  grade: 13
+  name: "Товарищ Артемон"
+  description: "Представитель маленькой коллекции товарищей-гринчатеров, оставивших след в истории игры. Товарищ Артемон любит Скакуню (правда невзаимно), двощ и СММить. Всегда напоминает КАПСОМ: \"ЗА ИНСТИНКТ ПРЕДЁТСЯ ИГРАТЬ!\""
+  attack: 220
+  defence: 980
+  health: 1100
+  mana: 1100
+  cost: 220
+  purchaseable: false
+  image: "https://i.yapx.ru/BQ4Dv.jpg"
+  elements: [1, 4]
+  locations: [4]
+- id: 399
+  grade: 13
+  name: "Товарищ Волчуля"
+  description: "Представитель маленькой коллекции товарищей-гринчатеров, оставивших след в истории игры. Товарищ ВОлчуля любит помогать малышам и делать \"кусь\", если они не встают по пину. Всегда подбодрит: \"И никаких сомнений! Кусь!\""
+  attack: 220
+  defence: 980
+  health: 1100
+  mana: 1100
+  cost: 220
+  purchaseable: false
+  image: "https://i.yapx.ru/BQ4Dy.jpg"
+  elements: [12, 8]
+  locations: [1, 2]
+- id: 400
+  grade: 13
+  name: "Товарищ ДВКюльчатай"
+  description: "Представитель маленькой коллекции товарищей-гринчатеров, оставивших след в истории игры. Товарищ ДВКюльчатай любит свою улитку, капризничать и всегда напомнит: \"Прапорядковый назначил меня любимой вдовой!\""
+  attack: 220
+  defence: 980
+  health: 1100
+  mana: 1100
+  cost: 220
+  purchaseable: false
+  image: "https://i.yapx.ru/BQ4Dw.jpg"
+  elements: [2, 7]
+  locations: [2, 4]
+- id: 401
+  grade: 13
+  name: "Товарищ Скуби Дуня"
+  description: "Представитель маленькой коллекции товарищей-гринчатеров, оставивших след в истории игры. Товарищ Скуби Дуня любит себя похвалить, повоевать с матаном и всегда напомнит: \"Добро пожаловать в чат Дуни.\""
+  attack: 220
+  defence: 980
+  health: 1100
+  mana: 1100
+  cost: 220
+  purchaseable: false
+  image: "http://i.yapx.ru/BQ4Dz.jpg"
+  elements: [11, 10]
+  locations: [1]
+- id: 402
+  grade: 13
+  name: "Холодецл"
+  description: "Холодецл: описание"
+  attack: 220
+  defence: 980
+  health: 1100
+  mana: 1100
+  cost: 220
+  purchaseable: false
+  image: "https://i.yapx.ru/BQ4D1.jpg"
+  elements: [9, 3]
+  locations: [1, 4]

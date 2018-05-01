@@ -122,8 +122,7 @@ func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 		c.Log.Error(err.Error())
 		return c.Talkers.BotError(update)
 	}
-	level := dbmapping.Level{}
-	err = c.Db.Get(&level, c.Db.Rebind("SELECT * FROM levels WHERE id=?"), profileRaw.LevelID)
+	level, err := c.DataCache.GetLevelByID(profileRaw.LevelID)
 	if err != nil {
 		c.Log.Error(err)
 	}
@@ -137,16 +136,12 @@ func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 	if err != nil {
 		c.Log.Error(err)
 	}
-	pokememes := []dbmapping.Pokememe{}
-	err = c.Db.Select(&pokememes, c.Db.Rebind("SELECT * FROM pokememes"))
-	if err != nil {
-		c.Log.Error(err)
-	}
+	pokememes := c.DataCache.GetAllPokememes()
 
 	attackPokememes := 0
 	for i := range profilePokememes {
 		for j := range pokememes {
-			if profilePokememes[i].PokememeID == pokememes[j].ID {
+			if profilePokememes[i].PokememeID == pokememes[j].Pokememe.ID {
 				singleAttack := profilePokememes[i].PokememeAttack
 				attackPokememes += singleAttack
 			}
@@ -178,9 +173,9 @@ func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 	message += "\n🐱Покемемы:"
 	for i := range profilePokememes {
 		for j := range pokememes {
-			if profilePokememes[i].PokememeID == pokememes[j].ID {
-				message += "\n *[" + strconv.Itoa(pokememes[j].Grade)
-				message += "]* " + pokememes[j].Name
+			if profilePokememes[i].PokememeID == pokememes[j].Pokememe.ID {
+				message += "\n *[" + strconv.Itoa(pokememes[j].Pokememe.Grade)
+				message += "]* " + pokememes[j].Pokememe.Name
 				message += " +" + c.Statistics.GetPrintablePoints(profilePokememes[i].PokememeAttack) + "⚔"
 			}
 		}

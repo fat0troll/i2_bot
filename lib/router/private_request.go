@@ -4,10 +4,10 @@
 package router
 
 import (
-	"regexp"
-
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"regexp"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
+	"strconv"
 )
 
 func (r *Router) routePrivateRequest(update tgbotapi.Update, playerRaw *dbmapping.Player, chatRaw *dbmapping.Chat) string {
@@ -26,15 +26,23 @@ func (r *Router) routePrivateRequest(update tgbotapi.Update, playerRaw *dbmappin
 	}
 
 	if update.Message.ForwardFrom != nil {
-		if update.Message.ForwardFrom.ID != 360402625 {
-			c.Log.Info("Forward from another user or bot. Ignoring")
-		} else {
+		if update.Message.ForwardFrom.ID == 360402625 {
 			c.Log.Info("Forward from PokememBro bot! Processing...")
 			if playerRaw.ID != 0 {
 				c.Forwarder.ProcessForward(&update, playerRaw)
 			} else {
 				return c.Talkers.AnyMessageUnauthorized(&update)
 			}
+		} else if update.Message.ForwardFrom.ID == 392622454 {
+			// Pokememes test bot with actual pokedeks
+			c.Log.Info("Forward from PokememBro test bot! Processing...")
+			if playerRaw.ID != 0 {
+				c.Forwarder.ProcessForward(&update, playerRaw)
+			} else {
+				return c.Talkers.AnyMessageUnauthorized(&update)
+			}
+		} else {
+			c.Log.Info("Forward from another user or bot (" + strconv.Itoa(update.Message.ForwardFrom.ID) + "). Ignoring")
 		}
 	} else {
 		if update.Message.IsCommand() {
@@ -74,12 +82,7 @@ func (r *Router) routePrivateRequest(update tgbotapi.Update, playerRaw *dbmappin
 			case pokememeInfoMsg.MatchString(text):
 				c.Pokedexer.PokememeInfo(&update, playerRaw)
 				return "ok"
-			case update.Message.Command() == "delete_pokememe":
-				if c.Users.PlayerBetterThan(playerRaw, "owner") {
-					return c.Pokedexer.DeletePokememe(&update)
-				}
 
-				return c.Talkers.AnyMessageUnauthorized(&update)
 			case update.Message.Command() == "me":
 				if playerRaw.ID != 0 {
 					c.Users.ProfileMessage(&update, playerRaw)

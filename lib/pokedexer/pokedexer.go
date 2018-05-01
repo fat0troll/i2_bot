@@ -6,22 +6,13 @@ package pokedexer
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"sort"
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
 	"strconv"
 )
 
-func (p *Pokedexer) pokememesListing(update *tgbotapi.Update, page int, pokememesArray map[int]*dbmapping.PokememeFull) {
-	message := "*Известные боту покемемы*\n"
-	message += "Список отсортирован по грейду и алфавиту.\n"
-	message += "Покедекс: " + strconv.Itoa(len(pokememesArray)) + " / 296\n"
-	message += "Отображаем покемемов с " + strconv.Itoa(((page-1)*50)+1) + " по " + strconv.Itoa(page*50) + "\n"
-	if len(pokememesArray) > page*50 {
-		message += "Переход на следующую страницу: /pokedeks" + strconv.Itoa(page+1)
-	}
-	if page > 1 {
-		message += "\nПереход на предыдущую страницу: /pokedeks" + strconv.Itoa(page-1)
-	}
-	message += "\n\n"
+func (p *Pokedexer) pokememesListingMessage(update *tgbotapi.Update, page int, pokememesArray map[int]*datamapping.PokememeFull) string {
+	message := "📕*Покедекс: " + strconv.Itoa(len(pokememesArray)) + " / 733*\n"
+	message += "```\nВсе виды покемемов, которые известны боту. [" + strconv.Itoa(page) + "] (" + strconv.Itoa(((page-1)*35)+1) + "-" + strconv.Itoa(page*35) + ")```"
 
 	var keys []int
 	for i := range pokememesArray {
@@ -30,13 +21,13 @@ func (p *Pokedexer) pokememesListing(update *tgbotapi.Update, page int, pokememe
 	sort.Ints(keys)
 
 	for _, i := range keys {
-		if (i+1 > 50*(page-1)) && (i+1 < (50*page)+1) {
+		if (i > 35*(page-1)) && (i < (35*page)+1) {
 			pk := pokememesArray[i].Pokememe
 			pkE := pokememesArray[i].Elements
-			message += strconv.Itoa(i+1) + ". *[" + strconv.Itoa(pk.Grade)
+			message += strconv.Itoa(pk.ID) + ". *[" + strconv.Itoa(pk.Grade)
 			message += "]* *" + pk.Name
-			message += "* (" + c.Statistics.GetPrintablePoints(pk.HP) + "-" + c.Statistics.GetPrintablePoints(pk.MP) + ") ⚔️ *"
-			message += c.Statistics.GetPrintablePoints(pk.Attack) + "* \\["
+			message += "* ❤️" + c.Statistics.GetPrintablePoints(pk.HP) + " ⚔️ "
+			message += c.Statistics.GetPrintablePoints(pk.Attack) + " 🛡" + c.Statistics.GetPrintablePoints(pk.Defence) + " \\["
 			for j := range pkE {
 				message += pkE[j].Symbol
 			}
@@ -45,49 +36,47 @@ func (p *Pokedexer) pokememesListing(update *tgbotapi.Update, page int, pokememe
 		}
 	}
 
-	if len(pokememesArray) > page*50 {
-		message += "\n"
-		message += "Переход на следующую страницу: /pokedeks" + strconv.Itoa(page+1)
+	return message
+}
+
+func (p *Pokedexer) pokememesListingKeyboard(pokememesArray map[int]*datamapping.PokememeFull) *tgbotapi.InlineKeyboardMarkup {
+	keyboard := tgbotapi.InlineKeyboardMarkup{}
+	rows := make(map[int][]tgbotapi.InlineKeyboardButton)
+	rows[0] = []tgbotapi.InlineKeyboardButton{}
+	if len(pokememesArray) > 35*7 {
+		rows[1] = []tgbotapi.InlineKeyboardButton{}
 	}
-	if page > 1 {
-		message += "\nПереход на предыдущую страницу: /pokedeks" + strconv.Itoa(page-1)
+	if len(pokememesArray) > 35*14 {
+		rows[2] = []tgbotapi.InlineKeyboardButton{}
+	}
+	totalPages := int(len(pokememesArray)/35) + 1
+	for i := 1; i <= totalPages; i++ {
+		btn := tgbotapi.NewInlineKeyboardButtonData(strconv.Itoa(i), "pokedeks"+strconv.Itoa(i))
+		rows[(i-1)/7] = append(rows[(i-1)/7], btn)
+	}
+	for i := range rows {
+		keyboard.InlineKeyboard = append(keyboard.InlineKeyboard, rows[i])
 	}
 
+	return &keyboard
+}
+
+func (p *Pokedexer) pokememesListing(update *tgbotapi.Update, page int, pokememesArray map[int]*datamapping.PokememeFull) {
+	message := p.pokememesListingMessage(update, page, pokememesArray)
+
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ParseMode = "Markdown"
+	msg.ReplyMarkup = p.pokememesListingKeyboard(pokememesArray)
 
 	c.Bot.Send(msg)
 }
 
-func (p *Pokedexer) pokememeAddSuccessMessage(update *tgbotapi.Update, newPokememeID int) {
-	message := "*Покемем успешно добавлен.*\n\n"
-	message += "Посмотреть всех известных боту покемемов можно командой /pokedeks\n"
-	message += "Посмотреть свежедобавленного покемема можно командой /pk" + strconv.Itoa(newPokememeID)
+func (p *Pokedexer) pokememesListingUpdate(update *tgbotapi.Update, page int, pokememesArray map[int]*datamapping.PokememeFull) {
+	message := p.pokememesListingMessage(update, page, pokememesArray)
 
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ParseMode = "Markdown"
+	messageUpdate := tgbotapi.NewEditMessageText(update.CallbackQuery.Message.Chat.ID, update.CallbackQuery.Message.MessageID, message)
+	messageUpdate.ParseMode = "Markdown"
+	messageUpdate.ReplyMarkup = p.pokememesListingKeyboard(pokememesArray)
 
-	c.Bot.Send(msg)
-}
-
-func (p *Pokedexer) pokememeAddDuplicateMessage(update *tgbotapi.Update, pokememeID int) {
-	message := "*Покемем успешно обновлён.*\n\n"
-	message += "Посмотреть всех известных боту покемемов можно командой /pokedeks\n"
-	message += "Посмотреть свежеобновлённого покемема можно командой /pk" + strconv.Itoa(pokememeID)
-
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ParseMode = "Markdown"
-
-	c.Bot.Send(msg)
-}
-
-func (p *Pokedexer) pokememeAddFailureMessage(update *tgbotapi.Update) {
-	message := "*Неудачно получилось :(*\n\n"
-	message += "Случилась жуткая ошибка, и мы не смогли записать покемема в базу. Напиши @fat0troll, он разберется.\n\n"
-	message += "Посмотреть всех известных боту покемемов можно командой /pokedeks"
-
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ParseMode = "Markdown"
-
-	c.Bot.Send(msg)
+	c.Bot.Send(messageUpdate)
 }

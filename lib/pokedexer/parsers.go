@@ -5,15 +5,14 @@ package pokedexer
 
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
-	"regexp"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"strconv"
 	"strings"
-	// "time"
 )
 
 // ParsePokememe parses pokememe, forwarded from PokememeBroBot, to database
 func (p *Pokedexer) ParsePokememe(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
+	c.Log.Info("Starting pokememe parsing...")
 	pokememeStringsArray := strings.Split(update.Message.Text, "\n")
 	pokememeRunesArray := make([][]rune, 0)
 	for i := range pokememeStringsArray {
@@ -21,149 +20,55 @@ func (p *Pokedexer) ParsePokememe(update *tgbotapi.Update, playerRaw *dbmapping.
 	}
 
 	pokememeData := make(map[string]string)
-	pokememeLocations := make(map[string]string)
-	pokememeElements := make(map[string]string)
-
-	hitPointsRx := regexp.MustCompile("(\\d|\\.)+(K|M)?")
 
 	for i := range pokememeStringsArray {
-		c.Log.Debug("Processing string: " + pokememeStringsArray[i])
-		if strings.Contains(pokememeStringsArray[i], "⃣") {
-			// Strings with name and grade
-			splitGradeAndName := strings.Split(string(pokememeRunesArray[i]), " ")
-			gradeNumberRegexp := regexp.MustCompile("[0-9]+")
-			pokememeData["grade"] = strings.Join(gradeNumberRegexp.FindAllString(splitGradeAndName[0], -1), "")
-			pokememeData["name"] = strings.Join(splitGradeAndName[1:], " ")
-		}
-
-		// Special case: "10" emoji
-		if strings.Contains(pokememeStringsArray[i], "🔟") {
-			// Strings with name and grade
-			pokememeData["grade"] = "10"
-			pokememeData["name"] = string(pokememeStringsArray[i][5:])
-		}
-
-		if i == 1 {
-			pokememeData["description"] = string(pokememeRunesArray[i])
-		}
-
-		if strings.HasPrefix(pokememeStringsArray[i], "Обитает: ") {
-			// Elements
-			locationsString := strings.TrimPrefix(pokememeStringsArray[i], "Обитает: ")
-			locationsArray := strings.Split(locationsString, ", ")
-			for i := range locationsArray {
-				pokememeLocations[strconv.Itoa(i)] = locationsArray[i]
+		infoString := pokememeStringsArray[i]
+		c.Log.Debug("Processing string: " + infoString)
+		if strings.HasPrefix(infoString, "Elements ") {
+			infoString = strings.Replace(infoString, "Elements  ", "", -1)
+			elements := strings.Split(infoString, " ")
+			elementsIDs := make([]string, 0)
+			for ii := range elements {
+				element, _ := c.DataCache.FindElementIDBySymbol(elements[ii])
+				elementsIDs = append(elementsIDs, strconv.Itoa(element))
 			}
-		}
-
-		if strings.HasPrefix(pokememeStringsArray[i], "Элементы:  ") {
-			// Elements
-			elementsString := strings.TrimPrefix(pokememeStringsArray[i], "Элементы:  ")
-			elementsArray := strings.Split(elementsString, " ")
-			for i := range elementsArray {
-				pokememeElements[strconv.Itoa(i)] = elementsArray[i]
+			pokememeData["elements"] = "\\[" + strings.Join(elementsIDs, ", ") + "]"
+		} else if strings.HasPrefix(infoString, "Place ") {
+			infoString = strings.Replace(infoString, "Place ", "", -1)
+			places := strings.Split(infoString, ",")
+			locationIDs := make([]string, 0)
+			for ii := range places {
+				locationID, _ := c.DataCache.FindLocationIDByName(places[ii])
+				locationIDs = append(locationIDs, strconv.Itoa(locationID))
 			}
-		}
-
-		if strings.HasPrefix(pokememeStringsArray[i], "⚔Атака: ") {
-			// Attack, HP, MP
-			hitPoints := hitPointsRx.FindAllString(string(pokememeRunesArray[i]), -1)
-			if len(hitPoints) != 3 {
-				c.Log.Error("Can't parse hitpoints!")
-				c.Log.Debug("Points string was: " + string(pokememeRunesArray[i]))
-				p.pokememeAddFailureMessage(update)
-				return "fail"
-			}
-			pokememeData["attack"] = hitPoints[0]
-			pokememeData["hp"] = hitPoints[1]
-			pokememeData["mp"] = hitPoints[2]
-		}
-
-		if strings.HasPrefix(pokememeStringsArray[i], "🛡Защита ") {
-			// Defence for top-level pokememes
-			defence := hitPointsRx.FindAllString(string(pokememeRunesArray[i]), -1)
-			if len(defence) != 1 {
-				c.Log.Error("Can't parse defence!")
-				c.Log.Debug("Defence string was: " + string(pokememeRunesArray[i]))
-				p.pokememeAddFailureMessage(update)
-				return "fail"
-			}
-			pokememeData["defence"] = defence[0]
-		}
-
-		if strings.HasPrefix(pokememeStringsArray[i], "Стоимость :") {
-			// Price
-			price := hitPointsRx.FindAllString(string(pokememeRunesArray[i]), -1)
-			if len(price) != 1 {
-				c.Log.Error("Can't parse price!")
-				c.Log.Debug("Price string was: " + string(pokememeRunesArray[i]))
-				p.pokememeAddFailureMessage(update)
-				return "fail"
-			}
-			pokememeData["price"] = price[0]
-		}
-
-		if strings.HasPrefix(pokememeStringsArray[i], "Купить: ") {
-			// Purchaseability
+			pokememeData["locations"] = "\\[" + strings.Join(locationIDs, ", ") + "]"
+		} else if strings.HasPrefix(infoString, "Buyable ") {
 			pokememeData["purchaseable"] = "false"
-			if strings.Contains(pokememeStringsArray[i], "Можно") {
+			if strings.HasSuffix(infoString, "Yes") {
 				pokememeData["purchaseable"] = "true"
 			}
+		} else {
+			pokememeData[strings.Split(infoString, " ")[0]] = strings.Join(strings.Split(infoString, " ")[1:], " ")
 		}
 	}
-
-	// Image
-	for _, entity := range *update.Message.Entities {
-		if entity.Type == "text_link" && entity.URL != "" {
-			pokememeData["image"] = entity.URL
-		}
-	}
-
-	// Checking grade to be integer
-	_, err := strconv.Atoi(pokememeData["grade"])
-	if err != nil {
-		c.Log.Error(err.Error())
-		p.pokememeAddFailureMessage(update)
-		return "fail"
-	}
-
-	pokememeData["creator_id"] = strconv.Itoa(playerRaw.ID)
 
 	c.Log.Debugln("Pokememe data: ", pokememeData)
-	c.Log.Debugln("Elements: ", pokememeElements)
-	c.Log.Debugln("Locations: ", pokememeLocations)
 
-	if len(pokememeElements) == 0 {
-		p.pokememeAddFailureMessage(update)
-		return "fail"
-	}
+	message := "- id: " + pokememeData["Dex"]
+	message += "\n  grade: " + pokememeData["Grade"]
+	message += "\n  name: \"" + pokememeData["Name"] + "\""
+	message += "\n  description: \"" + pokememeData["Description"] + "\""
+	message += "\n  attack: " + pokememeData["Attack"]
+	message += "\n  defence: " + pokememeData["Def"]
+	message += "\n  health: " + pokememeData["HP"]
+	message += "\n  mana: " + pokememeData["MP"]
+	message += "\n  cost: " + pokememeData["Cost"]
+	message += "\n  purchaseable: " + pokememeData["purchaseable"]
+	message += "\n  image: \"" + pokememeData["Image"] + "\""
+	message += "\n  elements: " + pokememeData["elements"]
+	message += "\n  locations: " + pokememeData["locations"]
 
-	if len(pokememeLocations) == 0 {
-		p.pokememeAddFailureMessage(update)
-		return "fail"
-	}
+	c.Sender.SendMarkdownAnswer(update, message)
 
-	_, err = c.DataCache.GetPokememeByName(pokememeData["name"])
-	if err == nil {
-		// There is already a pokememe with such name, updating
-		pokememeID, err := c.DataCache.UpdatePokememe(pokememeData, pokememeLocations, pokememeElements)
-		if err != nil {
-			c.Log.Error(err.Error())
-			p.pokememeAddFailureMessage(update)
-			return "fail"
-		}
-
-		p.pokememeAddDuplicateMessage(update, pokememeID)
-		return "ok"
-	}
-
-	newPokememeID, err := c.DataCache.AddPokememe(pokememeData, pokememeLocations, pokememeElements)
-	if err != nil {
-		c.Log.Error(err.Error())
-		p.pokememeAddFailureMessage(update)
-		return "fail"
-	}
-
-	p.pokememeAddSuccessMessage(update, newPokememeID)
 	return "ok"
 }
