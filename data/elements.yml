@@ -17,32 +17,32 @@
 - id: 5
   symbol: "🔥"
   name: "Огненный"
-  league_id: 2
+  league_id: 3
 - id: 6
   symbol: "⚡"
   name: "Электрический"
-  league_id: 2
+  league_id: 3
 - id: 7
   symbol: "💧"
   name: "Водяной"
-  league_id: 2
+  league_id: 3
 - id: 8
   symbol: "🍀"
   name: "Травяной"
-  league_id: 2
+  league_id: 3
 - id: 9
   symbol: "💩"
   name: "Отважный"
-  league_id: 3
+  league_id: 2
 - id: 10
   symbol: "👁"
   name: "Психический"
-  league_id: 3
+  league_id: 2
 - id: 11
   symbol: "👿"
   name: "Темный"
-  league_id: 3
+  league_id: 2
 - id: 12
   symbol: "⌛"
   name: "Времени"
-  league_id: 3
+  league_id: 2
