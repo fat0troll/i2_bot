@@ -111,11 +111,30 @@ func (s *Statistics) TopList(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 	message += "\n*Топ-5 по опыту*\n"
 
 	sort.Slice(profiles, func(i, j int) bool {
-		return profiles[i].Profile.Exp > profiles[j].Profile.Exp
+		firstProfileLevel, err := c.DataCache.GetLevelByID(profiles[i].Profile.LevelID)
+		if err != nil {
+			c.Log.Error(err.Error())
+			return false
+		}
+		secondProfileLevel, err := c.DataCache.GetLevelByID(profiles[j].Profile.LevelID)
+		if err != nil {
+			c.Log.Error(err.Error())
+			return false
+		}
+		firstExp := firstProfileLevel.LevelStart + profiles[i].Profile.Exp
+		secondExp := secondProfileLevel.LevelStart + profiles[j].Profile.Exp
+		return firstExp > secondExp
 	})
 
 	for i := 0; i < topLimit; i++ {
-		message += "*" + strconv.Itoa(i+1) + "*: " + c.Users.FormatUsername(profiles[i].Profile.Nickname) + " (" + strconv.Itoa(profiles[i].Profile.Exp) + " очков)\n"
+		if profiles[i].Profile.LevelID != 0 {
+			profileLevel, err := c.DataCache.GetLevelByID(profiles[i].Profile.LevelID)
+			if err != nil {
+				c.Log.Error(err.Error())
+				return c.Talkers.BotError(update)
+			}
+			message += "*" + strconv.Itoa(i+1) + "*: " + c.Users.FormatUsername(profiles[i].Profile.Nickname) + " (" + strconv.Itoa(profiles[i].Profile.Exp+profileLevel.LevelStart) + " очков)\n"
+		}
 	}
 
 	message += s.renderPosition(&profiles, playerRaw)
