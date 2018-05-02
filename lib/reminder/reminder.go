@@ -49,7 +49,7 @@ func (r *Reminder) formatRemindersButtons(playerRaw *dbmapping.Player) tgbotapi.
 		}
 	}
 
-	for i := range rows {
+	for i := 0; i <= 2; i++ {
 		keyboard.InlineKeyboard = append(keyboard.InlineKeyboard, rows[i])
 	}
 

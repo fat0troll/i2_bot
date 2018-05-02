@@ -42,19 +42,16 @@ func (p *Pokedexer) pokememesListingMessage(update *tgbotapi.Update, page int, p
 func (p *Pokedexer) pokememesListingKeyboard(pokememesArray map[int]*datamapping.PokememeFull) *tgbotapi.InlineKeyboardMarkup {
 	keyboard := tgbotapi.InlineKeyboardMarkup{}
 	rows := make(map[int][]tgbotapi.InlineKeyboardButton)
-	rows[0] = []tgbotapi.InlineKeyboardButton{}
-	if len(pokememesArray) > 35*7 {
-		rows[1] = []tgbotapi.InlineKeyboardButton{}
-	}
-	if len(pokememesArray) > 35*14 {
-		rows[2] = []tgbotapi.InlineKeyboardButton{}
+	rowsCount := int(len(pokememesArray) / (35 * 7))
+	for i := 0; i <= rowsCount; i++ {
+		rows[i] = []tgbotapi.InlineKeyboardButton{}
 	}
 	totalPages := int(len(pokememesArray)/35) + 1
 	for i := 1; i <= totalPages; i++ {
 		btn := tgbotapi.NewInlineKeyboardButtonData(strconv.Itoa(i), "pokedeks"+strconv.Itoa(i))
 		rows[(i-1)/7] = append(rows[(i-1)/7], btn)
 	}
-	for i := range rows {
+	for i := 0; i <= rowsCount; i++ {
 		keyboard.InlineKeyboard = append(keyboard.InlineKeyboard, rows[i])
 	}
 
