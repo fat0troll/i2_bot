@@ -103,8 +103,10 @@ func (dc *DataCache) GetLeaguePrivateChats() []dbmapping.Chat {
 
 	for i := range dc.players {
 		if dc.players[i].Status != "banned" && dc.players[i].Status != "spy" && dc.players[i].Status != "league_changed" && dc.players[i].LeagueID == 1 {
-			if dc.chats[dc.players[i].TelegramID] != nil {
-				chats = append(chats, *dc.chats[dc.players[i].TelegramID])
+			for ii := range dc.chats {
+				if int(dc.chats[ii].TelegramID) == int(dc.players[i].TelegramID) {
+					chats = append(chats, *dc.chats[ii])
+				}
 			}
 		}
 	}
