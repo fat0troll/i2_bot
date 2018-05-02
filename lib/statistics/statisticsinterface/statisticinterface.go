@@ -4,8 +4,8 @@
 package statisticsinterface
 
 import (
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 )
 
 // StatisticsInterface implements Statistics for importing via appcontext.

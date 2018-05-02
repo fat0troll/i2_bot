@@ -5,10 +5,11 @@ package datacache
 
 import (
 	"errors"
+	"strconv"
+
 	"gopkg.in/yaml.v2"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
 	"source.wtfteam.pro/i2_bot/i2_bot/static"
-	"strconv"
 )
 
 func (dc *DataCache) initLevels() {

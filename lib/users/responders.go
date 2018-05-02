@@ -4,10 +4,11 @@
 package users
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"strconv"
 	"strings"
+
+	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 )
 
 // FormatUsername formats Telegram username for posting
@@ -97,19 +98,6 @@ func (u *Users) ForeignProfileMessage(update *tgbotapi.Update) string {
 	return u.ProfileMessage(update, playerRaw)
 }
 
-// ProfileAddEffectsMessage shows when user tries to post profile with effects enabled
-func (u *Users) ProfileAddEffectsMessage(update *tgbotapi.Update) string {
-	message := "*Наркоман, штоле?*\n\n"
-	message += "Бот не принимает профили во время активированных эффектов. Закончи свои дела и принеси чистый профиль через полчаса."
-
-	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
-	msg.ParseMode = "Markdown"
-
-	c.Bot.Send(msg)
-
-	return "fail"
-}
-
 // ProfileMessage shows current player's profile
 func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string {
 	profileRaw, err := c.DataCache.GetProfileByPlayerID(playerRaw.ID)
@@ -158,7 +146,7 @@ func (u *Users) ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Pla
 	message += " | 🎓 " + strconv.Itoa(profileRaw.Exp) + "/" + strconv.Itoa(level.MaxExp)
 	message += " | 🥚 " + strconv.Itoa(profileRaw.EggExp) + "/" + strconv.Itoa(level.MaxEgg)
 	message += "\n💲" + c.Statistics.GetPrintablePoints(profileRaw.Wealth)
-	message += " |💎" + strconv.Itoa(profileRaw.Crystalls)
+	message += " |💎" + strconv.Itoa(profileRaw.Crystals)
 	message += " |⭕" + strconv.Itoa(profileRaw.Pokeballs)
 	if weapon != nil {
 		message += "\n⚔Атака: " + c.Statistics.GetPrintablePoints(weapon.Power) + " + " + c.Statistics.GetPrintablePoints(attackPokememes) + "\n"

@@ -4,9 +4,10 @@
 package reminder
 
 import (
+	"strconv"
+
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
-	"strconv"
 )
 
 func (r *Reminder) getRemindersForUser(playerRaw *dbmapping.Player) ([]dbmapping.Alarm, bool) {

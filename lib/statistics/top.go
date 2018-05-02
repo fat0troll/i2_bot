@@ -4,10 +4,11 @@
 package statistics
 
 import (
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"sort"
 	"strconv"
+
+	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 )
 
 func (s *Statistics) renderPosition(profilesRaw *[]*dbmapping.PlayerProfile, playerRaw *dbmapping.Player) string {
@@ -110,11 +111,11 @@ func (s *Statistics) TopList(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 	message += "\n*Топ-5 по опыту*\n"
 
 	sort.Slice(profiles, func(i, j int) bool {
-		return profiles[i].Profile.FullExp() > profiles[j].Profile.FullExp()
+		return profiles[i].Profile.Exp > profiles[j].Profile.Exp
 	})
 
 	for i := 0; i < topLimit; i++ {
-		message += "*" + strconv.Itoa(i+1) + "*: " + c.Users.FormatUsername(profiles[i].Profile.Nickname) + " (" + strconv.Itoa(profiles[i].Profile.FullExp()) + " очков)\n"
+		message += "*" + strconv.Itoa(i+1) + "*: " + c.Users.FormatUsername(profiles[i].Profile.Nickname) + " (" + strconv.Itoa(profiles[i].Profile.Exp) + " очков)\n"
 	}
 
 	message += s.renderPosition(&profiles, playerRaw)

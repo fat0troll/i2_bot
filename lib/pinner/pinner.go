@@ -4,10 +4,11 @@
 package pinner
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"strconv"
 	"strings"
+
+	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 )
 
 func (p *Pinner) execMassMessagePin(update *tgbotapi.Update, groupChats []dbmapping.Chat) string {

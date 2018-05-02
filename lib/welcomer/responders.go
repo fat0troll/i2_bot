@@ -4,9 +4,10 @@
 package welcomer
 
 import (
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"strconv"
+
+	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 )
 
 // PrivateWelcomeMessageUnauthorized tell new user what to do.

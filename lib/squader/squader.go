@@ -4,12 +4,13 @@
 package squader
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"regexp"
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 )
 
 func (s *Squader) isUserAnyCommander(playerID int) bool {

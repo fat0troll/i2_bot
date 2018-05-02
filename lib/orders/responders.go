@@ -4,8 +4,9 @@
 package orders
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"strconv"
+
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 // ListAllOrders returns to user all orders in database

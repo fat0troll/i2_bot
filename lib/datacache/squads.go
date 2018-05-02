@@ -5,8 +5,9 @@ package datacache
 
 import (
 	"errors"
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"strconv"
+
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 )
 
 func (dc *DataCache) initSquads() {

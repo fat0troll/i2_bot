@@ -1,5 +1,5 @@
 // i2_bot – Instinct PokememBro Bot
-// Copyright (c) 2017 Vladimir "fat0troll" Hodakov
+// Copyright (c) 2017-2018 Vladimir "fat0troll" Hodakov
 
 package users
 
@@ -64,8 +64,8 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 	wealthInt := 0
 	pokememesWealth := ""
 	pokememesWealthInt := 0
-	crystalls := ""
-	crystallsInt := 0
+	crystals := ""
+	crystalsInt := 0
 	weapon := ""
 	pokememes := make(map[string]string)
 	powerInt := 0
@@ -145,8 +145,8 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 			}
 			wealth = wealthArray[0]
 			wealthInt = c.Statistics.GetPoints(wealth)
-			crystalls = wealthArray[1]
-			crystallsInt = c.Statistics.GetPoints(crystalls)
+			crystals = wealthArray[1]
+			crystalsInt = c.Statistics.GetPoints(crystals)
 		}
 
 		if strings.HasPrefix(currentString, "🔫") {
@@ -208,8 +208,8 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 	c.Log.Debugln(pokeballsInt)
 	c.Log.Debug("Wealth: " + wealth)
 	c.Log.Debugln(wealthInt)
-	c.Log.Debug("Crystalls: " + crystalls)
-	c.Log.Debugln(crystallsInt)
+	c.Log.Debug("crystals: " + crystals)
+	c.Log.Debugln(crystalsInt)
 	c.Log.Debug("Weapon: " + weapon)
 	if len(pokememes) > 0 {
 		c.Log.Debug("Hand cost: " + pokememesWealth)
@@ -265,7 +265,7 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 	} else {
 		profileRaw.WeaponID = 0
 	}
-	profileRaw.Crystalls = crystallsInt
+	profileRaw.Crystals = crystalsInt
 	profileRaw.CreatedAt = time.Now().UTC()
 
 	newProfileID, err := c.DataCache.AddProfile(&profileRaw)

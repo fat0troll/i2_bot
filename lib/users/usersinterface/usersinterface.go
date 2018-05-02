@@ -4,8 +4,8 @@
 package usersinterface
 
 import (
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"github.com/go-telegram-bot-api/telegram-bot-api"
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 )
 
 // UsersInterface implements Users for importing via appcontex
@@ -22,7 +22,6 @@ type UsersInterface interface {
 	FindByTopAttack(update *tgbotapi.Update) string
 	ForeignProfileMessage(update *tgbotapi.Update) string
 	FormatUsername(userName string) string
-	ProfileAddEffectsMessage(update *tgbotapi.Update) string
 	ProfileMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
 	UsersList(update *tgbotapi.Update) string
 }

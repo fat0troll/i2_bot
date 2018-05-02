@@ -5,11 +5,12 @@ package datacache
 
 import (
 	"errors"
+	"strconv"
+	"strings"
+
 	"gopkg.in/yaml.v2"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
 	"source.wtfteam.pro/i2_bot/i2_bot/static"
-	"strconv"
-	"strings"
 )
 
 func (dc *DataCache) initWeapons() {

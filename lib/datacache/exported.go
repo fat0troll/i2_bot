@@ -4,11 +4,12 @@
 package datacache
 
 import (
+	"sync"
+
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/appcontext"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/datacache/datacacheinterface"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
-	"sync"
 )
 
 var (

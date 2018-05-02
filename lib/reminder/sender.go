@@ -4,9 +4,10 @@
 package reminder
 
 import (
+	"time"
+
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
-	"time"
 )
 
 // SendReminders sends reminders for users about coming league tournament

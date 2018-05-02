@@ -5,9 +5,10 @@ package datacache
 
 import (
 	"errors"
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 	"strconv"
 	"time"
+
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 )
 
 func (dc *DataCache) initPlayers() {

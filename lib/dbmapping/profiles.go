@@ -4,7 +4,6 @@
 package dbmapping
 
 import (
-	"math"
 	"time"
 )
 
@@ -22,18 +21,12 @@ type Profile struct {
 	EggExp           int       `db:"egg_exp"`
 	Power            int       `db:"power"`
 	WeaponID         int       `db:"weapon_id"`
-	Crystalls        int       `db:"crystalls"`
+	Crystals         int       `db:"crystalls"`
 	CreatedAt        time.Time `db:"created_at"`
 }
 
-// FullExp returns exp points in summary, gained after registration
-func (p *Profile) FullExp() int {
-	fullExp := 0.00
-
-	for i := 1; i < p.LevelID+1; i++ {
-		fullExp = fullExp + (100 * math.Pow(2.0, float64(i)))
-	}
-
-	fullExp += float64(p.Exp)
-	return int(fullExp)
+// ProfileWithPokememes is a struct, which represents full profile with current hand
+type ProfileWithPokememes struct {
+	Profile   Profile
+	Pokememes ProfilePokememe
 }

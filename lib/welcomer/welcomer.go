@@ -4,8 +4,9 @@
 package welcomer
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"time"
+
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 func (w *Welcomer) groupWelcomeUser(update *tgbotapi.Update, newUser *tgbotapi.User) string {

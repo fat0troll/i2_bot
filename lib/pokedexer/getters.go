@@ -5,9 +5,10 @@ package pokedexer
 
 import (
 	"sort"
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
 	"strconv"
 	"strings"
+
+	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
 )
 
 func (p *Pokedexer) getAdvicePokememes(playerID int, adviceType string) ([]*datamapping.PokememeFull, bool) {

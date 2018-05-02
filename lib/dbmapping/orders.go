@@ -4,8 +4,9 @@
 package dbmapping
 
 import (
-	"github.com/go-sql-driver/mysql"
 	"time"
+
+	"github.com/go-sql-driver/mysql"
 )
 
 // Order is a struct, which represents `orders` table item in databse.
