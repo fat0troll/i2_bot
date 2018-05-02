@@ -49,6 +49,7 @@ type DataCacheInterface interface {
 	FindElementIDBySymbol(symbol string) (int, error)
 
 	GetLeagueByID(leagueID int) (*datamapping.League, error)
+	GetLeagueByName(name string) (*datamapping.League, error)
 	GetLeagueBySymbol(symbol string) (*datamapping.League, error)
 
 	GetLevelByID(levelID int) (*datamapping.Level, error)
@@ -60,6 +61,7 @@ type DataCacheInterface interface {
 	GetPokememeByName(name string) (*datamapping.PokememeFull, error)
 	GetPokememesCountByGradeAndLocation(grade int, locationID int) int
 
+	GetWeaponTypeByAttack(attack int) (*datamapping.Weapon, error)
 	GetWeaponTypeByID(weaponID int) (*datamapping.Weapon, error)
 	GetWeaponTypeByName(name string) (*datamapping.Weapon, error)
 }

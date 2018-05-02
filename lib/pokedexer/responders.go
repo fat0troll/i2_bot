@@ -197,7 +197,6 @@ func (p *Pokedexer) PokememeInfo(update *tgbotapi.Update, playerRaw *dbmapping.P
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	keyboard := tgbotapi.InlineKeyboardMarkup{}
 	for i := range pokememe.Locations {
-		c.Log.Info("wow, location")
 		var row []tgbotapi.InlineKeyboardButton
 		btn := tgbotapi.NewInlineKeyboardButtonSwitch(pokememe.Locations[i].Symbol+pokememe.Locations[i].Name, pokememe.Locations[i].Symbol+pokememe.Locations[i].Name)
 		row = append(row, btn)

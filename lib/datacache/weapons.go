@@ -48,6 +48,17 @@ func (dc *DataCache) getWeapons() []datamapping.Weapon {
 
 // External functions
 
+// GetWeaponTypeByAttack returns weapon type from datacache by given attack
+func (dc *DataCache) GetWeaponTypeByAttack(attack int) (*datamapping.Weapon, error) {
+	for i := range dc.weapons {
+		if dc.weapons[i].Power == attack {
+			return dc.weapons[i], nil
+		}
+	}
+
+	return nil, errors.New("There is no weapon type with attack = " + strconv.Itoa(attack))
+}
+
 // GetWeaponTypeByID returns weapon type from datacache by given ID
 func (dc *DataCache) GetWeaponTypeByID(weaponID int) (*datamapping.Weapon, error) {
 	if dc.weapons[weaponID] != nil {

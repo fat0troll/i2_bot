@@ -42,10 +42,10 @@ func (p *Pokedexer) getAdvicePokememes(playerID int, adviceType string) ([]*data
 
 	allPokememes := c.DataCache.GetAllPokememes()
 	neededGrade := 0
-	if profileRaw.LevelID < 10 {
+	if profileRaw.LevelID < 19 {
 		neededGrade = profileRaw.LevelID + 1
 	} else {
-		neededGrade = 10
+		neededGrade = 19
 	}
 
 	c.Log.Debug("This player will search for grade: " + strconv.Itoa(neededGrade))
@@ -90,13 +90,9 @@ func (p *Pokedexer) getAdvicePokememes(playerID int, adviceType string) ([]*data
 	switch adviceType {
 	case "best", "advice", "best_nofilter":
 		if len(pokememesArray) > 5 {
-			idx := 0
 			pokememesArrayShorted := make([]*datamapping.PokememeFull, 0)
-			for i := range pokememesArray {
-				if idx < 5 {
-					pokememesArrayShorted = append(pokememesArrayShorted, pokememesArray[i])
-				}
-				idx++
+			for i := 0; i < 5; i++ {
+				pokememesArrayShorted = append(pokememesArrayShorted, pokememesArray[i])
 			}
 
 			pokememesArray = pokememesArrayShorted

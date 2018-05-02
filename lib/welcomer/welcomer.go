@@ -32,10 +32,17 @@ func (w *Welcomer) groupWelcomeUser(update *tgbotapi.Update, newUser *tgbotapi.U
 		w.alertUserWithoutProfile(update, newUser)
 	}
 
-	message += "Приветствую тебя, гость лиги Инстинкт! Для регистрации в Лиге и получения доступа к ее ресурсам и чатам напиши скорее мне, @i2\\_bot, в личку и скинь свой профиль Герой.\n\nГайд для игроков Инстинкта: http://telegra.ph/Dobro-pozhalovat-v-Instinkt-11-22"
+	message += "Приветствую тебя, гость лиги Инстинкт! Для регистрации в Лиге и получения доступа к ее ресурсам и чатам напиши скорее мне, @i2\\_bot, в личку и скинь свою статистику.\n\nГайд для игроков Инстинкта: http://telegra.ph/Dobro-pozhalovat-v-Instinkt-11-22"
 
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ParseMode = "Markdown"
+	keyboard := tgbotapi.InlineKeyboardMarkup{}
+	var row []tgbotapi.InlineKeyboardButton
+	btn := tgbotapi.NewInlineKeyboardButtonSwitch("Получить статистику у @PokememBroBot", "Статы")
+	row = append(row, btn)
+	keyboard.InlineKeyboard = append(keyboard.InlineKeyboard, row)
+
+	msg.ReplyMarkup = keyboard
 
 	c.Bot.Send(msg)
 

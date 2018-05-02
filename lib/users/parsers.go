@@ -4,20 +4,19 @@
 package users
 
 import (
-	"regexp"
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/go-telegram-bot-api/telegram-bot-api"
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
 )
 
 // Internal functions
 
-func (u *Users) fillProfilePokememe(profileID int, meme string, attack string, rarity string) {
-	spkRaw, err := c.DataCache.GetPokememeByName(meme)
+func (u *Users) fillProfilePokememe(profileID int, pokememeID int, attack string, rarity string) {
+	spkRaw, err := c.DataCache.GetPokememeByID(pokememeID)
 	if err != nil {
 		c.Log.Error(err.Error())
 	} else {
@@ -43,157 +42,103 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 	c.Log.Info(text)
 
 	profileStringsArray := strings.Split(text, "\n")
-	profileRunesArray := make([][]rune, 0)
-	for i := range profileStringsArray {
-		profileRunesArray = append(profileRunesArray, []rune(profileStringsArray[i]))
-	}
-
-	league := datamapping.League{}
 
 	telegramNickname := update.Message.From.UserName
-	nickname := ""
-	level := ""
-	levelInt := 0
-	exp := ""
-	expInt := 0
-	eggexp := ""
-	eggexpInt := 0
-	pokeballs := ""
-	pokeballsInt := 0
-	wealth := ""
-	wealthInt := 0
-	pokememesWealth := ""
-	pokememesWealthInt := 0
-	crystals := ""
-	crystalsInt := 0
-	weapon := ""
-	pokememes := make(map[string]string)
-	powerInt := 0
+	rawProfileData := make(map[string]string)
+	rawCurrentHandData := make(map[string]string)
+	currentHand := 0
+	profilePower := 0
 
-	// Filling information
-	// We don't know how many strings we got, so we iterating each other
-	for i := range profileRunesArray {
-		currentString := string(profileRunesArray[i])
-		currentRunes := profileRunesArray[i]
-		if strings.HasPrefix(currentString, "🈸") || strings.HasPrefix(currentString, "🈳 ") || strings.HasPrefix(currentString, "🈵") {
-			leagueRaw, err := c.DataCache.GetLeagueBySymbol(string(currentRunes[0]))
+	// Not using range here, because range is picking elements in random order
+	for i := 0; i < len(profileStringsArray); i++ {
+		infoString := profileStringsArray[i]
+		c.Log.Debug("Processing string: " + infoString)
+		if strings.HasPrefix(infoString, "CurrentHand ") {
+			currentHandNumber := strings.Split(infoString, " ")[1]
+			currentHandInt, err := strconv.Atoi(currentHandNumber)
 			if err != nil {
 				c.Log.Error(err.Error())
 				u.profileAddFailureMessage(update)
 				return "fail"
 			}
-			league = *leagueRaw
-			for j := range currentRunes {
-				if j > 1 {
-					nickname += string(currentRunes[j])
-				}
+			currentHand = currentHandInt
+		} else if strings.HasPrefix(infoString, ("Hand" + strconv.Itoa(currentHand))) {
+			if strings.HasPrefix(infoString, ("Hand"+strconv.Itoa(currentHand))+" Attack") {
+				rawProfileData["currentHandAttack"] = strings.Join(strings.Split(infoString, " ")[2:], " ")
+			} else {
+				rawCurrentHandData[strconv.Itoa(len(rawCurrentHandData))] = strings.Join(strings.Split(infoString, " ")[1:], " ")
 			}
-		}
-		if strings.HasPrefix(currentString, "id: ") {
-			realUserID := strings.TrimPrefix(currentString, "id: ")
-			c.Log.Debug("Profile user ID: " + realUserID)
-			realUID, _ := strconv.Atoi(realUserID)
-			if realUID != playerRaw.TelegramID {
-				return "fail"
-			}
-		}
-		if strings.HasPrefix(currentString, "👤Уровень:") {
-			levelRx := regexp.MustCompile("\\d+")
-			levelArray := levelRx.FindAllString(currentString, -1)
-			if len(levelArray) < 1 {
-				c.Log.Error("Level string broken")
-				u.profileAddFailureMessage(update)
-				return "fail"
-			}
-			level = levelArray[0]
-			levelInt, _ = strconv.Atoi(level)
-		}
-
-		if strings.HasPrefix(currentString, "🎓Опыт") {
-			expRx := regexp.MustCompile("\\d+")
-			expArray := expRx.FindAllString(currentString, -1)
-			if len(expArray) < 4 {
-				c.Log.Error("Exp string broken")
-				u.profileAddFailureMessage(update)
-				return "fail"
-			}
-			exp = expArray[0]
-			expInt, _ = strconv.Atoi(exp)
-			eggexp = expArray[2]
-			eggexpInt, _ = strconv.Atoi(eggexp)
-		}
-
-		if strings.HasPrefix(currentString, "⭕Покеболы") {
-			pkbRx := regexp.MustCompile("\\d+")
-			pkbArray := pkbRx.FindAllString(currentString, -1)
-			if len(pkbArray) < 2 {
-				c.Log.Error("Pokeballs string broken")
-				u.profileAddFailureMessage(update)
-				return "fail"
-			}
-			pokeballs = pkbArray[1]
-			pokeballsInt, _ = strconv.Atoi(pokeballs)
-		}
-
-		if strings.HasPrefix(currentString, "💲") {
-			wealthRx := regexp.MustCompile("(\\d|\\.|K|M)+")
-			wealthArray := wealthRx.FindAllString(currentString, -1)
-			if len(wealthArray) < 2 {
-				c.Log.Error("Wealth string broken")
-				u.profileAddFailureMessage(update)
-				return "fail"
-			}
-			wealth = wealthArray[0]
-			wealthInt = c.Statistics.GetPoints(wealth)
-			crystals = wealthArray[1]
-			crystalsInt = c.Statistics.GetPoints(crystals)
-		}
-
-		if strings.HasPrefix(currentString, "🔫") {
-			// We need NEXT string!
-			weaponType := strings.Replace(currentString, "🔫 ", "", 1)
-			wnRx := regexp.MustCompile("(.+)(ита|ёры)")
-			weapon = wnRx.FindString(weaponType)
-		}
-
-		if strings.HasPrefix(currentString, "🐱Покемемы: ") {
-			pkmnumRx := regexp.MustCompile(`(\d|\.|K|M)+`)
-			pkNumArray := pkmnumRx.FindAllString(currentString, -1)
-			if len(pkNumArray) < 3 {
-				c.Log.Error("Pokememes count broken")
-				u.profileAddFailureMessage(update)
-				return "fail"
-			}
-			pokememesCount, _ := strconv.Atoi(pkNumArray[0])
-			pokememesWealth = pkNumArray[2]
-			pokememesWealthInt = c.Statistics.GetPoints(pokememesWealth)
-			if pokememesCount > 0 {
-				for pi := 0; pi < pokememesCount; pi++ {
-					pokememeString := string(profileRunesArray[i+1+pi])
-					attackRx := regexp.MustCompile("(\\d|\\.|K|M)+")
-					pkPointsArray := attackRx.FindAllString(pokememeString, -1)
-					pkAttack := ""
-					if strings.Contains(pokememeString, "🔟") {
-						pkAttack = pkPointsArray[0]
-					} else if strings.Contains(pokememeString, "⃣") {
-						pkAttack = pkPointsArray[1]
-					} else {
-						// Something went wrong
-						return c.Talkers.BotError(update)
-					}
-					pkName := strings.Split(pokememeString, "+")[0]
-					pkName = strings.Replace(pkName, " ⭐", "", 1)
-					if strings.Contains(pkName, "🔟") {
-						pkName = strings.Split(pkName, "🔟 ")[1]
-					} else {
-						pkName = strings.Split(pkName, "⃣ ")[1]
-					}
-					pokememes[strconv.Itoa(pi)+"_"+pkName] = pkAttack
-					powerInt += c.Statistics.GetPoints(pkAttack)
-				}
-			}
+		} else {
+			rawProfileData[strings.Split(infoString, " ")[0]] = strings.Join(strings.Split(infoString, " ")[1:], " ")
 		}
 	}
+
+	fmt.Println(rawProfileData)
+
+	nickname := rawProfileData["Name"]
+	league, err := c.DataCache.GetLeagueByName(rawProfileData["Team"])
+	if err != nil {
+		c.Log.Error(err.Error())
+		u.profileAddFailureMessage(update)
+		return "fail"
+	}
+	level := rawProfileData["Lvl"]
+	levelInt, err := strconv.Atoi(level)
+	if err != nil {
+		c.Log.Error(err.Error())
+		u.profileAddFailureMessage(update)
+		return "fail"
+	}
+	exp := rawProfileData["Exp"]
+	expInt, err := strconv.Atoi(exp)
+	if err != nil {
+		c.Log.Error(err.Error())
+		u.profileAddFailureMessage(update)
+		return "fail"
+	}
+	eggexp := strings.Split(rawProfileData["Eggs"], "/")[0]
+	eggexpInt, err := strconv.Atoi(eggexp)
+	if err != nil {
+		c.Log.Error(err.Error())
+		u.profileAddFailureMessage(update)
+		return "fail"
+	}
+	pokeballs := rawProfileData["BallsMax"]
+	pokeballsInt, err := strconv.Atoi(pokeballs)
+	if err != nil {
+		c.Log.Error(err.Error())
+		u.profileAddFailureMessage(update)
+		return "fail"
+	}
+	wealth := rawProfileData["Money"]
+	wealthInt, err := strconv.Atoi(wealth)
+	if err != nil {
+		c.Log.Error(err.Error())
+		u.profileAddFailureMessage(update)
+		return "fail"
+	}
+	crystals := rawProfileData["Crystalls"]
+	crystalsInt, err := strconv.Atoi(crystals)
+	if err != nil {
+		c.Log.Error(err.Error())
+		u.profileAddFailureMessage(update)
+		return "fail"
+	}
+	weapon := rawProfileData["Weapon"]
+	weaponAttack, err := strconv.Atoi(weapon)
+	if err != nil {
+		c.Log.Error(err.Error())
+		u.profileAddFailureMessage(update)
+		return "fail"
+	}
+	currentHandAttack := rawProfileData["currentHandAttack"]
+	currentHandAttackInt, err := strconv.Atoi(currentHandAttack)
+	if err != nil {
+		c.Log.Error(err.Error())
+		u.profileAddFailureMessage(update)
+		return "fail"
+	}
+	profilePower = weaponAttack + currentHandAttackInt
 
 	c.Log.Debug("Telegram nickname: " + telegramNickname)
 	c.Log.Debug("Nickname: " + nickname)
@@ -208,23 +153,30 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 	c.Log.Debugln(pokeballsInt)
 	c.Log.Debug("Wealth: " + wealth)
 	c.Log.Debugln(wealthInt)
-	c.Log.Debug("crystals: " + crystals)
+	c.Log.Debug("Crystals: " + crystals)
 	c.Log.Debugln(crystalsInt)
-	c.Log.Debug("Weapon: " + weapon)
-	if len(pokememes) > 0 {
-		c.Log.Debug("Hand cost: " + pokememesWealth)
-		c.Log.Debugln(pokememesWealthInt)
-		for meme, attack := range pokememes {
-			c.Log.Debug(meme + ": " + attack)
+	c.Log.Debug("Weapon attack: " + weapon)
+	c.Log.Debugln(weaponAttack)
+	c.Log.Debug("Current hand attack: " + currentHandAttack)
+	c.Log.Debugln(currentHandAttackInt)
+	if len(rawCurrentHandData) > 0 {
+		for i := range rawCurrentHandData {
+			c.Log.Debug(rawCurrentHandData[i])
 		}
 	} else {
 		c.Log.Debug("Hand is empty.")
 	}
 
 	// Information is gathered, let's create profile in database!
-	weaponRaw, err := c.DataCache.GetWeaponTypeByName(weapon)
+	weaponRaw, err := c.DataCache.GetWeaponTypeByAttack(weaponAttack)
 	if err != nil {
 		c.Log.Error(err.Error())
+	}
+
+	if weaponRaw != nil {
+		c.Log.Debug("Got weapon: " + weaponRaw.Name)
+	} else {
+		c.Log.Debug("This profile contains no weapon")
 	}
 
 	if playerRaw.LeagueID == 0 {
@@ -256,10 +208,11 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 	profileRaw.LevelID = levelInt
 	profileRaw.Pokeballs = pokeballsInt
 	profileRaw.Wealth = wealthInt
-	profileRaw.PokememesWealth = pokememesWealthInt
+	// TODO: count pokememes wealth
+	profileRaw.PokememesWealth = 0
 	profileRaw.Exp = expInt
 	profileRaw.EggExp = eggexpInt
-	profileRaw.Power = powerInt
+	profileRaw.Power = profilePower
 	if weaponRaw != nil {
 		profileRaw.WeaponID = weaponRaw.ID
 	} else {
@@ -288,35 +241,31 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 		return "fail"
 	}
 
-	for nMeme, attack := range pokememes {
-		memeAry := strings.Split(nMeme, "_")
-		meme := memeAry[1]
-		rarity := "common"
-		if strings.HasPrefix(meme, "🔸") {
-			rarity = "rare"
-			meme = strings.Replace(meme, "🔸", "", 1)
+	for i := range rawCurrentHandData {
+		pokememeInfoArray := strings.Split(rawCurrentHandData[i], " ")
+		pokememePokedexNumber := pokememeInfoArray[1]
+		pokememePokedexID, err := strconv.Atoi(pokememePokedexNumber)
+		if err != nil {
+			c.Log.Error(err.Error())
 		}
-		if strings.HasPrefix(meme, "🔶") {
-			rarity = "super rare"
-			meme = strings.Replace(meme, "🔶", "", 1)
+		pokememeRarityName := "common"
+		pokememeRarity := pokememeInfoArray[3]
+		pokememeAttack := pokememeInfoArray[7]
+		switch pokememeRarity {
+		case "1":
+			pokememeRarityName = "rare"
+		case "2":
+			pokememeRarityName = "super rare"
+		case "3":
+			pokememeRarityName = "liber"
+		case "4":
+			pokememeRarityName = "super liber"
+		case "7":
+			pokememeRarityName = "new year"
+		case "8":
+			pokememeRarityName = "valentine"
 		}
-		if strings.HasPrefix(meme, "🔹") {
-			rarity = "liber"
-			meme = strings.Replace(meme, "🔹", "", 1)
-		}
-		if strings.HasPrefix(meme, "🔷") {
-			rarity = "super liber"
-			meme = strings.Replace(meme, "🔷", "", 1)
-		}
-		if strings.HasPrefix(meme, "❄") {
-			rarity = "new year"
-			meme = strings.Replace(meme, "❄", "", 1)
-		}
-		if strings.HasPrefix(meme, "❤") {
-			rarity = "valentine"
-			meme = strings.Replace(meme, "❤", "", 1)
-		}
-		u.fillProfilePokememe(newProfileID, meme, attack, rarity)
+		u.fillProfilePokememe(newProfileID, pokememePokedexID, pokememeAttack, pokememeRarityName)
 	}
 
 	u.profileAddSuccessMessage(update, league.ID, profileRaw.LevelID)

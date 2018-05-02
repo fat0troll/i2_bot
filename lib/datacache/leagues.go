@@ -6,6 +6,7 @@ package datacache
 import (
 	"errors"
 	"strconv"
+	"strings"
 
 	"gopkg.in/yaml.v2"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
@@ -54,6 +55,17 @@ func (dc *DataCache) GetLeagueByID(leagueID int) (*datamapping.League, error) {
 	}
 
 	return nil, errors.New("There is no league with ID = " + strconv.Itoa(leagueID))
+}
+
+// GetLeagueByName returns league from datacache by name
+func (dc *DataCache) GetLeagueByName(name string) (*datamapping.League, error) {
+	for i := range dc.leagues {
+		if strings.Contains(dc.leagues[i].Name, name) {
+			return dc.leagues[i], nil
+		}
+	}
+
+	return nil, errors.New("There is no league with name = " + name)
 }
 
 // GetLeagueBySymbol returns league from datacache by emoji

@@ -21,8 +21,8 @@ func (r *Router) RouteInline(update tgbotapi.Update) string {
 	results := make([]interface{}, 0)
 
 	if (playerRaw.LeagueID != 1) || (playerRaw.Status == "banned") {
-		article := tgbotapi.NewInlineQueryResultArticle("0", "Команда боту @PokememBroBot:", "👤Герой")
-		article.Description = "👤Герой"
+		article := tgbotapi.NewInlineQueryResultArticle("0", "Команда боту @PokememBroBot:", "/me")
+		article.Description = "Получить статистику"
 
 		results = append(results, article)
 	} else {
@@ -45,23 +45,30 @@ func (r *Router) RouteInline(update tgbotapi.Update) string {
 
 			results = append(results, article)
 		} else {
-			availableCommands := make(map[string]string)
-			availableCommands["10"] = "🌲Лес"
-			availableCommands["11"] = "⛰Горы"
-			availableCommands["12"] = "🚣Озеро"
-			availableCommands["13"] = "🏙Город"
-			availableCommands["14"] = "🏛Катакомбы"
-			availableCommands["15"] = "⛪️Кладбище"
-			outputCommands := make(map[string]string)
-			for i, value := range availableCommands {
-				if strings.Contains(value, update.InlineQuery.Query) {
-					outputCommands[i] = value
+			if update.InlineQuery.Query != "Статы" {
+				availableCommands := make(map[string]string)
+				availableCommands["10"] = "🌲Лес"
+				availableCommands["11"] = "⛰Горы"
+				availableCommands["12"] = "🚣Озеро"
+				availableCommands["13"] = "🏙Город"
+				availableCommands["14"] = "🏛Катакомбы"
+				availableCommands["15"] = "⛪️Кладбище"
+				outputCommands := make(map[string]string)
+				for i, value := range availableCommands {
+					if strings.Contains(value, update.InlineQuery.Query) {
+						outputCommands[i] = value
+					}
 				}
-			}
 
-			for i, value := range outputCommands {
-				article := tgbotapi.NewInlineQueryResultArticle(i, "Команда боту @PokememBroBot:", value)
-				article.Description = value
+				for i, value := range outputCommands {
+					article := tgbotapi.NewInlineQueryResultArticle(i, "Команда боту @PokememBroBot:", value)
+					article.Description = value
+
+					results = append(results, article)
+				}
+			} else {
+				article := tgbotapi.NewInlineQueryResultArticle("0", "Команда боту @PokememBroBot:", "/me")
+				article.Description = "Получить статистику"
 
 				results = append(results, article)
 			}
