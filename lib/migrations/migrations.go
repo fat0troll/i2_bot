@@ -45,6 +45,7 @@ func (m *Migrations) Init() {
 	goose.AddNamedMigration("32_add_is_active_to_pokememes.go", AddIsActiveToPokememesUp, AddIsActiveToPokememesDown)
 	goose.AddNamedMigration("33_delete_datamapped_tables.go", DeleteDataMappedTablesUp, DeleteDataMappedTablesDown)
 	goose.AddNamedMigration("34_delete_pokememes_tables.go", DeletePokememesTablesUp, DeletePokememesTablesDown)
+	goose.AddNamedMigration("35_add_karma_to_players.go", AddKarmaToPlayersUp, AddKarmaToPlayersDown)
 }
 
 // Migrate migrates database to current version

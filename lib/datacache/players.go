@@ -38,7 +38,7 @@ func (dc *DataCache) loadPlayers() {
 // AddPlayer creates new player in database
 func (dc *DataCache) AddPlayer(player *dbmapping.Player) (int, error) {
 	c.Log.Info("DataCache: Creating new user...")
-	_, err := c.Db.NamedExec("INSERT INTO players VALUES(NULL, :telegram_id, :league_id, :status, :created_at, :updated_at)", &player)
+	_, err := c.Db.NamedExec("INSERT INTO players VALUES(NULL, :telegram_id, :league_id, :status, :karma, :created_at, :updated_at)", &player)
 	if err != nil {
 		c.Log.Error(err.Error())
 		return 0, err
@@ -76,6 +76,7 @@ func (dc *DataCache) GetOrCreatePlayerByTelegramID(telegramID int) (*dbmapping.P
 		newPlayer := dbmapping.Player{}
 		newPlayer.TelegramID = telegramID
 		newPlayer.LeagueID = 0
+		newPlayer.Karma = 250
 		newPlayer.Status = "nobody"
 		newPlayer.CreatedAt = time.Now().UTC()
 		newPlayer.UpdatedAt = time.Now().UTC()
@@ -125,7 +126,7 @@ func (dc *DataCache) GetPlayerByTelegramID(telegramID int) (*dbmapping.Player, e
 // UpdatePlayerFields writes new fields to player
 func (dc *DataCache) UpdatePlayerFields(player *dbmapping.Player) (*dbmapping.Player, error) {
 	if dc.players[player.ID] != nil {
-		_, err := c.Db.NamedExec("UPDATE `players` SET league_id=:league_id, status=:status WHERE id=:id", player)
+		_, err := c.Db.NamedExec("UPDATE `players` SET league_id=:league_id, status=:status, karma=:karma WHERE id=:id", player)
 		if err != nil {
 			c.Log.Error(err.Error())
 			return dc.players[player.ID], err

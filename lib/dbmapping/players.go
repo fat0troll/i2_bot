@@ -15,6 +15,7 @@ type Player struct {
 	TelegramID int       `db:"telegram_id"`
 	LeagueID   int       `db:"league_id"`
 	Status     string    `db:"status"`
+	Karma      int       `db:"karma"`
 	CreatedAt  time.Time `db:"created_at"`
 	UpdatedAt  time.Time `db:"updated_at"`
 }
