@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// Alarm is a struct, which represents `alarms` table item in databse.
+// Alarm is a struct, which represents `alarms` table item in database.
 type Alarm struct {
 	ID           int       `db:"id"`
 	PlayerID     int       `db:"player_id"`

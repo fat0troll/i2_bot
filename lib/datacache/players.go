@@ -58,6 +58,25 @@ func (dc *DataCache) AddPlayer(player *dbmapping.Player) (int, error) {
 	return insertedPlayer.ID, nil
 }
 
+// ChangePlayerKarma changes karma value for user
+func (dc *DataCache) ChangePlayerKarma(addition int, playerID int) (*dbmapping.Player, error) {
+	if dc.players[playerID] == nil {
+		return nil, errors.New("There is no player with ID = " + strconv.Itoa(playerID))
+	}
+
+	dc.playersMutex.Lock()
+	dc.players[playerID].Karma += addition
+	dc.players[playerID].UpdatedAt = time.Now().UTC()
+	dc.playersMutex.Unlock()
+
+	_, err := c.Db.NamedExec("UPDATE `players` SET karma=:karma, updated_at=:updated_at WHERE id=:id", dc.players[playerID])
+	if err != nil {
+		c.Log.Error(err.Error())
+	}
+
+	return dc.players[playerID], nil
+}
+
 // GetOrCreatePlayerByTelegramID finds user by Telegram ID and creates one if not exist
 func (dc *DataCache) GetOrCreatePlayerByTelegramID(telegramID int) (*dbmapping.Player, error) {
 	c.Log.Info("DataCache: Getting player with Telegram ID=", telegramID)

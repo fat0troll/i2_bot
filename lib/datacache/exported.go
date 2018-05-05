@@ -29,6 +29,10 @@ type DataCache struct {
 	// Note: int in this array for player ID, not for profile ID
 	currentProfiles      map[int]*dbmapping.Profile
 	currentProfilesMutex sync.Mutex
+	// Tournament reports
+	tournamentReports                      map[int]*dbmapping.TournamentReport
+	tournamentReportsByTournamentAndPlayer map[int]map[int]*dbmapping.TournamentReport
+	tournamentReportsMutex                 sync.Mutex
 
 	// Chats
 	chats      map[int]*dbmapping.Chat
@@ -84,6 +88,8 @@ func (dc *DataCache) Init() {
 	dc.loadPlayers()
 	dc.initProfiles()
 	dc.loadProfiles()
+	dc.initTournamentReports()
+	dc.loadTournamentReports()
 	dc.initChats()
 	dc.loadChats()
 	dc.initSquads()

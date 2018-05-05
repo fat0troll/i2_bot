@@ -34,6 +34,7 @@ type DataCacheInterface interface {
 	GetUserRolesInSquads(userID int) []dbmapping.SquadPlayerFull
 
 	AddPlayer(player *dbmapping.Player) (int, error)
+	ChangePlayerKarma(addition int, playerID int) (*dbmapping.Player, error)
 	GetOrCreatePlayerByTelegramID(telegramID int) (*dbmapping.Player, error)
 	GetPlayerByID(playerID int) (*dbmapping.Player, error)
 	GetPlayerByTelegramID(telegramID int) (*dbmapping.Player, error)
@@ -44,6 +45,8 @@ type DataCacheInterface interface {
 	GetPlayersWithCurrentProfiles() map[int]*dbmapping.PlayerProfile
 	GetProfileByID(profileID int) (*dbmapping.Profile, error)
 	GetProfileByPlayerID(playerID int) (*dbmapping.Profile, error)
+
+	AddTournamentReport(tournamentNumber int, playerID int, target string) (int, error)
 
 	GetElementByID(elementID int) (*datamapping.Element, error)
 	FindElementIDBySymbol(symbol string) (int, error)
