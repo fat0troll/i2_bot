@@ -67,6 +67,9 @@ func (r *Router) routePrivateRequest(update tgbotapi.Update, playerRaw *dbmappin
 				return "ok"
 			case update.Message.Command() == "faq":
 				return c.Talkers.FAQMessage(&update)
+			case update.Message.Command() == "rules":
+				return c.Talkers.RulesMessage(&update)
+
 			case update.Message.Command() == "academy":
 				c.Talkers.AcademyMessage(&update, playerRaw)
 				return "ok"

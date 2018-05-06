@@ -5,7 +5,7 @@ package connections
 
 import (
 	"bitbucket.org/pztrn/mogrus"
-	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/go-sql-driver/mysql" // MySQL driver for sqlx
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/jmoiron/sqlx"
 	"source.wtfteam.pro/i2_bot/i2_bot/lib/config"

@@ -17,6 +17,7 @@ type TalkersInterface interface {
 	GamesMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
 	HelpMessage(update *tgbotapi.Update, playerRaw *dbmapping.Player) string
 	FAQMessage(update *tgbotapi.Update) string
+	RulesMessage(update *tgbotapi.Update) string
 
 	AnyMessageUnauthorized(update *tgbotapi.Update) string
 	BanError(update *tgbotapi.Update) string

@@ -63,6 +63,10 @@ func (r *Router) routeGroupRequest(update tgbotapi.Update, playerRaw *dbmapping.
 	switch {
 	case update.Message.Command() == "long":
 		return c.Talkers.LongMessage(&update)
+	default:
+		if update.Message.IsCommand() {
+			return c.Talkers.RulesMessage(&update)
+		}
 	}
 
 	// Ah, we're still here

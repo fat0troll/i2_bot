@@ -36,6 +36,8 @@ func (w *Welcomer) groupWelcomeUser(update *tgbotapi.Update, newUser *tgbotapi.U
 
 	message += "Алгоритм, как зарегистрироваться:\n\n1) Нажимаешь кнопку ниже, и выбираешь @PokememBroBot как цель для сообщения\n2) В ответ получаешь длинное сообщение-статистику.\n3) Полученное сообщение форвардишь в @i2\\_bot (не забудь заранее нажать там /start!)\n4) Готово, вы восхитительны."
 
+	message += "\n\nПравила чатов лиги Инстинкт:/rules. Незнание правил — отягчающее обстоятельство."
+
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
 	msg.ParseMode = "Markdown"
 	keyboard := tgbotapi.InlineKeyboardMarkup{}
