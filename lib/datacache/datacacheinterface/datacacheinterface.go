@@ -4,9 +4,9 @@
 package datacacheinterface
 
 import (
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/fat0troll/i2_bot/lib/datamapping"
 	"github.com/fat0troll/i2_bot/lib/dbmapping"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 // DataCacheInterface implements DataCache for importing via appcontext.
@@ -52,6 +52,7 @@ type DataCacheInterface interface {
 	FindElementIDBySymbol(symbol string) (int, error)
 
 	GetLeagueByID(leagueID int) (*datamapping.League, error)
+	GetLeagueByEnglishName(name string) (*datamapping.League, error)
 	GetLeagueByName(name string) (*datamapping.League, error)
 	GetLeagueBySymbol(symbol string) (*datamapping.League, error)
 

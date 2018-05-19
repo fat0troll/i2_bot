@@ -9,8 +9,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/fat0troll/i2_bot/lib/dbmapping"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 // Internal functions
@@ -76,7 +76,7 @@ func (u *Users) ParseProfile(update *tgbotapi.Update, playerRaw *dbmapping.Playe
 	fmt.Println(rawProfileData)
 
 	nickname := rawProfileData["Name"]
-	league, err := c.DataCache.GetLeagueByName(rawProfileData["Team"])
+	league, err := c.DataCache.GetLeagueByEnglishName(rawProfileData["Team"])
 	if err != nil {
 		c.Log.Error(err.Error())
 		u.profileAddFailureMessage(update)

@@ -1,9 +1,12 @@
 - id: 1
   symbol: 🈸
   name: "ИНСТИНКТ"
+  name_english: "INSTINCT"
 - id: 2
   symbol: 🈳
   name: "МИСТИКА"
+  name_english: "MYSTIC"
 - id: 3
   symbol: 🈵
   name: "ОТВАГА"
+  name_english: "VALOR"

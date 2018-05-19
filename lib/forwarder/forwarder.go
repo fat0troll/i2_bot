@@ -6,8 +6,8 @@ package forwarder
 import (
 	"regexp"
 
-	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/fat0troll/i2_bot/lib/dbmapping"
+	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
 // ProcessForward process forwards for single-user chats
@@ -16,7 +16,7 @@ func (f *Forwarder) ProcessForward(update *tgbotapi.Update, playerRaw *dbmapping
 
 	// Forwards
 	var pokememeMsg = regexp.MustCompile(`Dex(.+)\nGrade(.+)\nName(.+)`)
-	var profileMsg = regexp.MustCompile(`id(\s)(\d+)\n(Team)(\s)([А-Я]+)\nName(\s)(.*)\nLvl(\s)(\d+)`)
+	var profileMsg = regexp.MustCompile(`id(\s)(\d+)\n(Team)(\s)([A-Z]+)\nName(\s)(.*)\nLvl(\s)(\d+)`)
 
 	switch {
 	case pokememeMsg.MatchString(text):

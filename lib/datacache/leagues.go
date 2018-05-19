@@ -8,9 +8,9 @@ import (
 	"strconv"
 	"strings"
 
-	"gopkg.in/yaml.v2"
 	"github.com/fat0troll/i2_bot/lib/datamapping"
 	"github.com/fat0troll/i2_bot/static"
+	"gopkg.in/yaml.v2"
 )
 
 func (dc *DataCache) initLeagues() {
@@ -61,6 +61,17 @@ func (dc *DataCache) GetLeagueByID(leagueID int) (*datamapping.League, error) {
 func (dc *DataCache) GetLeagueByName(name string) (*datamapping.League, error) {
 	for i := range dc.leagues {
 		if strings.Contains(dc.leagues[i].Name, name) {
+			return dc.leagues[i], nil
+		}
+	}
+
+	return nil, errors.New("There is no league with name = " + name)
+}
+
+// GetLeagueByEnglishName returns league from datacache by english name
+func (dc *DataCache) GetLeagueByEnglishName(name string) (*datamapping.League, error) {
+	for i := range dc.leagues {
+		if strings.Contains(dc.leagues[i].NameEnglish, name) {
 			return dc.leagues[i], nil
 		}
 	}
