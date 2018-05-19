@@ -30,14 +30,6 @@ type TelegramConnection struct {
 	ListenAddress string `yaml:"listen_address"`
 }
 
-// ProxySettings handles settings for SOCKS5 proxy in config.yml
-type ProxySettings struct {
-	Enabled  bool   `yaml:"enabled"`
-	Address  string `yaml:"address,omitempty"`
-	Username string `yaml:"username,omitempty"`
-	Password string `yaml:"password,omitempty"`
-}
-
 // SpecialChats handles settings for special chats
 type SpecialChats struct {
 	AcademyID      string `yaml:"academy_id"`
@@ -56,7 +48,6 @@ type LoggingConfig struct {
 type Config struct {
 	Telegram     TelegramConnection `yaml:"telegram_connection"`
 	Database     DatabaseConnection `yaml:"database_connection"`
-	Proxy        ProxySettings      `yaml:"socks_proxy"`
 	SpecialChats SpecialChats       `yaml:"special_chats"`
 	Logs         LoggingConfig      `yaml:"logs"`
 }

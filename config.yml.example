@@ -8,11 +8,6 @@ database_connection:
     user: "i2_bot"
     password: "i2_bot"
     database: "i2_bot"
-socks_proxy:
-    enabled: true
-    address: "127.0.0.1:1337"
-    username: "proxy"
-    password: "proxy"
 special_chats:
     academy_id: "group_id"
     bastion_id: "group_id"
