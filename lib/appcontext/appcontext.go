@@ -231,7 +231,6 @@ func (c *Context) StartBot() {
 	c.Log.Info("Webhook URL: " + c.Cfg.Telegram.WebHookDomain + c.Bot.Token)
 
 	for update := range updates {
-		c.Log.Info("Got new update...")
 		if update.Message != nil {
 			if update.Message.From != nil {
 				if update.Message.Date > (int(time.Now().Unix()) - 5) {
