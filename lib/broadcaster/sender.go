@@ -7,8 +7,8 @@ import (
 	"strconv"
 
 	"github.com/go-telegram-bot-api/telegram-bot-api"
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/constants"
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
+	"github.com/fat0troll/i2_bot/lib/constants"
+	"github.com/fat0troll/i2_bot/lib/dbmapping"
 )
 
 // AdminBroadcastMessageSend sends saved message to all private chats

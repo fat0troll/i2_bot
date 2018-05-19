@@ -8,7 +8,7 @@ import (
 	"strconv"
 
 	"github.com/go-telegram-bot-api/telegram-bot-api"
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
+	"github.com/fat0troll/i2_bot/lib/dbmapping"
 )
 
 func (r *Router) routePrivateRequest(update tgbotapi.Update, playerRaw *dbmapping.Player, chatRaw *dbmapping.Chat) string {

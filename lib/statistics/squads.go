@@ -6,7 +6,7 @@ package statistics
 import (
 	"strconv"
 
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
+	"github.com/fat0troll/i2_bot/lib/dbmapping"
 )
 
 // SquadStatictics generates statistics message snippet. Public due to usage in chats list

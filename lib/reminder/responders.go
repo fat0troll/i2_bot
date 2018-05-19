@@ -5,7 +5,7 @@ package reminder
 
 import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/dbmapping"
+	"github.com/fat0troll/i2_bot/lib/dbmapping"
 )
 
 // AlarmsList lists all alarms for user with buttons to enable/disable each of available alarms

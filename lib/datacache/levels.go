@@ -8,8 +8,8 @@ import (
 	"strconv"
 
 	"gopkg.in/yaml.v2"
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
-	"source.wtfteam.pro/i2_bot/i2_bot/static"
+	"github.com/fat0troll/i2_bot/lib/datamapping"
+	"github.com/fat0troll/i2_bot/static"
 )
 
 func (dc *DataCache) initLevels() {

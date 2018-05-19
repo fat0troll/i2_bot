@@ -6,7 +6,7 @@ package dbmapping
 import (
 	"time"
 
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
+	"github.com/fat0troll/i2_bot/lib/datamapping"
 )
 
 // Player is a struct, which represents `players` table item in databse.

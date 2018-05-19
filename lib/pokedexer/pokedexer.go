@@ -8,7 +8,7 @@ import (
 	"strconv"
 
 	"github.com/go-telegram-bot-api/telegram-bot-api"
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/datamapping"
+	"github.com/fat0troll/i2_bot/lib/datamapping"
 )
 
 func (p *Pokedexer) pokememesListingMessage(update *tgbotapi.Update, page int, pokememesArray map[int]*datamapping.PokememeFull) string {

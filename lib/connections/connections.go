@@ -8,7 +8,7 @@ import (
 	_ "github.com/go-sql-driver/mysql" // MySQL driver for sqlx
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 	"github.com/jmoiron/sqlx"
-	"source.wtfteam.pro/i2_bot/i2_bot/lib/config"
+	"github.com/fat0troll/i2_bot/lib/config"
 )
 
 // BotInit initializes connection to Telegram
